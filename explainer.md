@@ -40,8 +40,6 @@ interface FakeXRDeviceController {
   // requestAnimationFrame() callbacks.
   void setXRPresentationFrameData(Float32Array poseModelMatrix, Array<FakeXRViewInit> views);
 
-  // Simulates the user activating the headset.
-  void simulateHeadsetActivation();
   // Simulates the user activating the reset pose on a device.
   void simulateResetPose();
 
