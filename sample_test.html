@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<script src="/resources/testharness.js"></script>
+<script src="/resources/testharnessreport.js"></script>
+<canvas id="webgl-canvas"></canvas>
+
+<script>
+const identityMatrix = new Float32Array([
+ 1, 0, 0, 0,
+ 0, 1, 0, 0,
+ 0, 0, 1, 0,
+ 0, 0, 0, 1
+]);
+
+let webglCanvas = document.getElementById('webgl-canvas');
+let gl = webglCanvas.getContext('webgl', glAttributes);
+
+let testDevice;
+
+promise_test(
+ (t) => XRTest.simulateDeviceConnection({ supportsExclusive:true })
+   .then(() => navigator.xr.requestDevice())
+   .then((device) => {
+     testDevice = device;
+     return gl.setCompatibleXRDevice(device);
+   })
+   .then(() => new Promise((resolve, reject) => {
+       // Perform the session request in a user gesture.
+       XRTest.simulateUserActivation(() => {
+         testDevice.requestSession({ exclusive: true })
+           .then((session) => {
+             assert_not_equals(session, null);
+             // Test does not complete until the returned promise resolves.
+             resolve();
+           }).catch((err) => {
+             reject("Session was reject with error: "+err);
+           });
+       });
+     })
+   ),
+ "RequestExclusiveSession resolves inside a user activation"
+);
+
+// In a real test scenario, these tests would run separately.
+// Shown together here for illustration purposes.
+promise_test(
+ (t) => XRTest.simulateDeviceConnection({ supportsExclusive:true })
+   .then((controller) => {
+     controller.setXRPresentationFrameData(identityMatrix, [
+       {eye:"left", projectionMatrix: identityMatrix, viewMatrix: identityMatrix},
+       {eye:"right", projectionMatrix: identityMatrix, viewMatrix: identityMatrix}
+     ]);
+     return navigator.xr.requestDevice();
+   })
+   .then((device) => {
+     testDevice = device;
+     return gl.setCompatibleXRDevice(device);
+   })
+   .then(() => new Promise((resolve, reject) => {
+       // Perform the session request in a user gesture.
+       XRTest.simulateUserActivation(() => {
+         testDevice.requestSession({ exclusive: true })
+           .then((session) => {
+             // Session must have a baseLayer or frame requests will be ignored.
+             session.baseLayer = new XRWebGLLayer(session, gl);
+
+             function onFrame(time, xrFrame) {
+               assert_true(xrFrame instanceof XRPresentationFrame);
+
+               assert_not_equals(xrFrame.views, null);
+               assert_equals(xrFrame.views.length, 2);
+
+               let devicePose = xrFrame.getDevicePose();
+
+               assert_not_equals(devicePose, null);
+               assert_equals(devicePose.poseModelMatrix, identityMatrix);
+
+               assert_not_equals(devicePose.getViewMatrix(xrFrame.views[0]), null);
+               assert_not_equals(devicePose.getViewMatrix(xrFrame.views[0]).length, 16);
+               assert_not_equals(devicePose.getViewMatrix(xrFrame.views[1]), null);
+               assert_not_equals(devicePose.getViewMatrix(xrFrame.views[1]).length, 16);
+
+               // Test does not complete until the returned promise resolves.
+               resolve();
+             }
+
+             session.requestAnimationFrame(onFrame);
+           }).catch((err) => {
+             reject("Session was rejected with error: "+err);
+           });
+       });
+     })
+   ),
+ "XRPresentationFrame has data set correctly"
+);
+</script>
