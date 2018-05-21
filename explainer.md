@@ -49,6 +49,9 @@ interface FakeXRDeviceController {
   // Simulates devices focusing and blurring sessions.
   void simulateBlurSession(XRSession);
   void simulateFocusSession(XRSession);
+  
+  Promise<FakeXRInputSourceController>  
+      simulateInputSourceConnection(FakeXRInputSourceInit);
 }
 
 interface FakeXRViewInit {
@@ -69,6 +72,18 @@ dictionary FakeXRFrameOfReferenceInit {
 dictionary FakeXRBoundsPoint {
   double x; double z;
 }
+
+interface FakeXRInputSourceInit {
+  XRHandedness handedness;
+  XRPointerOrigin pointerOrigin;
+};
+
+interface FakeXRInputSourceController {
+  void setPose(
+    boolean emulatedPosition, 
+    Float32Array pointerMatrix, 
+    Float32Array? gripMatrix);
+};
 ```
 
 These initialization object and control interfaces do not represent a complete set of WebXR functionality, 
