@@ -29,7 +29,7 @@ them out.
 ```WebIDL
 dictionary FakeXRDeviceInit {
 	// TODO: Subject to change to match spec changes.
-	required boolean supportsExclusive;
+	required boolean supportsImmersive;
 }
 
 interface FakeXRDeviceController {
