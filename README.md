@@ -4,3 +4,5 @@ In order to enable these tests, we define a common API to simulate backend funct
 This repo contains the development and discussion for that API.
 
 [Explainer](explainer.md)
+
+[Tests](https://github.com/web-platform-tests/wpt/tree/master/webxr)
