@@ -92,6 +92,8 @@ dictionary FakeXRBoundsPoint {
 
 // When used as a native origin, it is in the reference space
 // where the viewer's native origin is identity at initialization
+//
+// https://immersive-web.github.io/webxr/#xrrigidtransform
 dictionary FakeXRRigidTransformInit {
   required Float32Array position;
   required Float32Array orientation;
