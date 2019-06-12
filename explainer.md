@@ -32,10 +32,10 @@ dictionary FakeXRDeviceInit {
     required boolean supportsImmersive;
     required Array<FakeXRViewInit> views;
 
-    boolean supportsBounded = true;
-    boolean supportsUnbounded = true;
+    boolean supportsUnbounded = false;
     // Whether the space supports tracking in inline sessions
     boolean supportsTrackingInInline = true;
+    // The bounds coordinates. If null, bounded reference spaces are not supported.
     Array<FakeXRBoundsPoint>? boundsCoodinates = null;
     // Eye level used for calculating floor-level spaces
     float eyeLevel = 1.5;
