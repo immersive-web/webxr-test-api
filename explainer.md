@@ -19,6 +19,9 @@ interface XRTest {
   // The activation is only guaranteed to be valid in the provided function and only applies to WebXR
   // Device API methods.
   void simulateUserActivation(Function);
+
+  // Disconnect all fake devices
+  Promise<void> disconnectAllDevices();
 };
 ```
 
@@ -47,7 +50,7 @@ interface FakeXRDevice {
   void setViews(Array<FakeXRViewInit> views);
 
   // behaves as if device was disconnected
-  void disconnect();
+  Promise<void> disconnect();
 
   // Sets the origin of the viewer
   void setViewerOrigin(FakeXRRigidTransformInit origin, boolean emulatedPosition = false);
@@ -106,10 +109,10 @@ interface FakeXRInputController {
     FakeXRRigidTransformInit? gripOrigin);
 
   // Temporarily disconnect the input device
-  void disconnect();
+  Promise<void> disconnect();
 
   // Reconnect a disconnected input device
-  void reconnect();
+  Promise<void> reconnect();
 
   // Start a selection for the current frame with the given button index
   void startSelection(long? buttonIndex = null);
