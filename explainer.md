@@ -42,6 +42,7 @@ dictionary FakeXRDeviceInit {
     Array<FakeXRBoundsPoint>? boundsCoodinates = null;
     // Eye level used for calculating floor-level spaces
     float eyeLevel = 1.5;
+    FakeXRRigidTransformInit? viewerOrigin = null;
 }
 
 interface FakeXRDevice {
@@ -102,6 +103,10 @@ dictionary FakeXRRigidTransformInit {
 interface FakeXRInputSourceInit {
   XRHandedness handedness;
   XRTargetRayMode targetRayMode;
+  // was the primary action pressed when this was connected?
+  bool selectionStarted = false;
+  FakeXRRigidTransformInit? pointerOrigin = null;
+  FakeXRRigidTransformInit? gripOrigin = null;
 };
 
 interface FakeXRInputController {
@@ -117,10 +122,10 @@ interface FakeXRInputController {
   Promise<void> reconnect();
 
   // Start a selection for the current frame with the given button index
-  void startSelection(long? buttonIndex = null);
+  void startSelection();
 
   // End selection for the current frame with the given button index
-  void endSelection(long? buttonIndex = null);
+  void endSelection();
 };
 ```
 
