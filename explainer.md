@@ -48,20 +48,20 @@ dictionary FakeXRDeviceInit {
 interface FakeXRDevice {
   // Sets the values to be used for subsequent
   // requestAnimationFrame() callbacks.
-  void setViews(Array<FakeXRViewInit> views);
+  Promise<void> setViews(Array<FakeXRViewInit> views);
 
   // behaves as if device was disconnected
   Promise<void> disconnect();
 
   // Sets the origin of the viewer
-  void setViewerOrigin(FakeXRRigidTransformInit origin, boolean emulatedPosition = false);
+  Promise<void> setViewerOrigin(FakeXRRigidTransformInit origin, boolean emulatedPosition = false);
 
   // Simulates devices focusing and blurring sessions.
-  void simulateVisibilityChange(XRVisibilityState);
+  Promise<void> simulateVisibilityChange(XRVisibilityState);
 
   void setBoundsGeometry(Array<FakeXRBoundsPoint> boundsCoodinates);
   // Sets eye level used for calculating floor-level spaces
-  void setEyeLevel(float eyeLevel);
+  Promise<void> setEyeLevel(float eyeLevel);
 
   
   Promise<FakeXRInputController>  
@@ -110,7 +110,7 @@ interface FakeXRInputSourceInit {
 };
 
 interface FakeXRInputController {
-  void setOrigins(
+  Promise<void> setOrigins(
     boolean emulatedPosition, 
     FakeXRRigidTransformInit pointerOrigin, 
     FakeXRRigidTransformInit? gripOrigin);
@@ -122,10 +122,10 @@ interface FakeXRInputController {
   Promise<void> reconnect();
 
   // Start a selection for the current frame with the given button index
-  void startSelection();
+  Promise<void> startSelection();
 
   // End selection for the current frame with the given button index
-  void endSelection();
+  Promise<void> endSelection();
 };
 ```
 
