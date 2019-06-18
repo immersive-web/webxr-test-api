@@ -1,9 +1,10 @@
-In order to allow javascript tests for WebXR there are some basic functions which are common across all tests, 
-such as adding a fake test device and specifying poses. Below is a Javascript IDL which attempts to capture 
+In order to allow javascript tests for WebXR there are some basic functions which are common across all tests,
+such as adding a fake test device and specifying poses. Below is a Javascript IDL which attempts to capture
 the necessary functions, based off what was defined in the spec. Different browser vendors can implement this
 Javascript IDL in whatever way is most compatible with their browser. For example, some browsers may back the
-interface with a WebDriver API while others may use HTTP or IPC mechanisms to communicate with an out of process 
-fake backend.
+interface with a WebDriver API while others may use HTTP or IPC mechanisms to communicate with an out of process
+fake backend. Because of this, any "synchronous" methods that update the state of a device or controller are not
+guaranteed to have that updated state respected until the next "requestAnimationFrame" returns.
 
 ```WebIDL
 partial interface XR {
@@ -25,9 +26,9 @@ interface XRTest {
 };
 ```
 
-The promise returned from simulateDeviceConnection resolves with a FakeXRDevice, which can be used 
-to control the fake XRDevice that has been created in the background. The fake device may be used in a session returned by 
-navigator.xr.requestSession(), depending on how many devices have been created and how the browser decides to hand 
+The promise returned from simulateDeviceConnection resolves with a FakeXRDevice, which can be used
+to control the fake XRDevice that has been created in the background. The fake device may be used in a session returned by
+navigator.xr.requestSession(), depending on how many devices have been created and how the browser decides to hand
 them out.
 
 ```WebIDL
@@ -48,23 +49,23 @@ dictionary FakeXRDeviceInit {
 interface FakeXRDevice {
   // Sets the values to be used for subsequent
   // requestAnimationFrame() callbacks.
-  Promise<void> setViews(Array<FakeXRViewInit> views);
+  void setViews(Array<FakeXRViewInit> views);
 
   // behaves as if device was disconnected
   Promise<void> disconnect();
 
   // Sets the origin of the viewer
-  Promise<void> setViewerOrigin(FakeXRRigidTransformInit origin, boolean emulatedPosition = false);
+  void setViewerOrigin(FakeXRRigidTransformInit origin, boolean emulatedPosition = false);
 
   // Simulates devices focusing and blurring sessions.
-  Promise<void> simulateVisibilityChange(XRVisibilityState);
+  void simulateVisibilityChange(XRVisibilityState);
 
   void setBoundsGeometry(Array<FakeXRBoundsPoint> boundsCoodinates);
   // Sets eye level used for calculating floor-level spaces
-  Promise<void> setEyeLevel(float eyeLevel);
+  void setEyeLevel(float eyeLevel);
 
-  
-  Promise<FakeXRInputController>  
+
+  Promise<FakeXRInputController>
       simulateInputSourceConnection(FakeXRInputSourceInit);
 };
 
@@ -110,9 +111,9 @@ interface FakeXRInputSourceInit {
 };
 
 interface FakeXRInputController {
-  Promise<void> setOrigins(
-    boolean emulatedPosition, 
-    FakeXRRigidTransformInit pointerOrigin, 
+  void setOrigins(
+    boolean emulatedPosition,
+    FakeXRRigidTransformInit pointerOrigin,
     FakeXRRigidTransformInit? gripOrigin);
 
   // Temporarily disconnect the input device
@@ -122,12 +123,12 @@ interface FakeXRInputController {
   Promise<void> reconnect();
 
   // Start a selection for the current frame with the given button index
-  Promise<void> startSelection();
+  void startSelection();
 
   // End selection for the current frame with the given button index
-  Promise<void> endSelection();
+  void endSelection();
 };
 ```
 
-These initialization object and control interfaces do not represent a complete set of WebXR functionality, 
+These initialization object and control interfaces do not represent a complete set of WebXR functionality,
 and are expected to be expanded on as the WebXR spec grows.
