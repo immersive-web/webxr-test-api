@@ -39,10 +39,11 @@ dictionary FakeXRDeviceInit {
     boolean supportsUnbounded = false;
     // Whether the space supports tracking in inline sessions
     boolean supportsTrackingInInline = true;
-    // The bounds coordinates. If null, bounded reference spaces are not supported.
+    // The bounds coordinates. If null/empty, bounded reference spaces are not supported. If not, must have at least three elements.
     sequence<FakeXRBoundsPoint> boundsCoodinates;
     // Eye level used for calculating floor-level spaces
     float eyeLevel = 1.5;
+    // {} defaults to an identity transform
     FakeXRRigidTransformInit viewerOrigin;
 };
 
@@ -55,7 +56,7 @@ interface FakeXRDevice {
   Promise<void> disconnect();
 
   // Sets the origin of the viewer
-  void setViewerOrigin(FakeXRRigidTransformInit origin, optional boolean emulatedPosition position = false);
+  void setViewerOrigin(FakeXRRigidTransformInit origin, optional boolean emulatedPosition = false);
 
   // Simulates devices focusing and blurring sessions.
   void simulateVisibilityChange(XRVisibilityState);
@@ -74,10 +75,11 @@ dictionary FakeXRViewInit {
   required XREye eye;
   // https://immersive-web.github.io/webxr/#view-projection-matrix
   required sequence<float> projectionMatrix;
-  // https://immersive-web.github.io/webxr/#view-offset
-  required FakeXRRigidTransformInit viewOffset;
   // https://immersive-web.github.io/webxr/#dom-xrwebgllayer-getviewport
   required FakeXRViewportInit viewport;
+  // https://immersive-web.github.io/webxr/#view-offset
+  // {} defaults to an identity transform
+  FakeXRRigidTransformInit viewOffset;
 };
 
 // https://immersive-web.github.io/webxr/#xrviewport
@@ -97,8 +99,10 @@ dictionary FakeXRBoundsPoint {
 //
 // https://immersive-web.github.io/webxr/#xrrigidtransform
 dictionary FakeXRRigidTransformInit {
-  required Float32Array position;
-  required Float32Array orientation;
+  // must have three elements
+  sequence<float> position;
+  // must have four elements
+  sequence<float> orientation;
 };
 
 interface FakeXRInputSourceInit {
@@ -106,7 +110,9 @@ interface FakeXRInputSourceInit {
   XRTargetRayMode targetRayMode;
   // was the primary action pressed when this was connected?
   bool selectionStarted = false;
+  // {} defaults to an identity transform
   FakeXRRigidTransformInit pointerOrigin;
+  // {} means that there is no gripSpace
   FakeXRRigidTransformInit gripOrigin;
 };
 
