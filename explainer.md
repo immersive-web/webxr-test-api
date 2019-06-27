@@ -14,7 +14,7 @@ partial interface XR {
 interface XRTest {
   // Simulates connecting a device to the system.
   // Used to instantiate a fake device for use in tests.
-  Promise<FakeXRDevice> simulateDeviceConnection(FakeXRDeviceInit);
+  Promise<FakeXRDevice> simulateDeviceConnection(FakeXRDeviceInit init);
 
   // Simulates a user activation (aka user gesture) for the current scope.
   // The activation is only guaranteed to be valid in the provided function and only applies to WebXR
@@ -34,33 +34,34 @@ them out.
 ```WebIDL
 dictionary FakeXRDeviceInit {
     required boolean supportsImmersive;
-    required Array<FakeXRViewInit> views;
+    required sequence<FakeXRViewInit> views;
 
     boolean supportsUnbounded = false;
     // Whether the space supports tracking in inline sessions
     boolean supportsTrackingInInline = true;
-    // The bounds coordinates. If null, bounded reference spaces are not supported.
-    Array<FakeXRBoundsPoint>? boundsCoodinates = null;
+    // The bounds coordinates. If null/empty, bounded reference spaces are not supported. If not, must have at least three elements.
+    sequence<FakeXRBoundsPoint> boundsCoodinates;
     // Eye level used for calculating floor-level spaces
     float eyeLevel = 1.5;
-    FakeXRRigidTransformInit? viewerOrigin = null;
-}
+    // {} defaults to an identity transform
+    FakeXRRigidTransformInit viewerOrigin;
+};
 
 interface FakeXRDevice {
   // Sets the values to be used for subsequent
   // requestAnimationFrame() callbacks.
-  void setViews(Array<FakeXRViewInit> views);
+  void setViews(sequence<FakeXRViewInit> views);
 
   // behaves as if device was disconnected
   Promise<void> disconnect();
 
   // Sets the origin of the viewer
-  void setViewerOrigin(FakeXRRigidTransformInit origin, boolean emulatedPosition = false);
+  void setViewerOrigin(FakeXRRigidTransformInit origin, optional boolean emulatedPosition = false);
 
   // Simulates devices focusing and blurring sessions.
   void simulateVisibilityChange(XRVisibilityState);
 
-  void setBoundsGeometry(Array<FakeXRBoundsPoint> boundsCoodinates);
+  void setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoodinates);
   // Sets eye level used for calculating floor-level spaces
   void setEyeLevel(float eyeLevel);
 
@@ -69,15 +70,16 @@ interface FakeXRDevice {
       simulateInputSourceConnection(FakeXRInputSourceInit);
 };
 
-// https://immersive-web.github.io/webxr/#dom-xrwebgllayer-getviewport
+// https://immersive-web.github.io/webxr/#xrview
 dictionary FakeXRViewInit {
   required XREye eye;
   // https://immersive-web.github.io/webxr/#view-projection-matrix
-  required Float32Array projectionMatrix;
-  // https://immersive-web.github.io/webxr/#view-offset
-  required Float32Array viewOffset;
+  required sequence<float> projectionMatrix;
   // https://immersive-web.github.io/webxr/#dom-xrwebgllayer-getviewport
   required FakeXRViewportInit viewport;
+  // https://immersive-web.github.io/webxr/#view-offset
+  // {} defaults to an identity transform
+  FakeXRRigidTransformInit viewOffset;
 };
 
 // https://immersive-web.github.io/webxr/#xrviewport
@@ -97,8 +99,10 @@ dictionary FakeXRBoundsPoint {
 //
 // https://immersive-web.github.io/webxr/#xrrigidtransform
 dictionary FakeXRRigidTransformInit {
-  required Float32Array position;
-  required Float32Array orientation;
+  // must have three elements
+  sequence<float> position;
+  // must have four elements
+  sequence<float> orientation;
 };
 
 interface FakeXRInputSourceInit {
@@ -106,8 +110,10 @@ interface FakeXRInputSourceInit {
   XRTargetRayMode targetRayMode;
   // was the primary action pressed when this was connected?
   bool selectionStarted = false;
-  FakeXRRigidTransformInit? pointerOrigin = null;
-  FakeXRRigidTransformInit? gripOrigin = null;
+  // {} defaults to an identity transform
+  FakeXRRigidTransformInit pointerOrigin;
+  // {} means that there is no gripSpace
+  FakeXRRigidTransformInit gripOrigin;
 };
 
 interface FakeXRInputController {
