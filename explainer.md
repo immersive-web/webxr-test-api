@@ -43,7 +43,8 @@ dictionary FakeXRDeviceInit {
     sequence<FakeXRBoundsPoint> boundsCoodinates;
     // Eye level used for calculating floor-level spaces
     float eyeLevel = 1.5;
-    // {} defaults to an identity transform
+    // native origin of the viewer
+    // defaults to identity
     FakeXRRigidTransformInit viewerOrigin;
 };
 
@@ -78,8 +79,7 @@ dictionary FakeXRViewInit {
   // https://immersive-web.github.io/webxr/#dom-xrwebgllayer-getviewport
   required FakeXRViewportInit viewport;
   // https://immersive-web.github.io/webxr/#view-offset
-  // {} defaults to an identity transform
-  FakeXRRigidTransformInit viewOffset;
+  required FakeXRRigidTransformInit viewOffset;
 };
 
 // https://immersive-web.github.io/webxr/#xrviewport
@@ -100,19 +100,17 @@ dictionary FakeXRBoundsPoint {
 // https://immersive-web.github.io/webxr/#xrrigidtransform
 dictionary FakeXRRigidTransformInit {
   // must have three elements
-  sequence<float> position;
+  required sequence<float> position;
   // must have four elements
-  sequence<float> orientation;
+  required sequence<float> orientation;
 };
 
 interface FakeXRInputSourceInit {
-  XRHandedness handedness;
-  XRTargetRayMode targetRayMode;
+  required XRHandedness handedness;
+  required XRTargetRayMode targetRayMode;
+  required FakeXRRigidTransformInit pointerOrigin;
   // was the primary action pressed when this was connected?
   bool selectionStarted = false;
-  // {} defaults to an identity transform
-  FakeXRRigidTransformInit pointerOrigin;
-  // {} means that there is no gripSpace
   FakeXRRigidTransformInit gripOrigin;
 };
 
