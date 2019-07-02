@@ -84,8 +84,6 @@ dictionary FakeXRViewInit {
 
 // https://immersive-web.github.io/webxr/#xrviewport
 dictionary FakeXRViewportInit {
-    required long x;
-    required long y;
     required long width;
     required long height;
 };
