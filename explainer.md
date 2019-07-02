@@ -58,7 +58,8 @@ interface FakeXRDevice {
   Promise<void> disconnect();
 
   // Sets the origin of the viewer
-  void setViewerOrigin(FakeXRRigidTransformInit origin, optional boolean emulatedPosition = false);
+  // If an origin is not specified, then the device is assumed to not be tracking.
+  void setViewerOrigin(optional FakeXRRigidTransformInit origin, optional boolean emulatedPosition = false);
 
   // Simulates devices focusing and blurring sessions.
   void simulateVisibilityChange(XRVisibilityState);
