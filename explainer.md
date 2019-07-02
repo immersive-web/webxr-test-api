@@ -77,13 +77,14 @@ dictionary FakeXRViewInit {
   // https://immersive-web.github.io/webxr/#view-projection-matrix
   required sequence<float> projectionMatrix;
   // https://immersive-web.github.io/webxr/#dom-xrwebgllayer-getviewport
-  required FakeXRViewportInit viewport;
+  required FakeXRDeviceResolution resolution;
   // https://immersive-web.github.io/webxr/#view-offset
   required FakeXRRigidTransformInit viewOffset;
 };
 
+// This represents the native resolution of the device, but may not reflect the viewport exposed to the page.
 // https://immersive-web.github.io/webxr/#xrviewport
-dictionary FakeXRViewportInit {
+dictionary FakeXRDeviceResolution {
     required long width;
     required long height;
 };
