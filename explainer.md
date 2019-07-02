@@ -44,7 +44,8 @@ dictionary FakeXRDeviceInit {
     // Eye level used for calculating floor-level spaces
     float eyeLevel = 1.5;
     // native origin of the viewer
-    // defaults to identity
+    // If not set, the device is currently assumed to not be tracking, and xrFrame.getViewerPose should
+    // not return a pose.
     FakeXRRigidTransformInit viewerOrigin;
 };
 
@@ -58,6 +59,10 @@ interface FakeXRDevice {
 
   // Sets the origin of the viewer
   void setViewerOrigin(FakeXRRigidTransformInit origin, optional boolean emulatedPosition = false);
+
+  // If an origin is not specified, then the device is assumed to not be tracking, emulatedPosition should
+  // be assumed for cases where the UA must always provide a pose.
+  void clearViewerOrigin()
 
   // Simulates devices focusing and blurring sessions.
   void simulateVisibilityChange(XRVisibilityState);
