@@ -44,7 +44,8 @@ dictionary FakeXRDeviceInit {
     // Eye level used for calculating floor-level spaces
     float eyeLevel = 1.5;
     // native origin of the viewer
-    // defaults to identity
+    // If not set, the device is currently assumed to not be tracking, and xrFrame.getViewerPose should
+    // not return a pose.
     FakeXRRigidTransformInit viewerOrigin;
 };
 
