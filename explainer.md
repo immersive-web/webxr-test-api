@@ -37,8 +37,6 @@ dictionary FakeXRDeviceInit {
     required sequence<FakeXRViewInit> views;
 
     boolean supportsUnbounded = false;
-    // Whether the space supports tracking in inline sessions
-    boolean supportsTrackingInInline = true;
     // The bounds coordinates. If null/empty, bounded reference spaces are not supported. If not, must have at least three elements.
     sequence<FakeXRBoundsPoint> boundsCoodinates;
     // Eye level used for calculating floor-level spaces
