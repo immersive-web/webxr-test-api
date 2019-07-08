@@ -39,7 +39,7 @@ dictionary FakeXRDeviceInit {
     boolean supportsUnbounded = false;
     // The bounds coordinates. If null/empty, bounded reference spaces are not supported. If not, must have at least three elements.
     sequence<FakeXRBoundsPoint> boundsCoodinates;
-    // A transform used to identify the physical position of the user's floor relative to the viewerOrigin.  If not set, indicates that the device cannot identify the physical floor.
+    // A transform used to identify the physical position of the user's floor relative to the viewerOrigin at initialization.  If not set, indicates that the device cannot identify the physical floor.
     FakeXRRigidTransformInit localToFloorLevelTransform;
     // native origin of the viewer
     // If not set, the device is currently assumed to not be tracking, and xrFrame.getViewerPose should
@@ -66,7 +66,7 @@ interface FakeXRDevice {
   void simulateVisibilityChange(XRVisibilityState);
 
   void setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoodinates);
-  // Sets the transform from local (typically eye-level) viewerOrigin to the physical floor.
+  // Sets the transform from local (typically eye-level) viewerOrigin at initialization to the physical floor.
   void setLocalToFloorLevelTransform(FakeXRRigidTransformInit localToFloorTransform);
 
   // Indicates that the device can no longer identify the location of the physical floor.
