@@ -39,8 +39,8 @@ dictionary FakeXRDeviceInit {
     boolean supportsUnbounded = false;
     // The bounds coordinates. If null/empty, bounded reference spaces are not supported. If not, must have at least three elements.
     sequence<FakeXRBoundsPoint> boundsCoodinates;
-    // A transform used to identify the physical position of the user's floor relative to the viewerOrigin at initialization.  If not set, indicates that the device cannot identify the physical floor.
-    FakeXRRigidTransformInit localToFloorLevelTransform;
+    // A transform used to identify the physical position of the user's floor.  If not set, indicates that the device cannot identify the physical floor.
+    FakeXRRigidTransformInit floorOrigin;
     // native origin of the viewer
     // If not set, the device is currently assumed to not be tracking, and xrFrame.getViewerPose should
     // not return a pose.
@@ -66,11 +66,11 @@ interface FakeXRDevice {
   void simulateVisibilityChange(XRVisibilityState);
 
   void setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoodinates);
-  // Sets the transform from local (typically eye-level) viewerOrigin at initialization to the physical floor.
-  void setLocalToFloorLevelTransform(FakeXRRigidTransformInit localToFloorTransform);
+  // Sets the native origin of the physical floor
+  void setFloorOrigin(FakeXRRigidTransformInit localToFloorTransform);
 
   // Indicates that the device can no longer identify the location of the physical floor.
-  void clearLocalToFloorLevelTransform();
+  void clearFloorOrigin();
 
   // Used to simulate a major change in tracking and that a reset pose event should be fired
   // https://immersive-web.github.io/webxr/#event-types
