@@ -72,6 +72,9 @@ interface FakeXRDevice {
   // Indicates that the device can no longer identify the location of the physical floor.
   void clearLocalToFloorLevelTransform();
 
+  // Used to simulate a major change in tracking and that a reset pose event should be fired
+  // https://immersive-web.github.io/webxr/#event-types
+  void simulateResetPose();
 
   Promise<FakeXRInputController>
       simulateInputSourceConnection(FakeXRInputSourceInit);
