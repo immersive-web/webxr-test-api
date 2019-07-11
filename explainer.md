@@ -114,8 +114,8 @@ dictionary FakeXRRigidTransformInit {
 };
 ```
 
-For many UAs input is sent on a per-frame basis, therefore input events are not guaranteed to fire and the FakeXRInputController is not guaranteed
-to be present in session.inputSources until after one animation frame.
+For many UAs input is sent on a per-frame basis, therefore input events are not guaranteed to fire and the FakeXRInputController
+is not guaranteed to be present in session.inputSources until after one animation frame.
 
 ``` WebIDL
 interface FakeXRInputSourceInit {
