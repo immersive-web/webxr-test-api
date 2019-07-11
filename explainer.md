@@ -76,8 +76,8 @@ interface FakeXRDevice {
   // https://immersive-web.github.io/webxr/#event-types
   void simulateResetPose();
 
-  Promise<FakeXRInputController>
-      simulateInputSourceConnection(FakeXRInputSourceInit);
+  // Used to connect and send input events
+  FakeXRInputController simulateInputSourceConnection(FakeXRInputSourceInit);
 };
 
 // https://immersive-web.github.io/webxr/#xrview
@@ -112,33 +112,58 @@ dictionary FakeXRRigidTransformInit {
   // must have four elements
   required sequence<float> orientation;
 };
+```
 
+For many UAs input is sent on a per-frame basis, therefore input events are not guaranteed to fire and the FakeXRInputController is not guaranteed
+to be present in session.inputSources until after one animation frame.
+
+``` WebIDL
 interface FakeXRInputSourceInit {
   required XRHandedness handedness;
   required XRTargetRayMode targetRayMode;
   required FakeXRRigidTransformInit pointerOrigin;
+  required sequence<DOMString> profiles;
   // was the primary action pressed when this was connected?
   bool selectionStarted = false;
+  // should this input source send a select immediately upon connection?
+  bool selectionClicked = false;
+  // If not set the controller is assumed to not be tracked.
   FakeXRRigidTransformInit gripOrigin;
 };
 
 interface FakeXRInputController {
-  void setOrigins(
-    boolean emulatedPosition,
-    FakeXRRigidTransformInit pointerOrigin,
-    FakeXRRigidTransformInit? gripOrigin);
+
+  // Indicates that the handedness of the device has changed.
+  void setHandedness(XRHandedness handedness);
+
+  // Indicates that the target ray mode of the device has changed.
+  void setTargetRayMode(XRTargetRayMode targetRayMode);
+
+  // Indicates that the list of profiles representing the device has changed.
+  void setProfiles(sequence<DOMString> profiles);
+
+  // Sets or clears the position of the controller.  If not set, the controller is assumed to
+  // not be tracked.
+  void setGripOrigin(FakeXRRigidTransformInit gripOrigin, optional boolean emulatedPosition = false);
+  void clearGripOrigin();
+
+  // Sets the pointer origin for the controller.
+  void setPointerOrigin(FakeXRRigidTransformInit pointerOrigin, optional boolean emulatedPosition = false);
 
   // Temporarily disconnect the input device
-  Promise<void> disconnect();
+  void disconnect();
 
   // Reconnect a disconnected input device
-  Promise<void> reconnect();
+  void reconnect();
 
-  // Start a selection for the current frame with the given button index
+  // Start a selection for the current frame with the primary input
   void startSelection();
 
-  // End selection for the current frame with the given button index
+  // End selection for the current frame with the primary input
   void endSelection();
+
+  // Simulates a start/endSelection for the current frame with the primary input
+  void simulateSelect();
 };
 ```
 
