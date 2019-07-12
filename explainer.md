@@ -67,7 +67,7 @@ interface FakeXRDevice {
 
   void setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoodinates);
   // Sets the native origin of the physical floor
-  void setFloorOrigin(FakeXRRigidTransformInit localToFloorTransform);
+  void setFloorOrigin(FakeXRRigidTransformInit floorOrigin);
 
   // Indicates that the device can no longer identify the location of the physical floor.
   void clearFloorOrigin();
