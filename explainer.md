@@ -44,6 +44,9 @@ dictionary FakeXRDeviceInit {
     // native origin of the viewer
     // If not set, the device is currently assumed to not be tracking, and xrFrame.getViewerPose should
     // not return a pose.
+    //
+    // This sets the viewer origin *shortly after* initialization; since the viewer origin at initialization
+    // is used to provide a reference origin for all matrices.
     FakeXRRigidTransformInit viewerOrigin;
 };
 
@@ -88,6 +91,8 @@ dictionary FakeXRViewInit {
   // https://immersive-web.github.io/webxr/#dom-xrwebgllayer-getviewport
   required FakeXRDeviceResolution resolution;
   // https://immersive-web.github.io/webxr/#view-offset
+  // This is the origin of the view in the viewer space. In other words, this is
+  // a transform from the view space to the viewer space.
   required FakeXRRigidTransformInit viewOffset;
 };
 
@@ -102,9 +107,7 @@ dictionary FakeXRBoundsPoint {
   double x; double z;
 };
 
-// When used as a native origin, it is in the reference space
-// where the viewer's native origin is identity at initialization
-//
+
 // https://immersive-web.github.io/webxr/#xrrigidtransform
 dictionary FakeXRRigidTransformInit {
   // must have three elements
@@ -113,6 +116,9 @@ dictionary FakeXRRigidTransformInit {
   required sequence<float> orientation;
 };
 ```
+
+
+The WebXR API never exposes native origins directly, instead exposing transforms between them, so we need to specify a base reference space for XRRigidTransformInit so that we can have consistent numerical values across implementations. When used as an origin, XRRigidTransformInits are in the base reference space where the viewer's native origin is identity at initialization, unless otherwise specified. In this space, the `local` reference space has a native origin of identity. This is an arbitrary choice: changing this reference space doesn't affect the data returned by the WebXR API, but we must make such a choice so that the tests produce the same results across different UAs. When used as an origin it is logically a transform _from_ the origin's space _to_ the underlying base reference space described above.
 
 For many UAs input is sent on a per-frame basis, therefore input events are not guaranteed to fire and the FakeXRInputController
 is not guaranteed to be present in session.inputSources until after one animation frame.
