@@ -101,10 +101,14 @@ dictionary FakeXRDeviceResolution {
 dictionary FakeXRBoundsPoint {
   double x; double z;
 };
+```
 
-// When used as a native origin, it is in the reference space
-// where the viewer's native origin is identity at initialization
-//
+When a FakeXRRigidTransform is used as an origin, it is relative to that object's native origin.
+This object's native origin should be assumed to be identity at it's initialization.
+Any transforms applied to that object (whether via setters or inits), are applied *after* that object's initialization.
+This means that the transform also fundamentally represents the transform from that object in it's reference space to the native space.
+
+```WebIDL
 // https://immersive-web.github.io/webxr/#xrrigidtransform
 dictionary FakeXRRigidTransformInit {
   // must have three elements
