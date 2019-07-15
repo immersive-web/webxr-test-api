@@ -124,7 +124,7 @@ For many UAs input is sent on a per-frame basis, therefore input events are not 
 is not guaranteed to be present in session.inputSources until after one animation frame.
 
 ``` WebIDL
-interface FakeXRInputSourceInit {
+dictionary FakeXRInputSourceInit {
   required XRHandedness handedness;
   required XRTargetRayMode targetRayMode;
   required FakeXRRigidTransformInit pointerOrigin;
@@ -133,6 +133,9 @@ interface FakeXRInputSourceInit {
   bool selectionStarted = false;
   // should this input source send a select immediately upon connection?
   bool selectionClicked = false;
+  // Initial button state for any buttons beyond the primary that are supported.
+  // If empty, only the primary button is supported.
+  sequence<FakeXRButtonStateInit> supportedButtons;
   // If not set the controller is assumed to not be tracked.
   FakeXRRigidTransformInit gripOrigin;
 };
@@ -163,13 +166,49 @@ interface FakeXRInputController {
   void reconnect();
 
   // Start a selection for the current frame with the primary input
+  // If a gamepad is supported, should update the state of the primary button accordingly.
   void startSelection();
 
   // End selection for the current frame with the primary input
+  // If a gamepad is supported, should update the state of the primary button accordingly.
   void endSelection();
 
   // Simulates a start/endSelection for the current frame with the primary input
+  // If a gamepad is supported, should update the state of the primary button accordingly.
   void simulateSelect();
+
+  // Updates the set of supported buttons, including any initial state.
+  // Note that this method should not be generally used to update the state of the
+  // buttons, as the UA may treat this as re-creating the Gamepad.
+  void setSupportedButtons(sequence<FakeXRButtonStateInit> supportedButtons);
+
+  // Used to update the state of a button currently supported by the input source
+  // Will not add support for that button if it is not currently supported.
+  void updateButtonState(FakeXRButtonStateInit buttonState);
+};
+
+// Bcause the primary button is always guaranteed to be present, and other buttons
+// should fulfill the role of validating any state from FakeXRButtonStateInit
+// the primary button is not present in this enum.
+enum FakeXRButtonType {
+  "grip",
+  "touchpad",
+  "thumbstick",
+  // Represents a button whose position is not specified by the xr-standard mapping
+  "optional-button",
+  // Represents a thumbstick whose position is not specified by the xr-standard mapping.
+  "optional-thumbstick"
+};
+
+// Used to update the state of optionally supported buttons.
+dictionary FakeXRButtonStateInit {
+  required FakeXRButtonType buttonType,
+  required boolean pressed,
+  required boolean touched,
+  required float pressedValue,
+  // x and y value are ignored if the FakeXRButtonType is not touchpad, thumbstick, or optional-thumbstick
+  float xValue = 0.0,
+  float yValue = 0.0
 };
 ```
 
