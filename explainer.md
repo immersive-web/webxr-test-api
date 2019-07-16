@@ -135,6 +135,7 @@ dictionary FakeXRInputSourceInit {
   bool selectionClicked = false;
   // Initial button state for any buttons beyond the primary that are supported.
   // If empty, only the primary button is supported.
+  // Note that if any FakeXRButtonType is repeated the behavior is undefined.
   sequence<FakeXRButtonStateInit> supportedButtons;
   // If not set the controller is assumed to not be tracked.
   FakeXRRigidTransformInit gripOrigin;
@@ -180,6 +181,7 @@ interface FakeXRInputController {
   // Updates the set of supported buttons, including any initial state.
   // Note that this method should not be generally used to update the state of the
   // buttons, as the UA may treat this as re-creating the Gamepad.
+  // Note that if any FakeXRButtonType is repeated the behavior is undefined.
   void setSupportedButtons(sequence<FakeXRButtonStateInit> supportedButtons);
 
   // Used to update the state of a button currently supported by the input source
@@ -194,9 +196,11 @@ enum FakeXRButtonType {
   "grip",
   "touchpad",
   "thumbstick",
-  // Represents a button whose position is not specified by the xr-standard mapping
+  // Represents a button whose position is not specified by the xr-standard mapping.
+  // Should appear at one past the last reserved button index.
   "optional-button",
   // Represents a thumbstick whose position is not specified by the xr-standard mapping.
+  // Should appear at two past the last reserved button index.
   "optional-thumbstick"
 };
 
