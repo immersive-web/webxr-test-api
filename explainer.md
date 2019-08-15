@@ -36,11 +36,14 @@ dictionary FakeXRDeviceInit {
     required boolean supportsImmersive;
     required sequence<FakeXRViewInit> views;
 
-    boolean supportsUnbounded = false;
-    // The bounds coordinates. If null/empty, bounded reference spaces are not supported. If not, must have at least three elements.
+    // The bounds coordinates. If empty, no bounded reference space is currently tracked.
+    // If not, must have at least three elements.
     sequence<FakeXRBoundsPoint> boundsCoodinates;
-    // A transform used to identify the physical position of the user's floor.  If not set, indicates that the device cannot identify the physical floor.
+
+    // A transform used to identify the physical position of the user's floor.
+    // If not set, indicates that the device cannot identify the physical floor.
     FakeXRRigidTransformInit floorOrigin;
+
     // native origin of the viewer
     // If not set, the device is currently assumed to not be tracking, and xrFrame.getViewerPose should
     // not return a pose.
@@ -48,6 +51,14 @@ dictionary FakeXRDeviceInit {
     // This sets the viewer origin *shortly after* initialization; since the viewer origin at initialization
     // is used to provide a reference origin for all matrices.
     FakeXRRigidTransformInit viewerOrigin;
+
+    // https://immersive-web.github.io/webxr/#feature-name
+    // The list of feature names that this device supports.
+    // Any requests for features not in this list should be rejected, with the exception of those
+    // that are guaranteed regardless of device availability (e.g. 'viewer').
+    // NOTE: This is meant to emulate hardware support, not whether a feature is
+    // currently available (e.g. bounds not being tracked per above)
+    sequence<DOMString> supportedFeatures;
 };
 
 interface FakeXRDevice {
