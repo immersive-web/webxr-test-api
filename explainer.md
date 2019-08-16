@@ -40,9 +40,10 @@ dictionary FakeXRDeviceInit {
     // The list of feature names that this device supports.
     // Any requests for features not in this list should be rejected, with the exception of those
     // that are guaranteed regardless of device availability (e.g. 'viewer').
+    // If not specified/empty, the device supports no features.
     // NOTE: This is meant to emulate hardware support, not whether a feature is
     // currently available (e.g. bounds not being tracked per below)
-    required sequence<DOMString> supportedFeatures;
+    sequence<DOMString> supportedFeatures;
 
     // The bounds coordinates. If empty, no bounded reference space is currently tracked.
     // If not, must have at least three elements.
