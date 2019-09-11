@@ -106,6 +106,20 @@ dictionary FakeXRViewInit {
   // This is the origin of the view in the viewer space. In other words, this is
   // a transform from the view space to the viewer space.
   required FakeXRRigidTransformInit viewOffset;
+  // This is an optional means of specifying a decomposed form of the projection
+  // matrix.  If specified, the projectionMatrix should be ignored.
+  // Any test that wishes to test clip planes or similar features that would require
+  // decomposing/recomposing the projectionMatrix should use this instead of
+  // the projection matrix.
+  FakeXRFieldOfViewInit fieldOfView;
+};
+
+// A set of 4 angles which describe the view from a center point, units are degrees.
+dictionary FakeXRFieldOfViewInit {
+  required float upDegrees;
+  required float downDegrees;
+  required float leftDegrees;
+  required float rightDegrees;
 };
 
 // This represents the native resolution of the device, but may not reflect the viewport exposed to the page.
