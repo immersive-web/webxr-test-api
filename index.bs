@@ -1,0 +1,271 @@
+<pre class="metadata">
+Shortname: webxr-test
+Title: WebXR Test API
+Group: immersivewebwg
+Status: ED
+ED: https://immersive-web.github.io/webxr-test-api/
+Repository: immersive-web/webxr-test-api
+Level: 1
+
+Editor: Manish Goregaokar, Mozilla http://mozilla.org/, manish@mozilla.com
+Editor: Alex Cooper, Google http://google.com/, alcooper@google.com
+
+Abstract: The WebXR Test API module provides a mocking interface for <a href="https://github.com/web-platform-tests/">Web Platform Tests</a> to be able to test the <a href="https://www.w3.org/TR/webxr/">WebXR Device API</a>.
+
+Warning: custom
+Custom Warning Title: Testing-only API
+Custom Warning Text:
+  <b>The API represented in this document is for testing only and should not be exposed to users.</b>
+
+</pre>
+<pre class="link-defaults">
+spec:infra;
+    type:dfn; text:string
+</pre>
+
+<pre class="anchors">
+spec: WebXR Device API - Level 1; urlPrefix: https://www.w3.org/TR/webxr/#
+    type: interface; text: XR; url: xr-interface
+    type: interface; text: XREye; url: xreye-interface
+    type: interface; text: XRVisibilityState; url: xrvisibiitystate-interface
+    type: interface; text: XRTargetRayMode; url: xrtargetraymode-interface
+    type: interface; text: XREye; url: xreye-interface
+    type: interface; text: XRHandedness; url: xrhandedness-interface
+
+</pre>
+
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+
+<style>
+<style>
+  .unstable::before {
+    content: "This section is not stable";
+    display: block;
+    font-weight: bold;
+    text-align: right;
+    color: red;
+  }
+  .unstable {
+    border: thin solid pink;
+    border-radius: .5em;
+    padding: .5em;
+    margin: .5em calc(-0.5em - 1px);
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='290'><text transform='rotate(-45)' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='70' y='210' opacity='.1'>Unstable</text></svg>");
+    background-repeat: repeat;
+    background-color: #FFF4F4;
+  }
+  .unstable h3:first-of-type {
+    margin-top: 0.5rem;
+  }
+
+  .unstable.example:not(.no-marker)::before {
+    content: "Example " counter(example) " (Unstable)";
+    float: none;
+  }
+
+  .non-normative::before {
+    content: "This section is non-normative.";
+    font-style: italic;
+  }
+  .tg {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  .tg th {
+    border-style: solid;
+    border-width: 1px;
+    background: #90b8de;
+    color: #fff;
+    font-family: sans-serif;
+    font-weight: bold;
+    border-color: grey;
+  }
+  .tg td {
+    padding: 4px 5px;
+    background-color: rgb(221, 238, 255);
+    font-family: monospace;
+    border-style: solid;
+    border-width: 1px;
+    border-color: grey;
+    overflow: hidden;
+    word-break: normal;
+  }
+</style>
+
+
+Introduction {#intro}
+============
+
+<section class="non-normative">
+
+In order to allow <a href="https://web-platform-tests.org/">Web Platform Tests</a> for WebXR there are some basic functions which are common across all tests, such as adding a fake test device and specifying poses. Below is an API which attempts to capture the necessary functions, based off what was defined in the spec. Different browser vendors can implement this API in whatever way is most compatible with their browser. For example, some browsers may back the interface with a WebDriver API while others may use HTTP or IPC mechanisms to communicate with an out of process fake backend. 
+
+
+These initialization object and control interfaces do not represent a complete set of WebXR functionality, and are expected to be expanded on as the WebXR spec grows.
+
+</section>
+
+
+Conformance {#conformance}
+============
+
+Interfaces and functionality exposed by this specification SHOULD NOT be exposed to typical browsing experiences, and instead SHOULD only be used when running <a href="https://web-platform-tests.org/">Web Platform Tests</a>.
+
+Initialization {#initialization}
+==============
+
+navigator.xr.test {#xr-test-attribute}
+------------
+
+
+<pre class="idl">
+partial interface XR {
+    [SameObject] readonly attribute XRTest test;
+};
+</pre>
+
+The <dfn attribute for="XR">test</dfn> attribute's getter MUST return the {{XRTest}} object that is associated with it. This object MAY be lazily created.
+
+
+XRTest {#xrtest-interface}
+------------
+
+<pre class="idl">
+interface XRTest {
+  Promise&lt;FakeXRDevice> simulateDeviceConnection(FakeXRDeviceInit init);
+  void simulateUserActivation(Function f);
+  Promise&lt;void> disconnectAllDevices();
+};
+</pre>
+
+
+
+
+FakeXRDeviceInit {#fakexrdeviceinit-dict}
+------------
+
+<pre class="idl">
+dictionary FakeXRDeviceInit {
+    required boolean supportsImmersive;
+    required sequence&lt;FakeXRViewInit> views;
+
+    sequence&lt;DOMString> supportedFeatures;
+    sequence&lt;FakeXRBoundsPoint> boundsCoodinates;
+    FakeXRRigidTransformInit floorOrigin;
+    FakeXRRigidTransformInit viewerOrigin;
+};
+
+
+dictionary FakeXRViewInit {
+  required XREye eye;
+  required sequence&lt;float> projectionMatrix;
+  required FakeXRDeviceResolution resolution;
+  required FakeXRRigidTransformInit viewOffset;
+  FakeXRFieldOfViewInit fieldOfView;
+};
+
+dictionary FakeXRFieldOfViewInit {
+  required float upDegrees;
+  required float downDegrees;
+  required float leftDegrees;
+  required float rightDegrees;
+};
+
+dictionary FakeXRDeviceResolution {
+    required long width;
+    required long height;
+};
+
+dictionary FakeXRBoundsPoint {
+  double x; double z;
+};
+
+
+dictionary FakeXRRigidTransformInit {
+  required sequence&lt;float> position;
+  required sequence&lt;float> orientation;
+};
+
+</pre>
+
+Mocking {#mocking}
+==============
+
+FakeXRDevice {#fakexrdevice-interface}
+------------
+
+<pre class="idl">
+interface FakeXRDevice {
+  void setViews(sequence&lt;FakeXRViewInit> views);
+
+  Promise&lt;void> disconnect();
+
+  void setViewerOrigin(FakeXRRigidTransformInit origin, optional boolean emulatedPosition = false);
+  void clearViewerOrigin();
+
+  void simulateVisibilityChange(XRVisibilityState state);
+
+  void setBoundsGeometry(sequence&lt;FakeXRBoundsPoint> boundsCoodinates);
+  void setFloorOrigin(FakeXRRigidTransformInit floorOrigin);
+  void clearFloorOrigin();
+
+  void simulateResetPose();
+  FakeXRInputController simulateInputSourceConnection(FakeXRInputSourceInit init);
+};
+
+</pre>
+
+
+FakeXRInputController {#fakexrinputcontroller-init}
+------------
+
+<pre class="idl">
+dictionary FakeXRInputSourceInit {
+  required XRHandedness handedness;
+  required XRTargetRayMode targetRayMode;
+  required FakeXRRigidTransformInit pointerOrigin;
+  required sequence&lt;DOMString> profiles;
+  boolean selectionStarted = false;
+  boolean selectionClicked = false;
+  sequence&lt;FakeXRButtonStateInit> supportedButtons;
+  FakeXRRigidTransformInit gripOrigin;
+};
+
+interface FakeXRInputController {
+  void setHandedness(XRHandedness handedness);
+  void setTargetRayMode(XRTargetRayMode targetRayMode);
+  void setProfiles(sequence&lt;DOMString> profiles);
+  void setGripOrigin(FakeXRRigidTransformInit gripOrigin, optional boolean emulatedPosition = false);
+  void clearGripOrigin();
+  void setPointerOrigin(FakeXRRigidTransformInit pointerOrigin, optional boolean emulatedPosition = false);
+
+  void disconnect();
+  void reconnect();
+
+  void startSelection();
+  void endSelection();
+  void simulateSelect();
+
+  void setSupportedButtons(sequence&lt;FakeXRButtonStateInit> supportedButtons);
+  void updateButtonState(FakeXRButtonStateInit buttonState);
+};
+
+enum FakeXRButtonType {
+  "grip",
+  "touchpad",
+  "thumbstick",
+  "optional-button",
+  "optional-thumbstick"
+};
+
+dictionary FakeXRButtonStateInit {
+  required FakeXRButtonType buttonType;
+  required boolean pressed;
+  required boolean touched;
+  required float pressedValue;
+  float xValue = 0.0;
+  float yValue = 0.0;
+};
+</pre>
+
