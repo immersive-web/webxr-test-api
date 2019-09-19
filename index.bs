@@ -25,7 +25,7 @@ spec:infra;
 </pre>
 
 <pre class="anchors">
-spec: WebXR Device API - Level 1; urlPrefix: https://www.w3.org/TR/webxr/#
+spec: WebXR Device API - Level 1; urlPrefix: https://immersive-web.github.io/webxr/#
     type: interface; text: XR; url: xr-interface
     type: interface; text: XREye; url: xreye-interface
     type: interface; text: XRSession; url: xrsession-interface
@@ -152,23 +152,23 @@ Interfaces and functionality exposed by this specification SHOULD NOT be exposed
 Simulated devices {#simulated-devices}
 ============
 
-This API gives tests the ability to spin up a <dfn>simulated XR device</dfn> which is an [=/XR device=] which from the point of view of the WebXR API behaves like a normal [=/XR device=]. These [=simulated XR devices|simulated XR device=] can be controlled by the associated {{FakeXRDevice}} object.
+This API gives tests the ability to spin up a <dfn>simulated XR device</dfn> which is an [=/XR device=] which from the point of view of the WebXR API behaves like a normal [=/XR device=]. These [=simulated XR device|simulated XR devices=] can be controlled by the associated {{FakeXRDevice}} object.
 
-Every [=simulated XR device=] may have an <dfn for="simulated XR device">native bounds geometry</dfn> which is an array of {{DOMPointReadOnly}}s, used to initialize the [=XRBoundedReferenceSpace/native bounds geometry=] of any {{XRBoundedReferenceSpace}}s created for the device.
+Every [=simulated XR device=] may have an <dfn for="simulated XR device">native bounds geometry</dfn> which is an array of {{DOMPointReadOnly}}s, used to initialize the [=XRBoundedReferenceSpace/native bounds geometry=] of any {{XRBoundedReferenceSpace}}s created for the device. If <code>null</code>, the device is treated as if it is not currently tracking a bounded reference space.
 
-Every [=simulated XR device=] may have an <dfn for="simulated XR device">floor origin</dfn> which is an {{XRRigidTransform}} used to note the position of the physical floor. If <code>null</code>, the device is treated as if it is unable to identify the physical floor.
+Every [=simulated XR device=] may have a <dfn for="simulated XR device">floor origin</dfn> which is an {{XRRigidTransform}} used to note the position of the physical floor. If <code>null</code>, the device is treated as if it is unable to identify the physical floor.
 
 Every [=simulated XR device=] may have an <dfn for="simulated XR device">viewer origin</dfn> which is an {{XRRigidTransform}} used to set the position and orientation of the [=viewer=]. If <code>null</code>, the device is treated as if it has lost tracking.
 
-Every [=simulated XR device=] may have an <dfn for="simulated XR device">emulated position boolean</dfn> which is a boolean used to set the {{XRPose/emulatedPosition}} of any {{XRPose}}s produced involving the [=viewer=]. This is initially <code>false</code>.
+Every [=simulated XR device=] has an <dfn for="simulated XR device">emulated position boolean</dfn> which is a boolean used to set the {{XRPose/emulatedPosition}} of any {{XRPose}}s produced involving the [=viewer=]. This is initially <code>false</code>.
 
-Every [=simulated XR device=] may have an <dfn for="simulated XR device">visibility state</dfn> which is an {{XRVisibilityState}} used to set the {{XRSession/visibilityState}} of any {{XRSession}}s associated with the [=simulated XR device=] . This is initially {{XRVisibilityState/"visible"}}. When it is changed, the associated changes must be reflected on the {{XRSession}}, including triggering {{XRSession/onvisibilitychange}} events if necessary.
+Every [=simulated XR device=] has an <dfn for="simulated XR device">visibility state</dfn> which is an {{XRVisibilityState}} used to set the {{XRSession/visibilityState}} of any {{XRSession}}s associated with the [=simulated XR device=] . This is initially {{XRVisibilityState/"visible"}}. When it is changed, the associated changes must be reflected on the {{XRSession}}, including triggering {{XRSession/onvisibilitychange}} events if necessary.
 
 Every [=view=] for a [=simulated XR device=] has an associated <dfn for=view>device resolution</dfn>, which is an instance of {{FakeXRDeviceResolution}}. This resolution must be used when constructing {{XRViewport}} values for the [=view=], based on the canvas size.
 
 Every [=view=] for a [=simulated XR device=] may have an associated <dfn for=view>field of view</dfn>, which is an instance of {{FakeXRFieldOfViewInit}} used to calculate projection matrices using depth values. If the [=field of view=] is set, projection matrix values are calculated using the [=field of view=] and {{XRRenderState/depthNear}} and {{XRRenderState/depthFar}} values.
 
-The WebXR API never exposes native origins directly, instead exposing transforms between them, so we need to specify a base reference space for {{FakeXRRigidTransformInit}}s so that we can have consistent numerical values across implementations. When used as an origin, {{FakeXRRigidTransformInit}}s are in the base reference space where the [=viewer=]'s [=native origin=] is identity at initialization, unless otherwise specified. In this space, the {{XRReferenceSpaceType/"local"}} reference space has a [=native origin=] of identity. This is an arbitrary choice: changing this reference space doesn't affect the data returned by the WebXR API, but we must make such a choice so that the tests produce the same results across different UAs. When used as an origin it is logically a transform _from_ the origin's space _to_ the underlying base reference space described above.
+The WebXR API never exposes native origins directly, instead exposing transforms between them, so we need to specify a base reference space for {{FakeXRRigidTransformInit}}s so that we can have consistent numerical values across implementations. When used as an origin, {{FakeXRRigidTransformInit}}s are in the base reference space where the [=viewer=]'s [=native origin=] is identity at initialization, unless otherwise specified. In this space, the {{XRReferenceSpaceType/"local"}} reference space has a [=native origin=] of identity. This is an arbitrary choice: changing this reference space doesn't affect the data returned by the WebXR API, but we must make such a choice so that the tests produce the same results across different UAs. When used as an origin it is logically a transform <i>from</i> the origin's space <i>to</i> the underlying base reference space described above.
 
 
 Initialization {#initialization}
@@ -201,7 +201,7 @@ interface XRTest {
 </pre>
 
 <div class="algorithm" data-algorithm="simulate-device-connection">
-The <dfn method for="XRSession">simulateDeviceConnection(|init|)</dfn> method creates a new [=simulated XR device=].
+The <dfn method for="XRTest">simulateDeviceConnection(|init|)</dfn> method creates a new [=simulated XR device=].
 
 When this method is invoked, the user agent MUST run the following steps:
 
@@ -216,7 +216,7 @@ When this method is invoked, the user agent MUST run the following steps:
     1. If |init|'s {{FakeXRDeviceInit/boundsCoordinates}} is set, perform the following steps:
         1. If |init|'s {{FakeXRDeviceInit/boundsCoordinates}} has less than 3 elements, reject |promise| with {{TypeError}} and abort these steps.
         1. Set |device|'s [=simulated XR device/native bounds geometry=] to |init|'s {{FakeXRDeviceInit/boundsCoordinates}}.
-    1. If |init|'s {{FakeXRDeviceInit/floorOrigin}} is set, , set |device|'s [=simulated XR device/floor origin=] to |init|'s {{FakeXRDeviceInit/floorOrigin}}.
+    1. If |init|'s {{FakeXRDeviceInit/floorOrigin}} is set, set |device|'s [=simulated XR device/floor origin=] to |init|'s {{FakeXRDeviceInit/floorOrigin}}.
     1. If |init|'s {{FakeXRDeviceInit/viewerOrigin}} is set, set |device|'s [=simulated XR device/viewer origin=] to |init|'s {{FakeXRDeviceInit/viewerOrigin}}.
     1. Register |device| based on the following:
         <dl class="switch">
@@ -237,7 +237,7 @@ When this method is invoked, the user agent MUST run the following steps:
 When <dfn method for=XRTest>simulateUserActivation(f)</dfn> is called, invoke <code>f</code> as if it was [=triggered by user activation=].
 
 
-When <dfn method for=XRTest>disconnectAllDevices()</dfn> is called, remove all [=simulated XR devices=] from the [=context object=]'s {{XR}} object's [=list of immersive XR devices=] as if they were disconnected.
+When <dfn method for=XRTest>disconnectAllDevices()</dfn> is called, remove all [=simulated XR devices=] from the [=context object=]'s {{XR}} object's [=list of immersive XR devices=] as if they were disconnected. If the [=inline XR device=] is a [=simulated XR device=], reset it to the default [=inline XR device=].
 
 
 FakeXRDeviceInit {#fakexrdeviceinit-dict}
@@ -248,12 +248,11 @@ dictionary FakeXRDeviceInit {
     required boolean supportsImmersive;
     required sequence&lt;FakeXRViewInit> views;
 
-    sequence&lt;DOMString> supportedFeatures;
+    sequence&lt;any> supportedFeatures;
     sequence&lt;FakeXRBoundsPoint> boundsCoordinates;
     FakeXRRigidTransformInit floorOrigin;
     FakeXRRigidTransformInit viewerOrigin;
 };
-
 
 dictionary FakeXRViewInit {
   required XREye eye;
@@ -278,7 +277,6 @@ dictionary FakeXRDeviceResolution {
 dictionary FakeXRBoundsPoint {
   double x; double z;
 };
-
 
 dictionary FakeXRRigidTransformInit {
   required sequence&lt;float> position;
@@ -313,7 +311,7 @@ To <dfn>parse a view</dfn> given a {{FakeXRViewInit}} |init|, perform the follow
   1. Set |view|'s [=view/device resolution=] to |init|'s {{FakeXRViewInit/resolution}}.
   1. If |init|'s {{FakeXRViewInit/fieldOfView}} is set, perform the following steps:
     1. Set |view|'s [=view/field of view=] to |init|'s {{FakeXRViewInit/fieldOfView}}.
-    1. Set |view|'s [=view/projection matrix=] to the projection matrix corresponding to this field of view, and the initial depth values of <code>near=0.1, far=1000.0</code>.
+    1. Set |view|'s [=view/projection matrix=] to the projection matrix corresponding to this field of view, and depth values equal to {{XRRenderState/depthNear}} and {{XRRenderState/depthFar}} of any {{XRSession}} associated with the device. If there currently is none, use the default values of <code>near=0.1, far=1000.0</code>.
   1. Set |view|'s [=view/projection matrix=] to |init|'s {{FakeXRViewInit/projectionMatrix}}.
   1. Return |view|.
 
@@ -333,7 +331,7 @@ interface FakeXRDevice {
 
   void setViewerOrigin(FakeXRRigidTransformInit origin, optional boolean emulatedPosition = false);
   void clearViewerOrigin();
-  void setFloorOrigin(FakeXRRigidTransformInit floorOrigin);
+  void setFloorOrigin(FakeXRRigidTransformInit origin);
   void clearFloorOrigin();
   void setBoundsGeometry(sequence&lt;FakeXRBoundsPoint> boundsCoordinates);
   void simulateResetPose();
@@ -374,23 +372,32 @@ NOTE: The reason we defer an extra frame when there are pending animation frame 
 <div class="algorithm" data-algorithm="set-views">
 The <dfn method for=FakeXRDevice>setViews(|views|)</dfn> method performs the following steps:
 
-    1. Let |l| be an empty [=list=].
-    1. For each |view| in |views|:
-        1. Let |v| be the result of running [=parse a view=] on |view|.
-        1. [=list/Append=] |v| to |l|.
-    1. On the [=next animation frame=], set [=FakeXRDevice/device=]'s list of views to |l|.
+    1. On the [=next animation frame=], run the following steps:
+        1. Let |l| be an empty [=list=].
+        1. For each |view| in |views|:
+            1. Let |v| be the result of running [=parse a view=] on |view|.
+            1. [=list/Append=] |v| to |l|.
+        1. Set [=FakeXRDevice/device=]'s list of views to |l|.
 
 </div>
 
 
-When <dfn method for=FakeXRDevice>disconnect()</dfn> method is called, remove [=FakeXRDevice/device=] from the [=context object=]'s {{XR}} object's [=list of immersive XR devices=] as if it were disconnected.
+<div class="algorithm" data-algorithm="disconnect">
 
+When <dfn method for=FakeXRDevice>disconnect()</dfn> method is called, perform the following steps:
+
+
+    1. Remove [=FakeXRDevice/device=] from the [=context object=]'s {{XR}} object's [=list of immersive XR devices=] as if it were disconnected. 
+    1. If the [=inline XR device=] is equal to the {{FakeXRDevice}}, reset it to the default [=inline XR device=].
+
+</dfn>
 <div class="algorithm" data-algorithm="set-viewer-origin">
 The <dfn method for=FakeXRDevice>setViewerOrigin(|origin|, |emulatedPosition|)</dfn> performs the following steps:
 
     1. Let |o| be the result of running [=parse a rigid transform=] on |origin|.
-    1. On the [=next animation frame=], set [=FakeXRDevice/device=]'s [=simulated XR device/viewer origin=] to |o|.
-    1. On the [=next animation frame=], set [=FakeXRDevice/device=]'s [=simulated XR device/emulated position boolean=] to |emulatedPosition|.
+    1. On the [=next animation frame=], perform the following steps:
+        1. Set [=FakeXRDevice/device=]'s [=simulated XR device/viewer origin=] to |o|.
+        1. Set [=FakeXRDevice/device=]'s [=simulated XR device/emulated position boolean=] to |emulatedPosition|.
 
 </div>
 
@@ -420,7 +427,7 @@ The <dfn method for=FakeXRDevice>setBoundsGeometry(|boundsCoordinates|)</dfn> pe
 
 </div>
 
-The <dfn method for=FakeXRDevice>simulateResetEvent()</dfn> method will, as soon as possible, behave as if the [=FakeXRDevice/device=]'s [=viewer=]'s [=native origin=] had a discontinuity, triggering appropriate {{reset}} events.
+The <dfn method for=FakeXRDevice>simulateResetPose()</dfn> method will, as soon as possible, behave as if the [=FakeXRDevice/device=]'s [=viewer=]'s [=native origin=] had a discontinuity, triggering appropriate {{reset}} events.
 
 
 FakeXRInputController {#fakexrinputcontroller-init}
