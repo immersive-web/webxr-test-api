@@ -22,51 +22,26 @@ Custom Warning Text:
 spec:infra;
     type:dfn; text:string
     type:dfn; text:list
+    type:dfn; for:list; text:extend
+spec:webxr-1;
+    type:event; text:reset
+    type:dfn; text:xr device
+    type:dfn; for: XRBoundedReferenceSpace; text:native bounds geometry
+    type:dfn; text:native origin
+    type:dfn; text:viewer
+    type:dfn; text:view
+    type:dfn; text:view offset
+    type:dfn; for:view; text:eye
+    type:dfn; for:view; text:projection matrix
+    type:dfn; text:xr animation frame
+    type:dfn; text:capable of supporting
+    type:dfn; text:list of supported modes
+    type:dfn; text:list of animation frame callbacks
+    type:dfn; text:inline xr device
+    type:dfn; text:list of immersive xr devices
 </pre>
 
 <pre class="anchors">
-spec: WebXR Device API - Level 1; urlPrefix: https://immersive-web.github.io/webxr/#
-    type: interface; text: XR; url: xr-interface
-    type: interface; text: XREye; url: xreye-interface
-    type: interface; text: XRSession; url: xrsession-interface
-    type: method; text:requestAnimationFrame(); for: XRSession; url: dom-xrsession-requestanimationframe
-    type: interface; text: XRViewport; url: xrviewport-interface
-    type: enum; text: XRVisibilityState; url: xrvisibiitystate-interface
-    type: enum-value; text: "visible"; for: XRVisibilityState; url: dom-xrvisibiitystate-visible
-    type: attribute; text: onvisibilitychange; for: XRSession; url: dom-xrsession-onvisibilitychange
-    type: attribute; text: visibilityState; for: XRSession; url: dom-xrsession-visibilityState
-    type: interface; text: XRTargetRayMode; url: xrtargetraymode-interface
-    type: interface; text: XRRenderState; url: xrrenderstate-interface
-    type: attribute; text: depthNear; for: XRRenderState; url: dom-xrrenderstate-depthnear
-    type: attribute; text: depthFar; for: XRRenderState; url: dom-xrrenderstate-depthfar
-    type: interface; text: XRPose; url: interface-emulatedposition
-    type: attribute; text: emulatedPosition; for: XRPose; url: dom-xrpose-emulatedposition
-    type: interface; text: XRBoundedReferenceSpace; url: xrboundedreferencespace-interface
-    type: interface; text: XRReferenceSpaceType; url: enumdef-xrreferencespacetype
-    type: enum-value; text: local; for: XRReferenceSpaceType; url: dom-xrreferencespacetype-viewer
-    type: dfn; text: native bounds geometry; for: XRBoundedReferenceSpace; url: xrboundedreferencespace-native-bounds-geometry
-    type: interface; text: XRRigidTransform; url: xrrigidtransform-interface
-    type: argument; for: XRRigidTransform; text:position; url: dom-xrrigidtransform-xrrigidtransform-position-orientation-position;
-    type: argument; for:XRRigidTransform; text:orientation; url: dom-xrrigidtransform-xrrigidtransform-position-orientation-orientation;
-    type: constructor; for:XRRigidTransform; text:constructor; url: dom-xrrigidtransform-xrrigidtransform;
-    type: interface; text: XREye; url: xreye-interface
-    type: interface; text: XRHandedness; url: xrhandedness-interface
-    type:dfn; text:XR device; url: xr-device
-    type:dfn; text:capable of supporting; url: capable-of-supporting
-    type:dfn; text:list of immersive XR devices; url: list-of-immersive-xr-devices
-    type:dfn; text:list of supported modes; url: list-of-supported-modes
-    type:dfn; text:xr animation frame; url: xr-animation-frame
-    type:dfn; text:list of animation frame callbacks; url: list-of-animation-frame-callbacks
-    type:dfn; text:view; url: view
-    type:dfn; text:viewer; url: viewer
-    type:dfn; text:native origin; url: native-origin
-    type:dfn; text:inline xr device; url: inline-xr-device
-    type:dfn; text:eye; for:view; url: view-eye
-    type:dfn; text:view offset; for:view; url: view-view-offset
-    type:dfn; text:projection matrix; for:view; url: view-projection-matrix
-    type: event; text: reset
-spec:infra; urlPrefix: https://infra.spec.whatwg.org/
-    type:dfn; for:list; text:extend; url: list-extend
 </pre>
 
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -307,7 +282,7 @@ To <dfn>parse a view</dfn> given a {{FakeXRViewInit}} |init|, perform the follow
   1. Set |view|'s [=view/eye=] to |init|'s {{FakeXRViewInit/eye}}.
   1. If |init|'s {{FakeXRViewInit/projectionMatrix}} does not have 16 elements, throw a {{TypeError}}.
   1. Set |view|'s [=view/projection matrix=] to |init|'s {{FakeXRViewInit/projectionMatrix}}.
-  1. Set |view|'s [=view/view offset=] to the result of running [=parse a rigid transform=] |init|'s {{FakeXRViewInit/viewOffset}}.
+  1. Set |view|'s [=view offset=] to the result of running [=parse a rigid transform=] |init|'s {{FakeXRViewInit/viewOffset}}.
   1. Set |view|'s [=view/device resolution=] to |init|'s {{FakeXRViewInit/resolution}}.
   1. If |init|'s {{FakeXRViewInit/fieldOfView}} is set, perform the following steps:
     1. Set |view|'s [=view/field of view=] to |init|'s {{FakeXRViewInit/fieldOfView}}.
