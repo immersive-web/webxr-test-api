@@ -1,3 +1,5 @@
+# WebXR Test API
+
 In order to allow javascript tests for WebXR there are some basic functions which are common across all tests,
 such as adding a fake test device and specifying poses. Below is a Javascript IDL which attempts to capture
 the necessary functions, based off what was defined in the spec. Different browser vendors can implement this
@@ -244,3 +246,49 @@ dictionary FakeXRButtonStateInit {
 
 These initialization object and control interfaces do not represent a complete set of WebXR functionality,
 and are expected to be expanded on as the WebXR spec grows.
+
+## Hit Test Extension
+
+In order to create deterministic and cross-browser WPT tests for the proposed WebXR [hit testing API](https://github.com/immersive-web/hit-test/), the WPT tests need to have a way to mock the data that is supposed to be returned from the API under test. This can be achieved by leveraging the test API extensions for hit test, described below.
+
+```webidl
+partial interface FakeXRDevice {
+  // Sets new world state on the device.
+  void setWorld(FakeXRWorldInit world);
+  // Clears the entire knowledge of the world on the device.
+  void clearWorld();
+};
+
+partial dictionary FakeXRDeviceInit {
+  // Initial state of the world known to the device.
+  FakeXRWorldInit worldInit;
+};
+
+dictionary FakeXRWorldInit {
+  // World consists of a collection of hit testing regions.
+  // The regions are listed in no particular order.
+  required sequence<FakeXRRegionInit> hitTestRegions;
+};
+
+dictionary FakeXRRegionInit {
+  // Collection of faces that comprise this region.
+  required sequence<FakeXRTriangleInit> faces;
+  // Type of the region. This will be considered when computing hit test results
+  // for the purpose of filtering out the ones that the applicaton is not interested in.
+  // More details can be found in Hit Testing Explainer, Limiting results to specific entities section.
+  required FakeXRRegionType type;
+};
+
+dictionary FakeXRTriangleInit {
+  // Sequence of vertices that comprise this triangle.
+  // The triangle is considered to be a solid surface for the purposes of hit test computations.
+  required sequence<DOMPointReadOnly> vertices;  // size = 3
+};
+
+enum FakeXRRegionType {
+  "point",
+  "plane",
+  "mesh"
+};
+
+```
