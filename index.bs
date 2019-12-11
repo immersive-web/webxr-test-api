@@ -228,6 +228,7 @@ dictionary FakeXRDeviceInit {
     FakeXRRigidTransformInit floorOrigin;
     FakeXRRigidTransformInit viewerOrigin;
 
+    // Hit test extensions:
     FakeXRWorldInit world;
 };
 
@@ -317,6 +318,7 @@ interface FakeXRDevice {
 
   FakeXRInputController simulateInputSourceConnection(FakeXRInputSourceInit init);
 
+  // Hit test extensions:
   void setWorld(FakeXRWorldInit world);
   void clearWorld();
 };
