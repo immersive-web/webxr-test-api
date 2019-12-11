@@ -153,11 +153,11 @@ navigator.xr.test {#xr-test-attribute}
 ------------
 
 
-<pre class="idl">
+<script type="idl">
 partial interface XR {
     [SameObject] readonly attribute XRTest test;
 };
-</pre>
+</script>
 
 The <dfn attribute for="XR">test</dfn> attribute's getter MUST return the {{XRTest}} object that is associated with it. This object MAY be lazily created.
 
@@ -167,13 +167,13 @@ XRTest {#xrtest-interface}
 
 The {{XRTest}} object is the entry point for all testing.
 
-<pre class="idl">
+<script type="idl">
 interface XRTest {
-  Promise&lt;FakeXRDevice> simulateDeviceConnection(FakeXRDeviceInit init);
+  Promise<FakeXRDevice> simulateDeviceConnection(FakeXRDeviceInit init);
   void simulateUserActivation(Function f);
-  Promise&lt;void> disconnectAllDevices();
+  Promise<void> disconnectAllDevices();
 };
-</pre>
+</script>
 
 <div class="algorithm" data-algorithm="simulate-device-connection">
 The <dfn method for="XRTest">simulateDeviceConnection(|init|)</dfn> method creates a new [=simulated XR device=].
@@ -218,20 +218,23 @@ When <dfn method for=XRTest>disconnectAllDevices()</dfn> is called, remove all [
 FakeXRDeviceInit {#fakexrdeviceinit-dict}
 ------------
 
-<pre class="idl">
+<script type="idl">
 dictionary FakeXRDeviceInit {
     required boolean supportsImmersive;
-    required sequence&lt;FakeXRViewInit> views;
+    required sequence<FakeXRViewInit> views;
 
-    sequence&lt;any> supportedFeatures;
-    sequence&lt;FakeXRBoundsPoint> boundsCoordinates;
+    sequence<any> supportedFeatures;
+    sequence<FakeXRBoundsPoint> boundsCoordinates;
     FakeXRRigidTransformInit floorOrigin;
     FakeXRRigidTransformInit viewerOrigin;
+
+    // Hit test extensions:
+    FakeXRWorldInit world;
 };
 
 dictionary FakeXRViewInit {
   required XREye eye;
-  required sequence&lt;float> projectionMatrix;
+  required sequence<float> projectionMatrix;
   required FakeXRDeviceResolution resolution;
   required FakeXRRigidTransformInit viewOffset;
   FakeXRFieldOfViewInit fieldOfView;
@@ -254,11 +257,11 @@ dictionary FakeXRBoundsPoint {
 };
 
 dictionary FakeXRRigidTransformInit {
-  required sequence&lt;float> position;
-  required sequence&lt;float> orientation;
+  required sequence<float> position;
+  required sequence<float> orientation;
 };
 
-</pre>
+</script>
 
 
 <div class="algorithm" data-algorithm="parse-rigid-transform">
@@ -298,25 +301,29 @@ Mocking {#mocking}
 FakeXRDevice {#fakexrdevice-interface}
 ------------
 
-<pre class="idl">
+<script type="idl">
 interface FakeXRDevice {
-  void setViews(sequence&lt;FakeXRViewInit> views);
+  void setViews(sequence<FakeXRViewInit> views);
 
-  Promise&lt;void> disconnect();
+  Promise<void> disconnect();
 
   void setViewerOrigin(FakeXRRigidTransformInit origin, optional boolean emulatedPosition = false);
   void clearViewerOrigin();
   void setFloorOrigin(FakeXRRigidTransformInit origin);
   void clearFloorOrigin();
-  void setBoundsGeometry(sequence&lt;FakeXRBoundsPoint> boundsCoordinates);
+  void setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoordinates);
   void simulateResetPose();
 
   void simulateVisibilityChange(XRVisibilityState state);
 
   FakeXRInputController simulateInputSourceConnection(FakeXRInputSourceInit init);
+
+  // Hit test extensions:
+  void setWorld(FakeXRWorldInit world);
+  void clearWorld();
 };
 
-</pre>
+</script>
 
 
 Each {{FakeXRDevice}} object has an associated <dfn for=FakeXRDevice>device</dfn>, which is a [=simulated XR device=] that it is able to control.
@@ -365,7 +372,8 @@ When <dfn method for=FakeXRDevice>disconnect()</dfn> method is called, perform t
     1. Remove [=FakeXRDevice/device=] from the [=context object=]'s {{XR}} object's [=list of immersive XR devices=] as if it were disconnected. 
     1. If the [=inline XR device=] is equal to the {{FakeXRDevice}}, reset it to the default [=inline XR device=].
 
-</dfn>
+</div>
+
 <div class="algorithm" data-algorithm="set-viewer-origin">
 The <dfn method for=FakeXRDevice>setViewerOrigin(|origin|, |emulatedPosition|)</dfn> performs the following steps:
 
@@ -404,26 +412,25 @@ The <dfn method for=FakeXRDevice>setBoundsGeometry(|boundsCoordinates|)</dfn> pe
 
 The <dfn method for=FakeXRDevice>simulateResetPose()</dfn> method will, as soon as possible, behave as if the [=FakeXRDevice/device=]'s [=viewer=]'s [=native origin=] had a discontinuity, triggering appropriate {{reset}} events.
 
-
 FakeXRInputController {#fakexrinputcontroller-init}
 ------------
 
-<pre class="idl">
+<script type="idl">
 dictionary FakeXRInputSourceInit {
   required XRHandedness handedness;
   required XRTargetRayMode targetRayMode;
   required FakeXRRigidTransformInit pointerOrigin;
-  required sequence&lt;DOMString> profiles;
+  required sequence<DOMString> profiles;
   boolean selectionStarted = false;
   boolean selectionClicked = false;
-  sequence&lt;FakeXRButtonStateInit> supportedButtons;
+  sequence<FakeXRButtonStateInit> supportedButtons;
   FakeXRRigidTransformInit gripOrigin;
 };
 
 interface FakeXRInputController {
   void setHandedness(XRHandedness handedness);
   void setTargetRayMode(XRTargetRayMode targetRayMode);
-  void setProfiles(sequence&lt;DOMString> profiles);
+  void setProfiles(sequence<DOMString> profiles);
   void setGripOrigin(FakeXRRigidTransformInit gripOrigin, optional boolean emulatedPosition = false);
   void clearGripOrigin();
   void setPointerOrigin(FakeXRRigidTransformInit pointerOrigin, optional boolean emulatedPosition = false);
@@ -435,7 +442,7 @@ interface FakeXRInputController {
   void endSelection();
   void simulateSelect();
 
-  void setSupportedButtons(sequence&lt;FakeXRButtonStateInit> supportedButtons);
+  void setSupportedButtons(sequence<FakeXRButtonStateInit> supportedButtons);
   void updateButtonState(FakeXRButtonStateInit buttonState);
 };
 
@@ -455,5 +462,60 @@ dictionary FakeXRButtonStateInit {
   float xValue = 0.0;
   float yValue = 0.0;
 };
-</pre>
+</script>
 
+Hit test extensions {#hit-test-extensions}
+===================
+
+The hit test extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/hit-test/">WebXR Hit Test Module</a>.
+
+<script type="idl">
+
+dictionary FakeXRWorldInit {
+  required sequence<FakeXRRegionInit> hitTestRegions;
+};
+
+</script>
+
+{{FakeXRWorldInit}} dictionary describes the state of the world that will be used when computing hit test results on a {{FakeXRDevice}}.
+
+{{FakeXRWorldInit/hitTestRegions}} contains a collection of {{FakeXRRegionInit}}s that are used to describe specific regions of the fake world. The order of the regions does not matter.
+
+<script type="idl">
+
+dictionary FakeXRRegionInit {
+  required sequence<FakeXRTriangleInit> faces;
+  required FakeXRRegionType type;
+};
+
+</script>
+
+{{FakeXRRegionInit}} dictionary describes the contents of a specific region of the world.
+
+{{FakeXRRegionInit/faces}} contains a collection of {{FakeXRTriangleInit}}s that enumerate all the faces contained by the region. The order of the faces does not matter.
+
+{{FakeXRRegionInit/type}} contains a type of the region that will be used during computation of hit test results.
+
+<script type="idl">
+
+dictionary FakeXRTriangleInit {
+  required sequence<DOMPointInit> vertices;  // size = 3
+};
+
+</script>
+
+{{FakeXRTriangleInit}} dictionary describes a single face of a region.
+
+{{FakeXRTriangleInit/vertices}} contains a collection of {{DOMPointInit}}s that comprise the face. The face will be considered as solid when computing hit test results and as such, the winding order of the vertices does not matter.
+
+<script type="idl">
+
+enum FakeXRRegionType {
+  "point",
+  "plane",
+  "mesh"
+};
+
+</script>
+
+{{FakeXRRegionType}} enum is used to describe a type of the world region.
