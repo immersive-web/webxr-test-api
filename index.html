@@ -1213,7 +1213,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/W3C-ED" rel="stylesheet" type="text/css">
-  <meta content="Bikeshed version c2a4ab239714a7c0374d0c7ad8cb001030becba3" name="generator">
+  <meta content="Bikeshed version 087ea90e1ebd0321c20373d89950d1c6b73d5df1" name="generator">
   <link href="https://immersive-web.github.io/webxr-test-api/" rel="canonical">
   <link href="favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
   <link href="favicon-96x96.png" rel="icon" sizes="96x96" type="image/png">
@@ -1529,7 +1529,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">WebXR Test API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2019-12-11">11 December 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2019-12-17">17 December 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1680,20 +1680,37 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
        <li data-md>
         <p>If <var>init</var>’s <code class="idl"><a data-link-type="idl" href="#dom-fakexrdeviceinit-viewerorigin" id="ref-for-dom-fakexrdeviceinit-viewerorigin">viewerOrigin</a></code> is set, set <var>device</var>’s <a data-link-type="dfn" href="#simulated-xr-device-viewer-origin" id="ref-for-simulated-xr-device-viewer-origin">viewer origin</a> to <var>init</var>’s <code class="idl"><a data-link-type="idl" href="#dom-fakexrdeviceinit-viewerorigin" id="ref-for-dom-fakexrdeviceinit-viewerorigin①">viewerOrigin</a></code>.</p>
        <li data-md>
-        <p>Register <var>device</var> based on the following:</p>
+        <p>Let <var>supportedModes</var> be an empty list of <code class="idl"><a data-link-type="idl" href="https://immersive-web.github.io/webxr/#enumdef-xrsessionmode" id="ref-for-enumdef-xrsessionmode">XRSessionMode</a></code>s.</p>
+       <li data-md>
+        <p>Modify <var>supportedModes</var> as follows:</p>
         <dl class="switch">
-         <dt>If <var>init</var>’s <code class="idl"><a data-link-type="idl" href="#dom-fakexrdeviceinit-supportsimmersive" id="ref-for-dom-fakexrdeviceinit-supportsimmersive">supportsImmersive</a></code> is <code>true</code>:
+         <dt>If <var>init</var>’s <code class="idl"><a data-link-type="idl" href="#dom-fakexrdeviceinit-supportedmodes" id="ref-for-dom-fakexrdeviceinit-supportedmodes">supportedModes</a></code> is present:
          <dd>
           <ol>
            <li data-md>
-            <p>Append <code>"immersive-vr"</code> to <var>device</var>’s <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#list-of-supported-modes" id="ref-for-list-of-supported-modes">list of supported modes</a>.</p>
+            <p>Append the contents of <var>init</var>’s <code class="idl"><a data-link-type="idl" href="#dom-fakexrdeviceinit-supportedmodes" id="ref-for-dom-fakexrdeviceinit-supportedmodes①">supportedModes</a></code> to <var>supportedModes</var>.</p>
            <li data-md>
-            <p>Append <var>device</var> to the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#context-object" id="ref-for-context-object">context object</a>'s <code class="idl"><a data-link-type="idl" href="https://immersive-web.github.io/webxr/#xr" id="ref-for-xr①">XR</a></code> object’s <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#list-of-immersive-xr-devices" id="ref-for-list-of-immersive-xr-devices">list of immersive XR devices</a>.</p>
+            <p>If <var>supportedModes</var> is empty, append <code>"inline"</code> to it.</p>
           </ol>
-         <dd>Otherwise:
-         <dt>Set the <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device">inline XR device</a> to <var>device</var>
-         . 
+         <dt>Else
+         <dd>
+          <ol>
+           <li data-md>
+            <p>Append <code>"inline"</code> to <var>supportedModes</var>.</p>
+           <li data-md>
+            <p>If <var>init</var>’s <code class="idl"><a data-link-type="idl" href="#dom-fakexrdeviceinit-supportsimmersive" id="ref-for-dom-fakexrdeviceinit-supportsimmersive">supportsImmersive</a></code> is <code>true</code>, append <code>"immersive-vr"</code> to <var>supportedModes</var>.</p>
+          </ol>
         </dl>
+       <li data-md>
+        <p>Set <var>device</var>’s <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#list-of-supported-modes" id="ref-for-list-of-supported-modes">list of supported modes</a> to <var>supportedModes</var>.</p>
+       <li data-md>
+        <p>Register <var>device</var> based on the following:</p>
+        <ol>
+         <li data-md>
+          <p>If <var>supportedModes</var> contains <code>"immersive-vr"</code> or <code>"immersive-ar"</code>, append <var>device</var> to the <code class="idl"><a data-link-type="idl" href="https://immersive-web.github.io/webxr/#dom-navigator-xr" id="ref-for-dom-navigator-xr">xr</a></code>'s <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#list-of-immersive-xr-devices" id="ref-for-list-of-immersive-xr-devices">list of immersive XR devices</a>.</p>
+         <li data-md>
+          <p>If <var>supportedModes</var> contains <code>"inline"</code>, set the <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device">inline XR device</a> to <var>device</var>.</p>
+        </ol>
        <li data-md>
         <p>Let <var>d</var> be a new <code class="idl"><a data-link-type="idl" href="#fakexrdevice" id="ref-for-fakexrdevice②">FakeXRDevice</a></code> object with <a data-link-type="dfn" href="#fakexrdevice-device" id="ref-for-fakexrdevice-device">device</a> as <var>device</var>.</p>
        <li data-md>
@@ -1704,10 +1721,11 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     </ol>
    </div>
    <p>When <dfn class="dfn-paneled idl-code" data-dfn-for="XRTest" data-dfn-type="method" data-export id="dom-xrtest-simulateuseractivation"><code>simulateUserActivation(f)</code></dfn> is called, invoke <code>f</code> as if it was <a data-link-type="dfn">triggered by user activation</a>.</p>
-   <p>When <dfn class="dfn-paneled idl-code" data-dfn-for="XRTest" data-dfn-type="method" data-export id="dom-xrtest-disconnectalldevices"><code>disconnectAllDevices()</code></dfn> is called, remove all <a data-link-type="dfn" href="#simulated-xr-device" id="ref-for-simulated-xr-device①①">simulated XR devices</a> from the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#context-object" id="ref-for-context-object①">context object</a>'s <code class="idl"><a data-link-type="idl" href="https://immersive-web.github.io/webxr/#xr" id="ref-for-xr②">XR</a></code> object’s <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#list-of-immersive-xr-devices" id="ref-for-list-of-immersive-xr-devices①">list of immersive XR devices</a> as if they were disconnected. If the <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device①">inline XR device</a> is a <a data-link-type="dfn" href="#simulated-xr-device" id="ref-for-simulated-xr-device①②">simulated XR device</a>, reset it to the default <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device②">inline XR device</a>.</p>
+   <p>When <dfn class="dfn-paneled idl-code" data-dfn-for="XRTest" data-dfn-type="method" data-export id="dom-xrtest-disconnectalldevices"><code>disconnectAllDevices()</code></dfn> is called, remove all <a data-link-type="dfn" href="#simulated-xr-device" id="ref-for-simulated-xr-device①①">simulated XR devices</a> from the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#context-object" id="ref-for-context-object">context object</a>'s <code class="idl"><a data-link-type="idl" href="https://immersive-web.github.io/webxr/#xr" id="ref-for-xr①">XR</a></code> object’s <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#list-of-immersive-xr-devices" id="ref-for-list-of-immersive-xr-devices①">list of immersive XR devices</a> as if they were disconnected. If the <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device①">inline XR device</a> is a <a data-link-type="dfn" href="#simulated-xr-device" id="ref-for-simulated-xr-device①②">simulated XR device</a>, reset it to the default <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device②">inline XR device</a>.</p>
    <h3 class="heading settled" data-level="4.3" id="fakexrdeviceinit-dict"><span class="secno">4.3. </span><span class="content">FakeXRDeviceInit</span><a class="self-link" href="#fakexrdeviceinit-dict"></a></h3>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexrdeviceinit"><code><c- g>FakeXRDeviceInit</c-></code></dfn> {
     <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-fakexrdeviceinit-supportsimmersive"><code><c- g>supportsImmersive</c-></code></dfn>;
+    <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrsessionmode" id="ref-for-enumdef-xrsessionmode①"><c- n>XRSessionMode</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="sequence<XRSessionMode> " id="dom-fakexrdeviceinit-supportedmodes"><code><c- g>supportedModes</c-></code></dfn>;
     <c- b>required</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrviewinit" id="ref-for-dictdef-fakexrviewinit"><c- n>FakeXRViewInit</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="sequence<FakeXRViewInit> " id="dom-fakexrdeviceinit-views"><code><c- g>views</c-></code></dfn>;
 
     <c- b>sequence</c->&lt;<c- b>any</c->> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="sequence<any> " id="dom-fakexrdeviceinit-supportedfeatures"><code><c- g>supportedFeatures</c-></code></dfn>;
@@ -1749,6 +1767,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 };
 
 </pre>
+   <p class="advisement"> The <code class="idl"><a data-link-type="idl" href="#dom-fakexrdeviceinit-supportsimmersive" id="ref-for-dom-fakexrdeviceinit-supportsimmersive①">supportsImmersive</a></code> is deprecated in favor of <code class="idl"><a data-link-type="idl" href="#dom-fakexrdeviceinit-supportedmodes" id="ref-for-dom-fakexrdeviceinit-supportedmodes②">supportedModes</a></code> and will be removed in future revisions of the specification. </p>
    <div class="algorithm" data-algorithm="parse-rigid-transform">
      To <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="parse-a-rigid-transform">parse a rigid transform</dfn> given a <code class="idl"><a data-link-type="idl" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit⑤">FakeXRRigidTransformInit</a></code> <var>init</var>, perform the following steps: 
     <ol>
@@ -1867,7 +1886,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <p>When <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="method" data-export id="dom-fakexrdevice-disconnect"><code>disconnect()</code></dfn> method is called, perform the following steps:</p>
     <ol>
      <li data-md>
-      <p>Remove <a data-link-type="dfn" href="#fakexrdevice-device" id="ref-for-fakexrdevice-device③">device</a> from the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#context-object" id="ref-for-context-object②">context object</a>'s <code class="idl"><a data-link-type="idl" href="https://immersive-web.github.io/webxr/#xr" id="ref-for-xr③">XR</a></code> object’s <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#list-of-immersive-xr-devices" id="ref-for-list-of-immersive-xr-devices②">list of immersive XR devices</a> as if it were disconnected.</p>
+      <p>Remove <a data-link-type="dfn" href="#fakexrdevice-device" id="ref-for-fakexrdevice-device③">device</a> from the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#context-object" id="ref-for-context-object①">context object</a>'s <code class="idl"><a data-link-type="idl" href="https://immersive-web.github.io/webxr/#xr" id="ref-for-xr②">XR</a></code> object’s <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#list-of-immersive-xr-devices" id="ref-for-list-of-immersive-xr-devices②">list of immersive XR devices</a> as if it were disconnected.</p>
      <li data-md>
       <p>If the <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device③">inline XR device</a> is equal to the <code class="idl"><a data-link-type="idl" href="#fakexrdevice" id="ref-for-fakexrdevice⑤">FakeXRDevice</a></code>, reset it to the default <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device④">inline XR device</a>.</p>
     </ol>
@@ -2086,6 +2105,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#dom-fakexrinputcontroller-startselection">startSelection()</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrinputsourceinit-supportedbuttons">supportedButtons</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrdeviceinit-supportedfeatures">supportedFeatures</a><span>, in §4.3</span>
+   <li><a href="#dom-fakexrdeviceinit-supportedmodes">supportedModes</a><span>, in §4.3</span>
    <li><a href="#dom-fakexrdeviceinit-supportsimmersive">supportsImmersive</a><span>, in §4.3</span>
    <li><a href="#dom-fakexrinputsourceinit-targetraymode">targetRayMode</a><span>, in §5.2</span>
    <li><a href="#dom-xr-test">test</a><span>, in §4.1</span>
@@ -2112,8 +2132,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <aside class="dfn-panel" data-for="term-for-context-object">
    <a href="https://dom.spec.whatwg.org/#context-object">https://dom.spec.whatwg.org/#context-object</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-context-object">4.2. XRTest</a> <a href="#ref-for-context-object①">(2)</a>
-    <li><a href="#ref-for-context-object②">5.1. FakeXRDevice</a>
+    <li><a href="#ref-for-context-object">4.2. XRTest</a>
+    <li><a href="#ref-for-context-object①">5.1. FakeXRDevice</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dictdef-dompointinit">
@@ -2253,8 +2273,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <a href="https://immersive-web.github.io/webxr/#xr">https://immersive-web.github.io/webxr/#xr</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-xr">4.1. navigator.xr.test</a>
-    <li><a href="#ref-for-xr①">4.2. XRTest</a> <a href="#ref-for-xr②">(2)</a>
-    <li><a href="#ref-for-xr③">5.1. FakeXRDevice</a>
+    <li><a href="#ref-for-xr①">4.2. XRTest</a>
+    <li><a href="#ref-for-xr②">5.1. FakeXRDevice</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-xrboundedreferencespace">
@@ -2292,6 +2312,13 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <ul>
     <li><a href="#ref-for-xrsession">3. Simulated devices</a> <a href="#ref-for-xrsession①">(2)</a>
     <li><a href="#ref-for-xrsession②">4.3. FakeXRDeviceInit</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-enumdef-xrsessionmode">
+   <a href="https://immersive-web.github.io/webxr/#enumdef-xrsessionmode">https://immersive-web.github.io/webxr/#enumdef-xrsessionmode</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-enumdef-xrsessionmode">4.2. XRTest</a>
+    <li><a href="#ref-for-enumdef-xrsessionmode①">4.3. FakeXRDeviceInit</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-enumdef-xrtargetraymode">
@@ -2452,6 +2479,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-dom-xrsession-visibilitystate">3. Simulated devices</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-dom-navigator-xr">
+   <a href="https://immersive-web.github.io/webxr/#dom-navigator-xr">https://immersive-web.github.io/webxr/#dom-navigator-xr</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-navigator-xr">4.2. XRTest</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-xr-animation-frame">
    <a href="https://immersive-web.github.io/webxr/#xr-animation-frame">https://immersive-web.github.io/webxr/#xr-animation-frame</a><b>Referenced in:</b>
    <ul>
@@ -2518,6 +2551,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <li><span class="dfn-paneled" id="term-for-xrpose" style="color:initial">XRPose</span>
      <li><span class="dfn-paneled" id="term-for-xrrigidtransform" style="color:initial">XRRigidTransform</span>
      <li><span class="dfn-paneled" id="term-for-xrsession" style="color:initial">XRSession</span>
+     <li><span class="dfn-paneled" id="term-for-enumdef-xrsessionmode" style="color:initial">XRSessionMode</span>
      <li><span class="dfn-paneled" id="term-for-enumdef-xrtargetraymode" style="color:initial">XRTargetRayMode</span>
      <li><span class="dfn-paneled" id="term-for-xrviewport" style="color:initial">XRViewport</span>
      <li><span class="dfn-paneled" id="term-for-enumdef-xrvisibilitystate" style="color:initial">XRVisibilityState</span>
@@ -2543,6 +2577,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <li><span class="dfn-paneled" id="term-for-view-offset" style="color:initial">view offset</span>
      <li><span class="dfn-paneled" id="term-for-viewer" style="color:initial">viewer</span>
      <li><span class="dfn-paneled" id="term-for-dom-xrsession-visibilitystate" style="color:initial">visibilityState</span>
+     <li><span class="dfn-paneled" id="term-for-dom-navigator-xr" style="color:initial">xr</span>
      <li><span class="dfn-paneled" id="term-for-xr-animation-frame" style="color:initial">xr animation frame</span>
      <li><span class="dfn-paneled" id="term-for-xr-device" style="color:initial">xr device</span>
     </ul>
@@ -2564,7 +2599,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <dd>Brandon Jones; Nell Waliczek. <a href="https://www.w3.org/TR/webxr/">WebXR Device API</a>. 10 October 2019. WD. URL: <a href="https://www.w3.org/TR/webxr/">https://www.w3.org/TR/webxr/</a>
   </dl>
   <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
-<pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://immersive-web.github.io/webxr/#xr" id="ref-for-xr④"><c- g>XR</c-></a> {
+<pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://immersive-web.github.io/webxr/#xr" id="ref-for-xr③"><c- g>XR</c-></a> {
     [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SameObject" id="ref-for-SameObject①"><c- g>SameObject</c-></a>] <c- b>readonly</c-> <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="#xrtest" id="ref-for-xrtest③"><c- n>XRTest</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="XRTest" href="#dom-xr-test" id="ref-for-dom-xr-test①"><c- g>test</c-></a>;
 };
 
@@ -2576,6 +2611,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 
 <c- b>dictionary</c-> <a href="#dictdef-fakexrdeviceinit"><code><c- g>FakeXRDeviceInit</c-></code></a> {
     <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑧"><c- b>boolean</c-></a> <a data-type="boolean " href="#dom-fakexrdeviceinit-supportsimmersive"><code><c- g>supportsImmersive</c-></code></a>;
+    <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrsessionmode" id="ref-for-enumdef-xrsessionmode①①"><c- n>XRSessionMode</c-></a>> <a data-type="sequence<XRSessionMode> " href="#dom-fakexrdeviceinit-supportedmodes"><code><c- g>supportedModes</c-></code></a>;
     <c- b>required</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrviewinit" id="ref-for-dictdef-fakexrviewinit③"><c- n>FakeXRViewInit</c-></a>> <a data-type="sequence<FakeXRViewInit> " href="#dom-fakexrdeviceinit-views"><code><c- g>views</c-></code></a>;
 
     <c- b>sequence</c->&lt;<c- b>any</c->> <a data-type="sequence<any> " href="#dom-fakexrdeviceinit-supportedfeatures"><code><c- g>supportedFeatures</c-></code></a>;
@@ -2805,6 +2841,14 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <b><a href="#dom-fakexrdeviceinit-supportsimmersive">#dom-fakexrdeviceinit-supportsimmersive</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-fakexrdeviceinit-supportsimmersive">4.2. XRTest</a>
+    <li><a href="#ref-for-dom-fakexrdeviceinit-supportsimmersive①">4.3. FakeXRDeviceInit</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-fakexrdeviceinit-supportedmodes">
+   <b><a href="#dom-fakexrdeviceinit-supportedmodes">#dom-fakexrdeviceinit-supportedmodes</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-fakexrdeviceinit-supportedmodes">4.2. XRTest</a> <a href="#ref-for-dom-fakexrdeviceinit-supportedmodes①">(2)</a>
+    <li><a href="#ref-for-dom-fakexrdeviceinit-supportedmodes②">4.3. FakeXRDeviceInit</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-fakexrdeviceinit-views">

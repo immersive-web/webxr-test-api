@@ -193,16 +193,24 @@ When this method is invoked, the user agent MUST run the following steps:
         1. Set |device|'s [=simulated XR device/native bounds geometry=] to |init|'s {{FakeXRDeviceInit/boundsCoordinates}}.
     1. If |init|'s {{FakeXRDeviceInit/floorOrigin}} is set, set |device|'s [=simulated XR device/floor origin=] to |init|'s {{FakeXRDeviceInit/floorOrigin}}.
     1. If |init|'s {{FakeXRDeviceInit/viewerOrigin}} is set, set |device|'s [=simulated XR device/viewer origin=] to |init|'s {{FakeXRDeviceInit/viewerOrigin}}.
-    1. Register |device| based on the following:
+    1. Let |supportedModes| be an empty list of {{XRSessionMode}}s.
+    1. Modify |supportedModes| as follows:
         <dl class="switch">
-        <dt>If |init|'s {{FakeXRDeviceInit/supportsImmersive}} is <code>true</code>:</dt>
+        <dt>If |init|'s {{FakeXRDeviceInit/supportedModes}} is present:</dt>
         <dd>
-            1. Append <code>"immersive-vr"</code> to |device|'s [=list of supported modes=].
-            1. Append |device| to the [=context object=]'s {{XR}} object's [=list of immersive XR devices=].
+            1. Append the contents of |init|'s {{FakeXRDeviceInit/supportedModes}} to |supportedModes|.
+            1. If |supportedModes| is empty, append <code>"inline"</code> to it.
         </dd>
-        <dd>Otherwise:</dd>
-        <dt>Set the [=inline XR device=] to |device|</dt>.
+        <dt>Else</dt>
+        <dd>
+            1. Append <code>"inline"</code> to |supportedModes|.
+            1. If |init|'s {{FakeXRDeviceInit/supportsImmersive}} is <code>true</code>, append <code>"immersive-vr"</code> to |supportedModes|.
+        </dd>
         </dl>
+    1. Set |device|'s [=list of supported modes=] to |supportedModes|.
+    1. Register |device| based on the following:
+        1. If |supportedModes| contains <code>"immersive-vr"</code> or <code>"immersive-ar"</code>, append |device| to the {{Navigator/xr}}'s [=list of immersive XR devices=].
+        1. If |supportedModes| contains <code>"inline"</code>, set the [=inline XR device=] to |device|.
     1. Let |d| be a new {{FakeXRDevice}} object with [=FakeXRDevice/device=] as |device|.
     1. [=/Resolve=] |promise| with |d|.
   1. Return |promise|.
@@ -219,8 +227,10 @@ FakeXRDeviceInit {#fakexrdeviceinit-dict}
 ------------
 
 <script type="idl">
+
 dictionary FakeXRDeviceInit {
     required boolean supportsImmersive;
+    sequence<XRSessionMode> supportedModes;
     required sequence<FakeXRViewInit> views;
 
     sequence<any> supportedFeatures;
@@ -263,6 +273,9 @@ dictionary FakeXRRigidTransformInit {
 
 </script>
 
+<p class="advisement">
+The {{FakeXRDeviceInit/supportsImmersive}} is deprecated in favor of {{FakeXRDeviceInit/supportedModes}} and will be removed in future revisions of the specification.
+</p>
 
 <div class="algorithm" data-algorithm="parse-rigid-transform">
 To <dfn>parse a rigid transform</dfn> given a {{FakeXRRigidTransformInit}} |init|, perform the following steps:
