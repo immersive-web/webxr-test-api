@@ -196,14 +196,16 @@ When this method is invoked, the user agent MUST run the following steps:
     1. Let |supportedModes| be an empty list of {{XRSessionMode}}s.
     1. Modify |supportedModes| as follows:
         <dl class="switch">
-        <dt>If |init|'s {{FakeXRDeviceInit/supportedModes}} is present and empty:</dt>
-        <dd>Append <code>"inline"</code> to |supportedModes|.</dd>
-        <dt>Else, if |init|'s {{FakeXRDeviceInit/supportedModes}} is present and not empty:</dt>
-        <dd>Append the contents of |init|'s {{FakeXRDeviceInit/supportedModes}} to |supportedModes|.</dd>
-        <dt>Else, if |init|'s {{FakeXRDeviceInit/supportsImmersive}} is <code>true</code>:</dt>
-        <dd>Append <code>"immersive-vr"</code> to |supportedModes|</dd>
-        <dt>Else:</dt>
-        <dd>Append <code>"inline"</code> to |supportedModes|</dd>
+        <dt>If |init|'s {{FakeXRDeviceInit/supportedModes}} is present:</dt>
+        <dd>
+            1. Append the contents of |init|'s {{FakeXRDeviceInit/supportedModes}} to |supportedModes|.
+            1. If |supportedModes| is empty, append <code>"inline"</code> to it.
+        </dd>
+        <dt>Else</dt>
+        <dd>
+            1. Append <code>"inline"</code> to |supportedModes|.
+            1. If |init|'s {{FakeXRDeviceInit/supportsImmersive}} is <code>true</code>, append <code>"immersive-vr"</code> to |supportedModes|.
+        </dd>
         </dl>
     1. Set |device|'s [=list of supported modes=] to |supportedModes|.
     1. Register |device| based on the following:
