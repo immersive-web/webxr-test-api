@@ -35,7 +35,10 @@ them out.
 
 ```WebIDL
 dictionary FakeXRDeviceInit {
+    // Deprecated - use `supportedModes` instead.
     required boolean supportsImmersive;
+    // Sequence of modes that should be supported by this device.
+    sequence<XRSessionMode> supportedModes;
     required sequence<FakeXRViewInit> views;
 
     // https://immersive-web.github.io/webxr/#feature-name
