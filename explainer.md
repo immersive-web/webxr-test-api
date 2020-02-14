@@ -295,3 +295,14 @@ enum FakeXRRegionType {
 };
 
 ```
+
+## DOM Overlay Extension
+
+In order to create deterministic and cross-browser WPT tests for the proposed WebXR [DOM Overlay API](https://immersive-web.github.io/dom-overlays/), the WPT tests need to have a way to supply data for API interactions. This can be achieved by leveraging the test API extensions for DOM Overlay support, described below.
+
+```webidl
+partial interface FakeXRInputController {
+  // Sets the position within the DOM Overlay in DOM coordinates for the next controller action.
+  void setOverlayPointerPosition(float x, float y);
+};
+```
