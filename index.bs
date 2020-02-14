@@ -548,4 +548,4 @@ partial interface FakeXRInputController {
 };
 </script>
 
-When <dfn method for=FakeXRInputController>setOverlayPointerPosition(x, y)</dfn> is called, it sets a position within the DOM overlay in DOM coordinates for the next [=primary action=], simulating that the user is interacting with the DOM overlay. The UA will emit a [=beforexrselect=] event at this location before generating XR select events.
+When <dfn method for=FakeXRInputController>setOverlayPointerPosition(x, y)</dfn> is called, it sets a position within the DOM overlay in DOM coordinates for the next [=XR animation frame=], and is cleared after that frame. It is intended to be used along with a [=primary action=] for that frame, simulating that the user is interacting with the DOM overlay. The UA will emit a [=beforexrselect=] event at this location before generating XR select events.
