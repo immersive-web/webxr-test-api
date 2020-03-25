@@ -9,7 +9,7 @@ fake backend. Because of this, any "synchronous" methods that update the state o
 guaranteed to have that updated state respected until the next "requestAnimationFrame" returns.
 
 ```WebIDL
-partial interface XR {
+partial interface XRSystem {
     [SameObject] readonly attribute XRTest test;
 };
 
