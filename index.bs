@@ -157,12 +157,12 @@ navigator.xr.test {#xr-test-attribute}
 
 
 <script type="idl">
-partial interface XR {
+partial interface XRSystem {
     [SameObject] readonly attribute XRTest test;
 };
 </script>
 
-The <dfn attribute for="XR">test</dfn> attribute's getter MUST return the {{XRTest}} object that is associated with it. This object MAY be lazily created.
+The <dfn attribute for="XRSystem">test</dfn> attribute's getter MUST return the {{XRTest}} object that is associated with it. This object MAY be lazily created.
 
 
 XRTest {#xrtest-interface}
