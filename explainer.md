@@ -80,10 +80,10 @@ interface FakeXRDevice {
 
   // If an origin is not specified, then the device is assumed to not be tracking, emulatedPosition should
   // be assumed for cases where the UA must always provide a pose.
-  void clearViewerOrigin()
+  void clearViewerOrigin();
 
   // Simulates devices focusing and blurring sessions.
-  void simulateVisibilityChange(XRVisibilityState);
+  void simulateVisibilityChange(XRVisibilityState visibilityState);
 
   void setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoodinates);
   // Sets the native origin of the physical floor
@@ -97,7 +97,7 @@ interface FakeXRDevice {
   void simulateResetPose();
 
   // Used to connect and send input events
-  FakeXRInputController simulateInputSourceConnection(FakeXRInputSourceInit);
+  FakeXRInputController simulateInputSourceConnection(FakeXRInputSourceInit inputSource);
 };
 
 // https://immersive-web.github.io/webxr/#xrview
