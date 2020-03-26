@@ -80,10 +80,10 @@ interface FakeXRDevice {
 
   // If an origin is not specified, then the device is assumed to not be tracking, emulatedPosition should
   // be assumed for cases where the UA must always provide a pose.
-  void clearViewerOrigin()
+  void clearViewerOrigin();
 
   // Simulates devices focusing and blurring sessions.
-  void simulateVisibilityChange(XRVisibilityState);
+  void simulateVisibilityChange(XRVisibilityState state);
 
   void setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoodinates);
   // Sets the native origin of the physical floor
@@ -97,7 +97,7 @@ interface FakeXRDevice {
   void simulateResetPose();
 
   // Used to connect and send input events
-  FakeXRInputController simulateInputSourceConnection(FakeXRInputSourceInit);
+  FakeXRInputController simulateInputSourceConnection(FakeXRInputSourceInit init);
 };
 
 // https://immersive-web.github.io/webxr/#xrview
@@ -161,9 +161,9 @@ dictionary FakeXRInputSourceInit {
   required FakeXRRigidTransformInit pointerOrigin;
   required sequence<DOMString> profiles;
   // was the primary action pressed when this was connected?
-  bool selectionStarted = false;
+  boolean selectionStarted = false;
   // should this input source send a select immediately upon connection?
-  bool selectionClicked = false;
+  boolean selectionClicked = false;
   // Initial button state for any buttons beyond the primary that are supported.
   // If empty, only the primary button is supported.
   // Note that if any FakeXRButtonType is repeated the behavior is undefined.
@@ -237,13 +237,13 @@ enum FakeXRButtonType {
 
 // Used to update the state of optionally supported buttons.
 dictionary FakeXRButtonStateInit {
-  required FakeXRButtonType buttonType,
-  required boolean pressed,
-  required boolean touched,
-  required float pressedValue,
+  required FakeXRButtonType buttonType;
+  required boolean pressed;
+  required boolean touched;
+  required float pressedValue;
   // x and y value are ignored if the FakeXRButtonType is not touchpad, thumbstick, or optional-thumbstick
-  float xValue = 0.0,
-  float yValue = 0.0
+  float xValue = 0.0;
+  float yValue = 0.0;
 };
 ```
 
