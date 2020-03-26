@@ -237,13 +237,13 @@ enum FakeXRButtonType {
 
 // Used to update the state of optionally supported buttons.
 dictionary FakeXRButtonStateInit {
-  required FakeXRButtonType buttonType,
-  required boolean pressed,
-  required boolean touched,
-  required float pressedValue,
+  required FakeXRButtonType buttonType;
+  required boolean pressed;
+  required boolean touched;
+  required float pressedValue;
   // x and y value are ignored if the FakeXRButtonType is not touchpad, thumbstick, or optional-thumbstick
-  float xValue = 0.0,
-  float yValue = 0.0
+  float xValue = 0.0;
+  float yValue = 0.0;
 };
 ```
 
