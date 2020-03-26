@@ -161,9 +161,9 @@ dictionary FakeXRInputSourceInit {
   required FakeXRRigidTransformInit pointerOrigin;
   required sequence<DOMString> profiles;
   // was the primary action pressed when this was connected?
-  bool selectionStarted = false;
+  boolean selectionStarted = false;
   // should this input source send a select immediately upon connection?
-  bool selectionClicked = false;
+  boolean selectionClicked = false;
   // Initial button state for any buttons beyond the primary that are supported.
   // If empty, only the primary button is supported.
   // Note that if any FakeXRButtonType is repeated the behavior is undefined.
