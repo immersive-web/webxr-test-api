@@ -83,7 +83,7 @@ interface FakeXRDevice {
   void clearViewerOrigin();
 
   // Simulates devices focusing and blurring sessions.
-  void simulateVisibilityChange(XRVisibilityState visibilityState);
+  void simulateVisibilityChange(XRVisibilityState state);
 
   void setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoodinates);
   // Sets the native origin of the physical floor
@@ -97,7 +97,7 @@ interface FakeXRDevice {
   void simulateResetPose();
 
   // Used to connect and send input events
-  FakeXRInputController simulateInputSourceConnection(FakeXRInputSourceInit inputSource);
+  FakeXRInputController simulateInputSourceConnection(FakeXRInputSourceInit init);
 };
 
 // https://immersive-web.github.io/webxr/#xrview
