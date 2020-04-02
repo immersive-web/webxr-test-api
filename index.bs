@@ -306,7 +306,6 @@ To <dfn>parse a view</dfn> given a {{FakeXRViewInit}} |init|, perform the follow
   1. If |init|'s {{FakeXRViewInit/fieldOfView}} is set, perform the following steps:
     1. Set |view|'s [=view/field of view=] to |init|'s {{FakeXRViewInit/fieldOfView}}.
     1. Set |view|'s [=view/projection matrix=] to the projection matrix corresponding to this field of view, and depth values equal to {{XRRenderState/depthNear}} and {{XRRenderState/depthFar}} of any {{XRSession}} associated with the device. If there currently is none, use the default values of <code>near=0.1, far=1000.0</code>.
-  1. Set |view|'s [=view/projection matrix=] to |init|'s {{FakeXRViewInit/projectionMatrix}}.
   1. Return |view|.
 
 </div>
