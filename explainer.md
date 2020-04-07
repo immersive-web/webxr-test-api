@@ -52,7 +52,7 @@ dictionary FakeXRDeviceInit {
 
     // The bounds coordinates. If empty, no bounded reference space is currently tracked.
     // If not, must have at least three elements.
-    sequence<FakeXRBoundsPoint> boundsCoodinates;
+    sequence<FakeXRBoundsPoint> boundsCoordinates;
 
     // A transform used to identify the physical position of the user's floor.
     // If not set, indicates that the device cannot identify the physical floor.
@@ -85,7 +85,7 @@ interface FakeXRDevice {
   // Simulates devices focusing and blurring sessions.
   void simulateVisibilityChange(XRVisibilityState state);
 
-  void setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoodinates);
+  void setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoordinates);
   // Sets the native origin of the physical floor
   void setFloorOrigin(FakeXRRigidTransformInit floorOrigin);
 
