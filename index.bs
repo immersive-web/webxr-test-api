@@ -693,3 +693,55 @@ partial interface FakeXRInputController {
 </script>
 
 When <dfn method for=FakeXRInputController>setOverlayPointerPosition(x, y)</dfn> is called, it sets a position within the DOM overlay in DOM coordinates for the next [=XR animation frame=], and is cleared after that frame. It is intended to be used along with a [=primary action=] for that frame, simulating that the user is interacting with the DOM overlay. The UA will emit a [=beforexrselect=] event at this location before generating XR select events.
+
+Anchors extensions {#anchors-extensions}
+==================
+
+The hit test extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/anchors/">WebXR Anchors</a>.
+
+<script type="idl">
+
+partial interface FakeXRDevice {
+  attribute EventHandler onanchorcreate;
+};
+
+</script>
+
+A user agent MUST dispatch an <dfn>anchorcreate</dfn> event on a {{FakeXRDevice}} when it receives a request to create an anchor. The event MUST be of type {{FakeXRAnchorCreationEvent}}.
+
+<script type="idl">
+
+interface FakeXRAnchorCreationEvent : Event {
+  // Arguments to the call:
+  // Location of the requested anchor, relative to base reference space.
+  readonly attribute FakeXRRigidTransformInit requestedAnchorOrigin;
+  // True if the requested anchor should be attached to the entity, false otherwise.
+  readonly attribute boolean isAttachedToEntity;
+
+  // Result of the call.
+  attribute boolean success;
+
+  // Controller that could be used to modify the anchor location in case the call is deemed successful.
+  readonly attribute FakeXRAnchorController anchorController;
+};
+
+</script>
+
+The {{FakeXRAnchorCreationEvent}} interface can be used by the Web Platform Tests to control the result of a call to create an anchor, and to be able to subsequently control the newly created anchor.
+
+<script type="idl">
+
+interface FakeXRAnchorController {
+  // The anchor will still be considered tracked, but it will not be localizable.
+  void pauseTracking();
+  // If the anchor tracing was paused, the anchor will yet again be localizable.
+  void resumeTracking();
+  // The anchor will no longer be tracked. It also implies that the anchor is not localizable.
+  void stopTracking();
+
+  // Sets the transformation between the base reference space and the anchor.
+  // It will only affect poses of the anchor if it is localizable.
+  void setAnchorOrigin(FakeXRRigidTransformInit anchorOrigin);
+};
+
+</script>
