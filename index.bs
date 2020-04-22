@@ -40,6 +40,7 @@ spec:webxr-1;
     type:dfn; text:inline xr device
     type:dfn; text:list of immersive xr devices
     type:dfn; text:primary action
+    type:dfn; text:xr input source
 </pre>
 
 <pre class="anchors">
@@ -130,6 +131,8 @@ Interfaces and functionality exposed by this specification SHOULD NOT be exposed
 Simulated devices {#simulated-devices}
 ============
 
+Simulated XR Device {#simulated-devices-xr}
+------------
 This API gives tests the ability to spin up a <dfn>simulated XR device</dfn> which is an [=/XR device=] which from the point of view of the WebXR API behaves like a normal [=/XR device=]. These [=simulated XR device|simulated XR devices=] can be controlled by the associated {{FakeXRDevice}} object.
 
 Every [=simulated XR device=] may have an <dfn for="simulated XR device">native bounds geometry</dfn> which is an array of {{DOMPointReadOnly}}s, used to initialize the [=XRBoundedReferenceSpace/native bounds geometry=] of any {{XRBoundedReferenceSpace}}s created for the device. If <code>null</code>, the device is treated as if it is not currently tracking a bounded reference space.
@@ -146,8 +149,24 @@ Every [=view=] for a [=simulated XR device=] has an associated <dfn for=view>dev
 
 Every [=view=] for a [=simulated XR device=] may have an associated <dfn for=view>field of view</dfn>, which is an instance of {{FakeXRFieldOfViewInit}} used to calculate projection matrices using depth values. If the [=field of view=] is set, projection matrix values are calculated using the [=field of view=] and {{XRRenderState/depthNear}} and {{XRRenderState/depthFar}} values.
 
-The WebXR API never exposes native origins directly, instead exposing transforms between them, so we need to specify a base reference space for {{FakeXRRigidTransformInit}}s so that we can have consistent numerical values across implementations. When used as an origin, {{FakeXRRigidTransformInit}}s are in the base reference space where the [=viewer=]'s [=native origin=] is identity at initialization, unless otherwise specified. In this space, the {{XRReferenceSpaceType/"local"}} reference space has a [=native origin=] of identity. This is an arbitrary choice: changing this reference space doesn't affect the data returned by the WebXR API, but we must make such a choice so that the tests produce the same results across different UAs. When used as an origin it is logically a transform <i>from</i> the origin's space <i>to</i> the underlying base reference space described above.
+Simulated Input Device {#simulated-devices-input}
+------------
 
+This API gives tests the ability to spin up a <dfn>simulated XR input source</dfn> which is an [=/XR input source=] which from the point of view of the WebXR API behaves like a normal [=/XR input source=]. These [=simulated XR input source|simulated XR input sources=] can be controlled by the associated {{FakeXRInputController}} object.
+
+Every [=simulated XR input source=] has a <dfn for="simulated XR input source">handedness</dfn> which is an {{XRHandedness}} value that MUST be returned for the corresponding [=/XR input source|XR input source's=] {{XRInputSource/handedness}} attribute.
+
+Every [=simulated XR input source=] has a <dfn for="simulated XR input source">targetRayMode</dfn> which is an {{XRTargetRayMode}} value that MUST be returned for the corresponding [=/XR input source|XR input source's=] {{XRInputSource/targetRayMode}} attribute.
+
+Every [=simulated XR input source=] has a <dfn for="simulated XR input source">pointerOrigin</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/targetRaySpace}}. The basis for this origin depends on the value of [=targetRayMode=].
+
+A [=simulated XR input source=] may have a <dfn for="simulated XR input source">gripOrigin</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/gripSpace}}.
+
+Every [=simulated XR input source=] has a <dfn for="simulated XR input source">profiles</dfn> array which is an array of {{DOMString}}s which MUST be returned for the corresponding [=/XR input source|XR input source's=] {{XRInputSource/profiles}} attribute.
+
+If a UA implements the <a href="https://immersive-web.github.io/webxr-gamepads-module/">WebXR Gamepads Module</a>, then the [=simulated XR input source=] SHOULD have <dfn for="simulated XR input source">supportedButtons</dfn> which is an array of {{FakeXRButtonStateInit}}s used to set the state for the corresponding [=/XR input source|XR input source's=] {{XRInputSource/gamepad}} object.
+
+Every [=simulated XR input source=] has a <dfn for="simulated XR input source">connectionState</dfn> which is a boolean that is initially <code>true</code> and indicates whether the associated [=/XR input source=] should appear in {{XRSession/inputSources}}. When it is changed the associated changes must be reflected on the XRSession, including triggering the {{XRSession/inputsourceschange}} event if necessary by the [=next animation frame=].
 
 Initialization {#initialization}
 ==============
@@ -309,6 +328,10 @@ To <dfn>parse a view</dfn> given a {{FakeXRViewInit}} |init|, perform the follow
   1. Return |view|.
 
 </div>
+
+FakeXRRigidTransformInit {#fakexrrigidtransform-base-space}
+------------
+The WebXR API never exposes native origins directly, instead exposing transforms between them, so we need to specify a base reference space for {{FakeXRRigidTransformInit}}s so that we can have consistent numerical values across implementations. When used as an origin, {{FakeXRRigidTransformInit}}s are in the base reference space where the [=viewer=]'s [=native origin=] is identity at initialization, unless otherwise specified. In this space, the {{XRReferenceSpaceType/"local"}} reference space has a [=native origin=] of identity. This is an arbitrary choice: changing this reference space doesn't affect the data returned by the WebXR API, but we must make such a choice so that the tests produce the same results across different UAs. When used as an origin it is logically a transform <i>from</i> the origin's space <i>to</i> the underlying base reference space described above.
 
 Mocking {#mocking}
 ==============
