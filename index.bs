@@ -220,7 +220,7 @@ When this method is invoked, the user agent MUST run the following steps:
 
 </div>
 
-When <dfn method for=XRTest>simulateUserActivation(f)</dfn> is called, invoke <code>f</code> as if it was [=triggered by user activation=].
+When <dfn method for=XRTest>simulateUserActivation(f)</dfn> is called, invoke <code>f</code> as if it had [=transient activation=].
 
 
 When <dfn method for=XRTest>disconnectAllDevices()</dfn> is called, remove all [=simulated XR devices=] from the [=context object=]'s {{XR}} object's [=list of immersive XR devices=] as if they were disconnected. If the [=inline XR device=] is a [=simulated XR device=], reset it to the default [=inline XR device=].

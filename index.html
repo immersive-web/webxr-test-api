@@ -1222,7 +1222,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/W3C-ED" rel="stylesheet" type="text/css">
-  <meta content="Bikeshed version c1dbacab, updated Mon Mar 30 18:56:12 2020 -0700" name="generator">
+  <meta content="Bikeshed version d4d56a96, updated Fri Apr 10 11:10:34 2020 -0700" name="generator">
   <link href="https://immersive-web.github.io/webxr-test-api/" rel="canonical">
   <link href="favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
   <link href="favicon-96x96.png" rel="icon" sizes="96x96" type="image/png">
@@ -1538,7 +1538,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">WebXR Test API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2020-04-07">7 April 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2020-04-22">22 April 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1730,7 +1730,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <p>Return <var>promise</var>.</p>
     </ol>
    </div>
-   <p>When <dfn class="dfn-paneled idl-code" data-dfn-for="XRTest" data-dfn-type="method" data-export id="dom-xrtest-simulateuseractivation"><code>simulateUserActivation(f)</code></dfn> is called, invoke <code>f</code> as if it was <a data-link-type="dfn">triggered by user activation</a>.</p>
+   <p>When <dfn class="dfn-paneled idl-code" data-dfn-for="XRTest" data-dfn-type="method" data-export id="dom-xrtest-simulateuseractivation"><code>simulateUserActivation(f)</code></dfn> is called, invoke <code>f</code> as if it had <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation">transient activation</a>.</p>
    <p>When <dfn class="dfn-paneled idl-code" data-dfn-for="XRTest" data-dfn-type="method" data-export id="dom-xrtest-disconnectalldevices"><code>disconnectAllDevices()</code></dfn> is called, remove all <a data-link-type="dfn" href="#simulated-xr-device" id="ref-for-simulated-xr-device①①">simulated XR devices</a> from the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#context-object" id="ref-for-context-object">context object</a>'s <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webxr/#xr" id="ref-for-xr">XR</a></code> object’s <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#list-of-immersive-xr-devices" id="ref-for-list-of-immersive-xr-devices①">list of immersive XR devices</a> as if they were disconnected. If the <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device①">inline XR device</a> is a <a data-link-type="dfn" href="#simulated-xr-device" id="ref-for-simulated-xr-device①②">simulated XR device</a>, reset it to the default <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device②">inline XR device</a>.</p>
    <h3 class="heading settled" data-level="4.3" id="fakexrdeviceinit-dict"><span class="secno">4.3. </span><span class="content">FakeXRDeviceInit</span><a class="self-link" href="#fakexrdeviceinit-dict"></a></h3>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexrdeviceinit"><code><c- g>FakeXRDeviceInit</c-></code></dfn> {
@@ -2195,6 +2195,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-in-parallel">4.2. XRTest</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-transient-activation">
+   <a href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation">https://html.spec.whatwg.org/multipage/interaction.html#transient-activation</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-transient-activation">4.2. XRTest</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-list-append">
    <a href="https://infra.spec.whatwg.org/#list-append">https://infra.spec.whatwg.org/#list-append</a><b>Referenced in:</b>
    <ul>
@@ -2553,6 +2559,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-in-parallel" style="color:initial">in parallel</span>
+     <li><span class="dfn-paneled" id="term-for-transient-activation" style="color:initial">transient activation</span>
     </ul>
    <li>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
