@@ -47,6 +47,9 @@ spec:webxr-1;
 <pre class="anchors">
 spec:webxr-dom-overlays; urlPrefix: https://immersive-web.github.io/dom-overlays#
     type:dfn; text:beforexrselect
+spec:WebXR Anchors Module; urlPrefix: https://immersive-web.github.io/anchors/#
+    for: XRAnchor;
+        type: method; text: delete(); url: dom-xranchor-delete
 </pre>
 
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -712,16 +715,16 @@ A user agent MUST dispatch an <dfn>anchorcreate</dfn> event on a {{FakeXRDevice}
 <script type="idl">
 
 interface FakeXRAnchorCreationEvent : Event {
-  // Arguments to the call:
-  // Location of the requested anchor, relative to base reference space.
+  // Arguments passed in to anchor creation requst:
+  [SameObject]
   readonly attribute FakeXRRigidTransformInit requestedAnchorOrigin;
-  // True if the requested anchor should be attached to the entity, false otherwise.
   readonly attribute boolean isAttachedToEntity;
 
-  // Result of the call.
+  // Communicating result:
   attribute boolean success;
 
-  // Controller that could be used to modify the anchor location in case the call is deemed successful.
+  // Controlling anchor post-creation:
+  [SameObject]
   readonly attribute FakeXRAnchorController anchorController;
 };
 
@@ -729,19 +732,39 @@ interface FakeXRAnchorCreationEvent : Event {
 
 The {{FakeXRAnchorCreationEvent}} interface can be used by the Web Platform Tests to control the result of a call to create an anchor, and to be able to subsequently control the newly created anchor.
 
+The {{FakeXRAnchorCreationEvent/requestedAnchorOrigin}} attribute represents a transform from the requested anchor origin to the [=base reference space=] used by the device.
+
+The {{FakeXRAnchorCreationEvent/isAttachedToEntity}} attribute will be set to <code>true</code> if the created anchor should be treated as attached to some entity. If so, the tests could emulate entity changing location by appropriately controlling the anchor via {{FakeXRAnchorCreationEvent/anchorController}}.
+
+The {{FakeXRAnchorCreationEvent/success}} attribute SHOULD be set by the event handler to signal the result of the anchor creation request. It is initialized to <code>false</code> - as a consequence, if the event handler does not set it to <code>true</code>, the anchor creation request will be treated as failed.
+
+The {{FakeXRAnchorCreationEvent/anchorController}} attribute can be used to update the state of the anchor, assuming that the creation request was deemed successful. Tests SHOULD store it and issue commands to it for the entire duration of controlled anchor's lifetime.
+
 <script type="idl">
 
 interface FakeXRAnchorController {
-  // The anchor will still be considered tracked, but it will not be localizable.
+  readonly attribute boolean deleted;
+
   void pauseTracking();
-  // If the anchor tracing was paused, the anchor will yet again be localizable.
   void resumeTracking();
-  // The anchor will no longer be tracked. It also implies that the anchor is not localizable.
   void stopTracking();
 
   // Sets the transformation between the base reference space and the anchor.
   // It will only affect poses of the anchor if it is localizable.
   void setAnchorOrigin(FakeXRRigidTransformInit anchorOrigin);
+
 };
 
 </script>
+
+Successfully created anchors can be controlled by the test through the use of {{FakeXRAnchorController}} interface.
+
+The {{FakeXRAnchorController/deleted}} attribute will be set to <code>true</code> when the application has invoked an {{XRAnchor/delete()}} method on the anchor - in that case, the changes to the fake anchor controller will be ignored.
+
+The {{FakeXRAnchorController/pauseTracking()}} method can be used by the tests to signal that the controlled anchor is temporarily untracked (i.e. its location will be unknown).
+
+The {{FakeXRAnchorController/resumeTracking()}} method can be used by the tests to signal that the controlled anchor should have its tracking resumed, if it was temporarily untracked.
+
+The {{FakeXRAnchorController/stopTracking()}} method can be used by the tests to signal that the controlled anchor is no longer tracked and that anchor tracking will not be resumed. After calling this method, the other calls on anchor controller will be ignored.
+
+The {{FakeXRAnchorController/setAnchorOrigin(anchorOrigin)}} method can be used to update the currently used anchor origin. Tests can use this method to simulate updates in anchor pose.
