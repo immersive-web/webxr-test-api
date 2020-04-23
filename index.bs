@@ -161,9 +161,9 @@ Every [=simulated XR input source=] has a <dfn for="simulated XR input source">t
 
 Every [=simulated XR input source=] has a <dfn for="simulated XR input source">pointerOrigin</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/targetRaySpace}}. The basis for this origin depends on the value of [=targetRayMode=].
 
-Issue(immersive-web/webxr-test-api#57): How this origin is defined needs to be determined. Current thinking is that for {{XRTargetRayMode/"gaze"}} and {{XRTargetRayMode/"screen"}} this origin is in the {{XRReferenceSpaceType/"viewer"}}. While {{XRTargetRayMode/"tracked-pointer"}} may be in either {{XRInputSource/gripSpace}} or in the {{XRReferenceSpaceType/"local"}} space.
+Issue(immersive-web/webxr-test-api#57): How this origin is defined needs to be determined. Current thinking is that for {{XRTargetRayMode/"gaze"}} and {{XRTargetRayMode/"screen"}} this origin is in the {{XRReferenceSpaceType/"viewer"}} {{XRReferenceSpace}}. While {{XRTargetRayMode/"tracked-pointer"}} may be in either {{XRInputSource/gripSpace}} or in the {{XRReferenceSpaceType/"local"}} space.
 
-A [=simulated XR input source=] may have a <dfn for="simulated XR input source">gripOrigin</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/gripSpace}}.
+A [=simulated XR input source=] may have a <dfn for="simulated XR input source">gripOrigin</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/gripSpace}}. If this is <code>null</code> the [=simulated XR input source=] is not tracked.
 
 Every [=simulated XR input source=] has a <dfn for="simulated XR input source">profiles</dfn> array which is an array of {{DOMString}}s which MUST be returned for the corresponding [=/XR input source|XR input source's=] {{XRInputSource/profiles}} attribute.
 
@@ -554,6 +554,8 @@ To <dfn>simulate a full primary action</dfn> on a [=simulated XR input source=] 
 
 Note: If a gamepad is attached to the [=simulated XR input source=], then running [=start a primary action=] or [=stop a primary action=] should also ensure that the primary input's corresponding gamepad button is updated accordingly.
 
+Note: If both [=start a primary action=] and [=stop a primary action=] are run in the same frame, then by the [=next animation frame=] It is expected that {{XRSession/onselect}} and {{XRSession/onselectend}} events will fire.
+
 <div class="algorithm" data-algorithm="parse-supported-buttons">
 To <dfn>parse supported buttons</dfn> on a sequence of {{FakeXRButtonStateInit}}s, |buttons| run the following steps:
     1. Let |l| be an empty list of {{FakeXRButtonStateInit}}s
@@ -568,29 +570,29 @@ The <dfn method for=FakeXRInputController>setTargetRayMode(|targetRayMode|)</dfn
 
 The <dfn method for=FakeXRInputController>setProfiles(|profiles|)</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/profiles=] to |profiles|.
 
-The <dfn method for=FakeXRInputController>setGripOrigin(|gripOrigin|)</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/gripOrigin=] to the resut of running [=parse a rigid transform=] on |gripOrigin|.
+The <dfn method for=FakeXRInputController>setGripOrigin(|gripOrigin|)</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/gripOrigin=] to the result of running [=parse a rigid transform=] on |gripOrigin|.
 
 The <dfn method for=FakeXRInputController>clearGripOrigin()</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/gripOrigin=] to <code>null</code>.
 
-The <dfn method for=FakeXRInputController>setPointerOrigin(|pointerOrigin|)</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/pointerOrigin=] to the resut of running [=parse a rigid transform=] on |pointerOrigin|.
+The <dfn method for=FakeXRInputController>setPointerOrigin(|pointerOrigin|)</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/pointerOrigin=] to the result of running [=parse a rigid transform=] on |pointerOrigin|.
 
 <div class="algorithm" data-algorithm="fakexrinputcontroller-disconnect">
 The <dfn method for=FakeXRInputController>disconnect()</dfn> method will run the following steps:
     1. If [=FakeXRInputController/inputSource=]'s [=simulated XR input source/connectionState=] is <code>false</code>, abort these steps.
-    1. Set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/connectionState=] to false.
+    1. Set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/connectionState=] to <code>false</code>.
     1. By the [=next animation frame=], notify the {{XRSession}} that this [=/XR input source=] has been removed.
 </div>
 
 <div class="algorithm" data-algorithm="fakexrinputcontroller-reconnect">
 The <dfn method for=FakeXRInputController>reconnect()</dfn> method will run the following steps:
     1. If [=FakeXRInputController/inputSource=]'s [=simulated XR input source/connectionState=] is <code>true</code>, abort these steps.
-    1. Set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/connectionState=] to true.
+    1. Set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/connectionState=] to <code>true</code>.
     1. By the [=next animation frame=], notify the {{XRSession}} that this [=/XR input source=] has been added.
 </div>
 
 The <dfn method for=FakeXRInputController>startSelection()</dfn> method will run [=start a primary action=] on [=FakeXRInputController/inputSource=].
 
-The <dfn method for=FakeXRInputController>stopSelection()</dfn> method will run [=stop a primary action=] on [=FakeXRInputController/inputSource=].
+The <dfn method for=FakeXRInputController>endSelection()</dfn> method will run [=stop a primary action=] on [=FakeXRInputController/inputSource=].
 
 The <dfn method for=FakeXRInputController>simulateSelect()</dfn> method will run [=simulate a full primary action=] on [=FakeXRInputController/inputSource=].
 
