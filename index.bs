@@ -302,7 +302,7 @@ dictionary FakeXRRigidTransformInit {
 
 <p class="advisement">
 The {{FakeXRDeviceInit/supportsImmersive}} is deprecated in favor of {{FakeXRDeviceInit/supportedModes}} and will be removed in future revisions of the specification.
-</p>setViewerOrigin
+</p>
 
 <div class="algorithm" data-algorithm="parse-rigid-transform">
 To <dfn>parse a rigid transform</dfn> given a {{FakeXRRigidTransformInit}} |init|, perform the following steps:
@@ -528,7 +528,7 @@ dictionary FakeXRButtonStateInit {
 
 Each {{FakeXRInputController}} object has an associated <dfn for="FakeXRInputController">inputSource</dfn>, which is a [=simulated XR input source=] that it is able to control.
 
-Since user agents may opt to send input events on a per-frame basis, the results of all {{FakeXRInputController}} methods and {{FakeXRDevice/simulateInputSourceConnection}} are not guaranteed to be visible (via, e.g. {{XRSession/inputSources}} or {{XRSession/oninputsourceschange}} events) until the [=next animation frame=].
+Since user agents may opt to send input events on a per-frame basis, the results of all {{FakeXRInputController}} methods and {{FakeXRDevice/simulateInputSourceConnection()}} are not guaranteed to be visible (via, e.g. {{XRSession/inputSources}} or {{XRSession/oninputsourceschange}} events) until the [=next animation frame=].
 
 <div class="algorithm" data-algorithm="start-a-primary-action">
 To <dfn>start a primary action</dfn> on a [=simulated XR input source=] run the following steps:
