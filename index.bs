@@ -40,6 +40,7 @@ spec:webxr-1;
     type:dfn; text:inline xr device
     type:dfn; text:list of immersive xr devices
     type:dfn; text:primary action
+    type:dfn; text:primary squeeze action
     type:dfn; text:xr input source
 </pre>
 
@@ -160,14 +161,15 @@ Every [=simulated XR input source=] has a <dfn for="simulated XR input source">t
 
 Every [=simulated XR input source=] has a <dfn for="simulated XR input source">pointerOrigin</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/targetRaySpace}}. The basis for this origin depends on the value of [=targetRayMode=].
 
+Issue(immersive-web/webxr-test-api#57): How this origin is defined needs to be determined. Current thinking is that for {{XRTargetRayMode/"gaze"}} and {{XRTargetRayMode/"screen"}} this origin is in the {{XRReferenceSpaceType/"viewer"}}. While {{XRTargetRayMode/"tracked-pointer"}} may be in either {{XRInputSource/gripSpace}} or in the {{XRReferenceSpaceType/"local"}} space.
+
 A [=simulated XR input source=] may have a <dfn for="simulated XR input source">gripOrigin</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/gripSpace}}.
 
 Every [=simulated XR input source=] has a <dfn for="simulated XR input source">profiles</dfn> array which is an array of {{DOMString}}s which MUST be returned for the corresponding [=/XR input source|XR input source's=] {{XRInputSource/profiles}} attribute.
 
-<!-- TODO: alcooper, does this matter? Since it supports grip it may not be necessary to gate it. -->
-If a UA implements the <a href="https://immersive-web.github.io/webxr-gamepads-module/">WebXR Gamepads Module</a>, then the [=simulated XR input source=] SHOULD have <dfn for="simulated XR input source">supportedButtons</dfn> which is an array of {{FakeXRButtonStateInit}}s used to set the state for the corresponding [=/XR input source|XR input source's=] {{XRInputSource/gamepad}} object.
+Every [=simulated XR input source=] has a <dfn for="simulated XR input source">buttonState</dfn> array which is an array of {{FakeXRButtonStateInit}}s. If a {{FakeXRButtonType/"grip"}} button is specified, it SHOULD drive the [=/primary squeeze action=]. If a UA implements the <a href="https://immersive-web.github.io/webxr-gamepads-module/">WebXR Gamepads Module</a> [=buttonState=] SHOULD be used to set the state for the corresponding [=/XR input source|XR input source's=] {{XRInputSource/gamepad}} object, which SHOULD be of type {{GamepadMappingType/"xr-standard"}} if enough buttons are specified to support it.
 
-Every [=simulated XR input source=] has a <dfn for="simulated XR input source">connectionState</dfn> which is a boolean that is initially <code>true</code> and indicates whether the associated [=/XR input source=] should appear in {{XRSession/inputSources}}. When it is changed the associated changes must be reflected on the XRSession, including triggering the {{XRSession/inputsourceschange}} event if necessary by the [=next animation frame=].
+Every [=simulated XR input source=] has a <dfn for="simulated XR input source">connectionState</dfn> which is a boolean that is initially <code>true</code> and indicates whether the associated [=/XR input source=] should appear in {{XRSession/inputSources}}. When it is changed the associated changes must be reflected on the XRSession, including triggering the {{XRSession/inputsourceschange}} event if necessary by the [=next animation frame=]. 
 
 Every [=simulated XR input source=] has a <dfn for="simulated XR input source">primaryActionStarted</dfn> which is a boolean, initially set to <code>false</code>, that indicates whether or not the primary action of the XR input source has been started.
 
@@ -464,10 +466,8 @@ When this method is invoked, the user agent MUST run the following steps:
     1. Set |inputSource|'s [=simulated XR input source/profiles=] to |init|'s {{FakeXRInputSourceInit/profiles}}
     1. If |init|'s {{FakeXRInputSourceInit/gripOrigin}} is set, set |inputSource|'s [=simulated XR input source/gripOrigin=] to the result of running [=parse a rigid transform=] on |init|'s {{FakeXRInputSourceInit/gripOrigin}}
     1. Set |inputSource|'s [=simulated XR input source/pointerOrigin=] to the result of running [=parse a rigid transform=] on |init|'s {{FakeXRInputSourceInit/pointerOrigin}}
-    1. If |init|'s {{FakeXRInputSourceInit/supportedButtons}} is set, set |inputSource|'s [=simulated XR input source/supportedButtons=] to the result of running [=parse supported buttons=] on |init|'s {{FakeXRInputSourceInit/supportedButtons}}
-    1. If |init|'s {{FakeXRInputSourceInit/selectionClicked}} is set to <code>true</code>, run the following steps:
-        1. Run [=start a primary action=] on |inputSource|.
-        1. Run [=stop a primary action=] on |inputSource|.
+    1. If |init|'s {{FakeXRInputSourceInit/supportedButtons}} is set, set |inputSource|'s [=simulated XR input source/buttonState=] to the result of running [=parse supported buttons=] on |init|'s {{FakeXRInputSourceInit/supportedButtons}}
+    1. If |init|'s {{FakeXRInputSourceInit/selectionClicked}} is set to <code>true</code>, run [=simulate a full primary action=] on |inputSource|.
     1. If |init|'s {{FakeXRInputSourceInit/selectionStarted}} is set to <code>true</code>, run [=start a primary action=] on |inputSource|.
     1. By the [=next animation frame=] notify {{XRSession}} of the new [=/XR input source=].
     1. Let |c| be a new {{FakeXRInputController}} object with {[=FakeXRInputController/inputSource=] as |inputSource|.
@@ -528,24 +528,98 @@ dictionary FakeXRButtonStateInit {
 
 Each {{FakeXRInputController}} object has an associated <dfn for="FakeXRInputController">inputSource</dfn>, which is a [=simulated XR input source=] that it is able to control.
 
+Since user agents may opt to send input events on a per-frame basis, the results of all {{FakeXRInputController}} methods and {{FakeXRDevice/simulateInputSourceConnection}} are not guaranteed to be visible (via, e.g. {{XRSession/inputSources}} or {{XRSession/oninputsourceschange}} events) until the [=next animation frame=].
+
 <div class="algorithm" data-algorithm="start-a-primary-action">
 To <dfn>start a primary action</dfn> on a [=simulated XR input source=] run the following steps:
     1. If [=simulated XR input source/primaryActionStarted=] is true, abort these steps.
     1. Set [=simulated XR input source/primaryActionStarted=] to true.
-    1. By the [=next animation frame=], indicate to the {{XRSession}} that the corresponding [=/XR input source|XR input source's=] [=/primary action=] has started.
+    1. By the [=next animation frame=] indicate to the {{XRSession}} that the corresponding [=/XR input source|XR input source's=] [=/primary action=] has started.
 </div>
+
 <div class="algorithm" data-algorithm="stop-a-primary-action">
 To <dfn>stop a primary action</dfn> on a [=simulated XR input source=] run the following steps:
     1. If [=simulated XR input source/primaryActionStarted=] is false, abort these steps.
     1. Set [=simulated XR input source/primaryActionStarted=] to false.
-    1. By the [=next animation frame=], indicate to the {{XRSession}} that the corresponding [=/XR input source|XR input source's=] [=/primary action=] has stopped.
+    1. By the [=next animation frame=] indicate to the {{XRSession}} that the corresponding [=/XR input source|XR input source's=] [=/primary action=] has stopped.
 </div>
+
+<div class="algorithm" data-algorithm="simulate-a-full-primary-action">
+To <dfn>simulate a full primary action</dfn> on a [=simulated XR input source=] |source|, run the following steps:
+    1. Let |current| be the current value of [=simulated XR input source/primaryActionStarted=].
+    1. Run [=start a primary action=] on |source|
+    1. Run [=stop a primary action=] on |source|
+    1. If |current| is <code>true</code> run [=start a primary action=] on |source|
+</div>
+
+Note: If a gamepad is attached to the [=simulated XR input source=], then running [=start a primary action=] or [=stop a primary action=] should also ensure that the primary input's corresponding gamepad button is updated accordingly.
+
 <div class="algorithm" data-algorithm="parse-supported-buttons">
 To <dfn>parse supported buttons</dfn> on a sequence of {{FakeXRButtonStateInit}}s, |buttons| run the following steps:
     1. Let |l| be an empty list of {{FakeXRButtonStateInit}}s
     1. For each |button| in |buttons|:
         1. If |l| does not contain a {{FakeXRButtonStateInit}} whose {{FakeXRButtonStateInit/buttonType}} matches |button|'s {{FakeXRButtonStateInit/buttonType}}, append |button| to |l|.
     1. Return |l|
+</div>
+
+The <dfn method for=FakeXRInputController>setHandedness(|handedness|)</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/handedness=] to |handedness|.
+
+The <dfn method for=FakeXRInputController>setTargetRayMode(|targetRayMode|)</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/targetRayMode=] to |targetRayMode|.
+
+The <dfn method for=FakeXRInputController>setProfiles(|profiles|)</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/profiles=] to |profiles|.
+
+The <dfn method for=FakeXRInputController>setGripOrigin(|gripOrigin|)</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/gripOrigin=] to the resut of running [=parse a rigid transform=] on |gripOrigin|.
+
+The <dfn method for=FakeXRInputController>clearGripOrigin()</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/gripOrigin=] to <code>null</code>.
+
+The <dfn method for=FakeXRInputController>setPointerOrigin(|pointerOrigin|)</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/pointerOrigin=] to the resut of running [=parse a rigid transform=] on |pointerOrigin|.
+
+<div class="algorithm" data-algorithm="fakexrinputcontroller-disconnect">
+The <dfn method for=FakeXRInputController>disconnect()</dfn> method will run the following steps:
+    1. If [=FakeXRInputController/inputSource=]'s [=simulated XR input source/connectionState=] is <code>false</code>, abort these steps.
+    1. Set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/connectionState=] to false.
+    1. By the [=next animation frame=], notify the {{XRSession}} that this [=/XR input source=] has been removed.
+</div>
+
+<div class="algorithm" data-algorithm="fakexrinputcontroller-reconnect">
+The <dfn method for=FakeXRInputController>reconnect()</dfn> method will run the following steps:
+    1. If [=FakeXRInputController/inputSource=]'s [=simulated XR input source/connectionState=] is <code>true</code>, abort these steps.
+    1. Set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/connectionState=] to true.
+    1. By the [=next animation frame=], notify the {{XRSession}} that this [=/XR input source=] has been added.
+</div>
+
+The <dfn method for=FakeXRInputController>startSelection()</dfn> method will run [=start a primary action=] on [=FakeXRInputController/inputSource=].
+
+The <dfn method for=FakeXRInputController>stopSelection()</dfn> method will run [=stop a primary action=] on [=FakeXRInputController/inputSource=].
+
+The <dfn method for=FakeXRInputController>simulateSelect()</dfn> method will run [=simulate a full primary action=] on [=FakeXRInputController/inputSource=].
+
+The <dfn method for=FakeXRInputController>setSupportedButtons(|supportedButtons|)</dfn> will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/buttonState=] to the result of running [=parse supported buttons=] on |supportedButtons|.
+
+Note: As user agents may recreate the {{XRInputSource}} or {{XRInputSource/gamepad}} objects on buttons being changed, this method SHOULD NOT be used to simulate changes to button state.
+
+<div class="algorithm" data-algorithm="update-button-state">
+The <dfn method for=FakeXRInputController>updateButtonState(|buttonState|)</dfn> will run the following steps:
+    1. Let |validState| equal the results of running [=validate a button state=] on |buttonState|.
+    1. Let |foundState| be <code>null</code>.
+    1. For every |state| in [=FakeXRInputController/inputSource=]'s [=simulated XR input source/buttonState=] array:
+        1. If |state|'s {{FakeXRButtonStateInit/buttonType}} matches |buttonState|'s {{FakeXRButtonStateInit/buttonType}}:
+            1. Set |foundState| to a reference of |state|
+            1. Break out of this loop
+    1. If |foundState| is <code>null</code> throw a {{NotFoundError}}
+    1. Update |foundState|'s attributes in [=FakeXRInputController/inputSource=]'s [=simulated XR input source/buttonState=] to match those of |validState|. Note: If {{FakeXRButtonStateInit/buttonType}} is {{FakeXRButtonType/grip}}, then [=XR input source=]'s [=/primary squeeze action=] should be updated.
+</div>
+
+<div class="algorithm" data-algorithm="validate-a-button-state">
+To <dfn>validate a button state</dfn> on a {{FakeXRButtonStateInit}} |buttonState| run the following steps:
+    1. Let |validState| equal |buttonState|.
+    1. If {{FakeXRButtonStateInit/pressed}} is <code>true</code> and {{FakeXRButtonStateInit/touched}} is <code>false</code>, throw a {{TypeError}}.
+    1. If {{FakeXRButtonStateInit/pressedValue}} is less than <code>0.0</code>, throw a {{TypeError}}.
+    1. If {{FakeXRButtonStateInit/pressedValue}} is greater than <code>0.0</code> and {{FakeXRButtonStateInit/touched}} is <code>false</code> throw a {{TypeError}}.
+    1. If {{FakeXRButtonStateInit/buttonType}} is not one of: {{FakeXRButtonType/"touchpad"}}, {{FakeXRButtonType/"thumbstick"}}, or {{FakeXRButtonType/"optional-thumbstick"}}:
+        1. Set |validState|'s {{FakeXRButtonStateInit/xValue}} to <code>0.0</code>.
+        1. Set |validState|'s {{FakeXRButtonStateInit/yValue}} to <code>0.0</code>.
+    1. Return |validState|.
 </div>
 
 Hit test extensions {#hit-test-extensions}
