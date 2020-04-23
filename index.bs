@@ -745,14 +745,13 @@ The {{FakeXRAnchorCreationEvent/anchorController}} attribute can be used to upda
 interface FakeXRAnchorController {
   readonly attribute boolean deleted;
 
+  // Controlling anchor state:
   void pauseTracking();
   void resumeTracking();
   void stopTracking();
 
-  // Sets the transformation between the base reference space and the anchor.
-  // It will only affect poses of the anchor if it is localizable.
+  // Controlling anchor location:
   void setAnchorOrigin(FakeXRRigidTransformInit anchorOrigin);
-
 };
 
 </script>
