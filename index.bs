@@ -700,7 +700,7 @@ When <dfn method for=FakeXRInputController>setOverlayPointerPosition(x, y)</dfn>
 Anchors extensions {#anchors-extensions}
 ==================
 
-The hit test extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/anchors/">WebXR Anchors</a>.
+The anchors extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/anchors/">WebXR Anchors</a>.
 
 <script type="idl">
 
