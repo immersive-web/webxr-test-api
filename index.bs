@@ -718,14 +718,11 @@ A user agent MUST dispatch an <dfn>anchorcreate</dfn> event on a {{FakeXRDevice}
 <script type="idl">
 
 interface FakeXRAnchorCreationEvent : Event {
-  // Arguments passed in to anchor creation requst:
   [SameObject] readonly attribute FakeXRRigidTransformInit requestedAnchorOrigin;
   readonly attribute boolean isAttachedToEntity;
 
-  // Communicating result:
   attribute boolean success;
 
-  // Controlling anchor post-creation:
   [SameObject] readonly attribute FakeXRAnchorController anchorController;
 };
 
