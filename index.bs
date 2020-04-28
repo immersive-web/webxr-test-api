@@ -27,7 +27,7 @@ spec:webxr-1;
     type:event; text:reset
     type:dfn; text:xr device
     type:dfn; for: XRBoundedReferenceSpace; text:native bounds geometry
-    type:dfn; text:native origin
+    type:dfn; for: XRSpace; text:native origin
     type:dfn; text:viewer
     type:dfn; text:view
     type:dfn; text:view offset
@@ -47,6 +47,10 @@ spec:webxr-1;
 <pre class="anchors">
 spec:webxr-dom-overlays; urlPrefix: https://immersive-web.github.io/dom-overlays#
     type:dfn; text:beforexrselect
+spec:WebXR Anchors Module; urlPrefix: https://immersive-web.github.io/anchors/#
+    for: XRAnchor;
+        type: method; text: delete(); url: dom-xranchor-delete
+        type: dfn; text: native origin; url: xranchor-native-origin
 </pre>
 
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -336,7 +340,7 @@ To <dfn>parse a view</dfn> given a {{FakeXRViewInit}} |init|, perform the follow
 
 FakeXRRigidTransformInit {#fakexrrigidtransform-base-space}
 ------------
-The WebXR API never exposes native origins directly, instead exposing transforms between them, so we need to specify a base reference space for {{FakeXRRigidTransformInit}}s so that we can have consistent numerical values across implementations. When used as an origin, {{FakeXRRigidTransformInit}}s are in the base reference space where the [=viewer=]'s [=native origin=] is identity at initialization, unless otherwise specified. In this space, the {{XRReferenceSpaceType/"local"}} reference space has a [=native origin=] of identity. This is an arbitrary choice: changing this reference space doesn't affect the data returned by the WebXR API, but we must make such a choice so that the tests produce the same results across different UAs. When used as an origin it is logically a transform <i>from</i> the origin's space <i>to</i> the underlying base reference space described above.
+The WebXR API never exposes native origins directly, instead exposing transforms between them, so we need to specify a <dfn>base reference space</dfn> for {{FakeXRRigidTransformInit}}s so that we can have consistent numerical values across implementations. When used as an origin, {{FakeXRRigidTransformInit}}s are in the [=base reference space=] where the [=viewer=]'s [=native origin=] is identity at initialization, unless otherwise specified. In this space, the {{XRReferenceSpaceType/"local"}} reference space has a [=native origin=] of identity. This is an arbitrary choice: changing this reference space doesn't affect the data returned by the WebXR API, but we must make such a choice so that the tests produce the same results across different UAs. When used as an origin it is logically a transform <i>from</i> the origin's space <i>to</i> the underlying [=base reference space=] described above.
 
 Mocking {#mocking}
 ==============
@@ -345,7 +349,7 @@ FakeXRDevice {#fakexrdevice-interface}
 ------------
 
 <script type="idl">
-interface FakeXRDevice {
+interface FakeXRDevice : EventTarget {
   void setViews(sequence<FakeXRViewInit> views);
 
   Promise<void> disconnect();
@@ -693,3 +697,74 @@ partial interface FakeXRInputController {
 </script>
 
 When <dfn method for=FakeXRInputController>setOverlayPointerPosition(x, y)</dfn> is called, it sets a position within the DOM overlay in DOM coordinates for the next [=XR animation frame=], and is cleared after that frame. It is intended to be used along with a [=primary action=] for that frame, simulating that the user is interacting with the DOM overlay. The UA will emit a [=beforexrselect=] event at this location before generating XR select events.
+
+Anchors extensions {#anchors-extensions}
+==================
+
+The anchors extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/anchors/">WebXR Anchors</a>.
+
+<script type="idl">
+
+partial interface FakeXRDevice {
+  attribute EventHandler onanchorcreate;
+};
+
+</script>
+
+The {{FakeXRDevice/onanchorcreate}} attribute is an [=Event handler IDL attribute=] for the [=anchorcreate=] event type.
+
+A user agent MUST dispatch an <dfn>anchorcreate</dfn> event on a {{FakeXRDevice}} when it receives a request to create an anchor. The event MUST be of type {{FakeXRAnchorCreationEvent}}.
+
+<script type="idl">
+
+interface FakeXRAnchorCreationEvent : Event {
+  [SameObject] readonly attribute FakeXRRigidTransformInit requestedAnchorOrigin;
+  readonly attribute boolean isAttachedToEntity;
+
+  attribute boolean success;
+
+  [SameObject] readonly attribute FakeXRAnchorController anchorController;
+};
+
+</script>
+
+The {{FakeXRAnchorCreationEvent}} interface can be used by the Web Platform Tests to control the result of a call to create an anchor, and to be able to subsequently control the newly created anchor.
+
+The {{FakeXRAnchorCreationEvent/requestedAnchorOrigin}} attribute represents a transform from the requested anchor origin to the [=base reference space=] used by the device.
+
+The {{FakeXRAnchorCreationEvent/isAttachedToEntity}} attribute will be set to <code>true</code> if the created anchor should be treated as attached to some entity. If so, the tests could emulate entity changing location by appropriately controlling the anchor via {{FakeXRAnchorCreationEvent/anchorController}}.
+
+The {{FakeXRAnchorCreationEvent/success}} attribute SHOULD be set by the event handler to signal the result of the anchor creation request. It is initialized to <code>false</code> - as a consequence, if the event handler does not set it to <code>true</code>, the anchor creation request will be treated as failed.
+
+The {{FakeXRAnchorCreationEvent/anchorController}} attribute can be used to update the state of the anchor, assuming that the creation request was deemed successful. Tests SHOULD store it and issue commands to it for the entire duration of controlled anchor's lifetime.
+
+<script type="idl">
+
+interface FakeXRAnchorController {
+  readonly attribute boolean deleted;
+
+  // Controlling anchor state:
+  void pauseTracking();
+  void resumeTracking();
+  void stopTracking();
+
+  // Controlling anchor location:
+  void setAnchorOrigin(FakeXRRigidTransformInit anchorOrigin);
+};
+
+</script>
+
+Successfully created anchors can be controlled by the test through the use of {{FakeXRAnchorController}} interface.
+
+The {{FakeXRAnchorController}} has an associated internal <dfn for=FakeXRAnchorController>anchor origin</dfn>, which is a {{FakeXRRigidTransformInit}} describing the current state of the anchor's [=XRAnchor/native origin=].
+
+The {{FakeXRAnchorController/deleted}} attribute will be set to <code>true</code> when the application has invoked an {{XRAnchor/delete()}} method on the anchor - in that case, the changes to the fake anchor controller will be ignored.
+
+The {{FakeXRAnchorController/pauseTracking()}} method can be used by the tests to signal that the controlled anchor is temporarily untracked (i.e. its location will be unknown). Calling this method does not modify [=FakeXRAnchorController/anchor origin=] of the controller.
+
+The {{FakeXRAnchorController/resumeTracking()}} method can be used by the tests to signal that the controlled anchor should have its tracking resumed, if it was temporarily untracked. Calling this method does not modify [=FakeXRAnchorController/anchor origin=] of the controller.
+
+The {{FakeXRAnchorController/stopTracking()}} method can be used by the tests to signal that the controlled anchor is no longer tracked and that anchor tracking will not be resumed. After calling this method, the other calls on anchor controller will be ignored.
+
+The {{FakeXRAnchorController/setAnchorOrigin(anchorOrigin)}} method can be used to set the controller's [=FakeXRAnchorController/anchor origin=]. Tests can use this method to simulate updates in anchor pose.
+
