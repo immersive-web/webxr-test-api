@@ -163,9 +163,11 @@ Every [=simulated XR input source=] has a <dfn for="simulated XR input source">h
 
 Every [=simulated XR input source=] has a <dfn for="simulated XR input source">targetRayMode</dfn> which is an {{XRTargetRayMode}} value that MUST be returned for the corresponding [=/XR input source|XR input source's=] {{XRInputSource/targetRayMode}} attribute.
 
-Every [=simulated XR input source=] has a <dfn for="simulated XR input source">pointerOrigin</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/targetRaySpace}}. The basis for this origin depends on the value of [=targetRayMode=].
+Every [=simulated XR input source=] has a <dfn for="simulated XR input source">pointerOrigin</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/targetRaySpace}} in the [=base reference space=].
 
-Issue(immersive-web/webxr-test-api#57): How this origin is defined needs to be determined. Current thinking is that for {{XRTargetRayMode/"gaze"}} and {{XRTargetRayMode/"screen"}} this origin is in the {{XRReferenceSpaceType/"viewer"}} {{XRReferenceSpace}}. While {{XRTargetRayMode/"tracked-pointer"}} may be in either {{XRInputSource/gripSpace}} or in the {{XRReferenceSpaceType/"local"}} space.
+Every [=simulated XR input source=] has a <dfn for="simulated XR input source">pointerOffset</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/targetRaySpace}} in the [=pointer offset base space=]. 
+
+Only one of [=simulated XR input source/pointerOrigin=] and [=simulated XR input source/pointerOffset=] may be non-<code>null</code> at a given time.
 
 A [=simulated XR input source=] may have a <dfn for="simulated XR input source">gripOrigin</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/gripSpace}}. If this is <code>null</code> the [=simulated XR input source=] is not tracked.
 
@@ -176,6 +178,8 @@ Every [=simulated XR input source=] has a <dfn for="simulated XR input source">b
 Every [=simulated XR input source=] has a <dfn for="simulated XR input source">connectionState</dfn> which is a boolean that is initially <code>true</code> and indicates whether the associated [=/XR input source=] should appear in {{XRSession/inputSources}}. When it is changed the associated changes must be reflected on the XRSession, including triggering the {{XRSession/inputsourceschange}} event if necessary by the [=next animation frame=]. 
 
 Every [=simulated XR input source=] has a <dfn for="simulated XR input source">primaryActionStarted</dfn> which is a boolean, initially set to <code>false</code>, that indicates whether or not the primary action of the XR input source has been started.
+
+If both [=simulated XR input source/gripOrigin=] and [=simulated XR input source/pointerOrigin=] are <code>null</code>, the [=simulated XR input source=] MUST NOT be locatable.
 
 Initialization {#initialization}
 ==============
@@ -342,6 +346,23 @@ FakeXRRigidTransformInit {#fakexrrigidtransform-base-space}
 ------------
 The WebXR API never exposes native origins directly, instead exposing transforms between them, so we need to specify a <dfn>base reference space</dfn> for {{FakeXRRigidTransformInit}}s so that we can have consistent numerical values across implementations. When used as an origin, {{FakeXRRigidTransformInit}}s are in the [=base reference space=] where the [=viewer=]'s [=native origin=] is identity at initialization, unless otherwise specified. In this space, the {{XRReferenceSpaceType/"local"}} reference space has a [=native origin=] of identity. This is an arbitrary choice: changing this reference space doesn't affect the data returned by the WebXR API, but we must make such a choice so that the tests produce the same results across different UAs. When used as an origin it is logically a transform <i>from</i> the origin's space <i>to</i> the underlying [=base reference space=] described above.
 
+<div class="algorithm" data-algorithm="pointer-offset-base-space">
+The <dfn>pointer offset base space</dfn> is the reference space that should be used in place of the [=base reference space=] for a given [=simulated XR input source/pointerOffset=].
+
+To determine the [=pointer offset base space=] for a given [=simulated XR input source=] |source| run the following steps:
+  1. Let |rayMode| be |source|'s [=simulated XR input source/targetRayMode=]
+    <dl class=switch>
+      <dt> If |rayMode| is {{XRTargetRayMode/"screen"}} or {{XRTargetRayMode/"gaze"}}: </dt>
+      <dd> Use the {{XRReferenceSpaceType/"viewer"}} reference space as the [=pointer offset base space=] </dd>
+      <dt> Else if |rayMode| is {{XRTargetRayMode/"tracked-pointer"}}: </dt>
+      <dd> Use the space where |source|'s [=simulated XR input source/gripOrigin=] is identity </dd>
+      <dt> Else: </dt>
+      <dd> Use the previously defined [=base reference space=]. </dd>
+    </dl>
+
+  Note: It is still okay to use the [=simulated XR input source/gripOrigin=] as the [=pointer offset base space=] if it is <code>null</code>. This represents a state where the transform between the grip and the pointer is known, but the position of the grip (and therefore the pointer) in the [=base reference space=] is not known. As such, in this situation, the [=simulated XR input source=] is not tracked, as the pointer position is unknown.
+</div>
+
 Mocking {#mocking}
 ==============
 
@@ -469,7 +490,15 @@ When this method is invoked, the user agent MUST run the following steps:
     1. Set |inputSource|'s [=simulated XR input source/targetRayMode=] to |init|'s {{FakeXRInputSourceInit/targetRayMode}}.
     1. Set |inputSource|'s [=simulated XR input source/profiles=] to |init|'s {{FakeXRInputSourceInit/profiles}}
     1. If |init|'s {{FakeXRInputSourceInit/gripOrigin}} is set, set |inputSource|'s [=simulated XR input source/gripOrigin=] to the result of running [=parse a rigid transform=] on |init|'s {{FakeXRInputSourceInit/gripOrigin}}
-    1. Set |inputSource|'s [=simulated XR input source/pointerOrigin=] to the result of running [=parse a rigid transform=] on |init|'s {{FakeXRInputSourceInit/pointerOrigin}}
+    1. Set |inputSource|'s [=simulated XR input source/pointerOrigin=] and [=simulated XR input source/pointerOffset=] as follows:
+        <dl class="switch">
+          <dt> If |init|'s {{FakeXRInputSourceInit/pointerOffset}} is not <code>null</code>
+          <dd> Set |inputSource|'s [=simulated XR input source/pointerOffset=] to the result of running [=parse a rigid transform=] on |init|'s {{FakeXRInputSourceInit/pointerOffset}}.
+          <dt> Else if |init|'s {{FakeXRInputSourceInit/pointerOrigin}} is not <code>null</code>
+          <dd> Set |inputSource|'s [=simulated XR input source/pointerOrigin=] to the result of running [=parse a rigid transform=] on |init|'s {{FakeXRInputSourceInit/pointerOrigin}}.
+          <dt> Else
+          <dd> throw a {{TypeError}}
+        </dl>
     1. If |init|'s {{FakeXRInputSourceInit/supportedButtons}} is set, set |inputSource|'s [=simulated XR input source/buttonState=] to the result of running [=parse supported buttons=] on |init|'s {{FakeXRInputSourceInit/supportedButtons}}
     1. If |init|'s {{FakeXRInputSourceInit/selectionClicked}} is set to <code>true</code>, run [=simulate a full primary action=] on |inputSource|.
     1. If |init|'s {{FakeXRInputSourceInit/selectionStarted}} is set to <code>true</code>, run [=start a primary action=] on |inputSource|.
@@ -478,6 +507,10 @@ When this method is invoked, the user agent MUST run the following steps:
     1. Return |c|.
 </div>
 
+<p class="advisement">
+If both {{FakeXRInputSourceInit/pointerOffset}} and {{FakeXRInputSourceInit/pointerOrigin}} are set, {{FakeXRInputSourceInit/pointerOffset}} takes precedence. However, future revisions of the specification will consider this an error.
+</p>
+
 FakeXRInputController {#fakexrinputcontroller-init}
 ------------
 
@@ -485,8 +518,9 @@ FakeXRInputController {#fakexrinputcontroller-init}
 dictionary FakeXRInputSourceInit {
   required XRHandedness handedness;
   required XRTargetRayMode targetRayMode;
-  required FakeXRRigidTransformInit pointerOrigin;
   required sequence<DOMString> profiles;
+  FakeXRRigidTransformInit pointerOrigin;
+  FakeXRRigidTransformInit pointerOffset;
   boolean selectionStarted = false;
   boolean selectionClicked = false;
   sequence<FakeXRButtonStateInit> supportedButtons;
@@ -500,6 +534,7 @@ interface FakeXRInputController {
   void setGripOrigin(FakeXRRigidTransformInit gripOrigin, optional boolean emulatedPosition = false);
   void clearGripOrigin();
   void setPointerOrigin(FakeXRRigidTransformInit pointerOrigin, optional boolean emulatedPosition = false);
+  void setPointerOffset(FakeXRRigidTransformInit pointerOffset);
 
   void disconnect();
   void reconnect();
@@ -578,7 +613,17 @@ The <dfn method for=FakeXRInputController>setGripOrigin(|gripOrigin|)</dfn> meth
 
 The <dfn method for=FakeXRInputController>clearGripOrigin()</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/gripOrigin=] to <code>null</code>.
 
-The <dfn method for=FakeXRInputController>setPointerOrigin(|pointerOrigin|)</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/pointerOrigin=] to the result of running [=parse a rigid transform=] on |pointerOrigin|.
+<div class="algorithm" data-algorithm="fakexrinputcontroller-set-pointer-origin">
+The <dfn method for=FakeXRInputController>setPointerOrigin(|pointerOrigin|)</dfn> method will, by the [=next animation frame=], run the following steps:
+    1. Set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/pointerOrigin=] to the result of running [=parse a rigid transform=] on |pointerOrigin|.
+    1. Set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/pointerOffset=] to <code>null</code>.
+</div>
+
+<div class="algorithm" data-algorithm="fakexrinputcontroller-set-pointer-offset">
+The <dfn method for=FakeXRInputController>setPointerOffset(|pointerOffset|)</dfn> method will, by the [=next animation frame=], run the following steps:
+    1. Set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/pointerOffset=] to the result of running [=parse a rigid transform=] on |pointerOffset|.
+    1. Set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/pointerOrigin=] to <code>null</code>.
+</div>
 
 <div class="algorithm" data-algorithm="fakexrinputcontroller-disconnect">
 The <dfn method for=FakeXRInputController>disconnect()</dfn> method will run the following steps:
