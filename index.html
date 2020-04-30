@@ -1538,7 +1538,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">WebXR Test API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2020-04-28">28 April 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2020-04-30">30 April 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1880,16 +1880,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <dt>If such an operation is triggered within an <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xr-animation-frame" id="ref-for-xr-animation-frame">XR animation frame</a>:
      <dd>Choose the next <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xr-animation-frame" id="ref-for-xr-animation-frame①">XR animation frame</a>, whenever it may occur
      <dt>If such an operation is triggered outside of an <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xr-animation-frame" id="ref-for-xr-animation-frame②">XR animation frame</a>:
-     <dd>
-      Choose a frame based on the following: 
-      <dl class="switch">
-       <dt>If there are no callbacks in the <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#list-of-animation-frame-callbacks" id="ref-for-list-of-animation-frame-callbacks">list of animation frame callbacks</a>:
-       <dd>Choose the next <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xr-animation-frame" id="ref-for-xr-animation-frame③">XR animation frame</a>, whenever it may occur
-       <dt>Otherwise:
-       <dd>Choose the next-to-next <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xr-animation-frame" id="ref-for-xr-animation-frame④">XR animation frame</a>, whenever it may occur
-      </dl>
+     <dd>Choose either the next or next-to-next <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xr-animation-frame" id="ref-for-xr-animation-frame③">XR animation frame</a>. The precise choice is up to the user agent and may be dependent on the exact timing of these events. 
     </dl>
-    <p class="note" role="note"><span>NOTE:</span> The reason we defer an extra frame when there are pending animation frame callbacks is to avoid having to deal with potential race conditions when the device is ready to trigger an animation frame callback, but has not yet. In practice, this means that tests should be written so that they wait until they have performed all such operations <i>before</i> calling the next <code class="idl"><a data-link-type="idl" href="https://immersive-web.github.io/webxr/#dom-xrsession-requestanimationframe" id="ref-for-dom-xrsession-requestanimationframe①">requestAnimationFrame()</a></code></p>
+    <p class="note" role="note"><span>NOTE:</span> The reason we defer an extra frame when there are pending animation frame callbacks is to avoid having to deal with potential race conditions when the device is ready to trigger an animation frame callback, but has not yet. In practice, this means that tests should be written so that they wait until they have performed all such operations <i>before</i> calling the next <code class="idl"><a data-link-type="idl" href="https://immersive-web.github.io/webxr/#dom-xrsession-requestanimationframe" id="ref-for-dom-xrsession-requestanimationframe①">requestAnimationFrame()</a></code>, and in case they are running outside of an <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xr-animation-frame" id="ref-for-xr-animation-frame④">XR animation frame</a>, should always wait two frames before expecting any updates to take effect.</p>
    </div>
    <div class="algorithm" data-algorithm="set-views">
      The <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="method" data-export id="dom-fakexrdevice-setviews"><code>setViews(<var>views</var>)</code></dfn> method performs the following steps: 
@@ -2795,12 +2788,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-eventdef-xrsession-inputsourceschange">3.2. Simulated Input Device</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-list-of-animation-frame-callbacks">
-   <a href="https://immersive-web.github.io/webxr/#list-of-animation-frame-callbacks">https://immersive-web.github.io/webxr/#list-of-animation-frame-callbacks</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-list-of-animation-frame-callbacks">5.1. FakeXRDevice</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="term-for-list-of-immersive-xr-devices">
    <a href="https://immersive-web.github.io/webxr/#list-of-immersive-xr-devices">https://immersive-web.github.io/webxr/#list-of-immersive-xr-devices</a><b>Referenced in:</b>
    <ul>
@@ -3080,7 +3067,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <li><span class="dfn-paneled" id="term-for-inline-xr-device" style="color:initial">inline xr device</span>
      <li><span class="dfn-paneled" id="term-for-dom-xrsession-inputsources" style="color:initial">inputSources</span>
      <li><span class="dfn-paneled" id="term-for-eventdef-xrsession-inputsourceschange" style="color:initial">inputsourceschange</span>
-     <li><span class="dfn-paneled" id="term-for-list-of-animation-frame-callbacks" style="color:initial">list of animation frame callbacks</span>
      <li><span class="dfn-paneled" id="term-for-list-of-immersive-xr-devices" style="color:initial">list of immersive xr devices</span>
      <li><span class="dfn-paneled" id="term-for-list-of-supported-modes" style="color:initial">list of supported modes</span>
      <li><span class="dfn-paneled" id="term-for-xrboundedreferencespace-native-bounds-geometry" style="color:initial">native bounds geometry</span>
