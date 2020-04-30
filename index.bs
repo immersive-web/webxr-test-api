@@ -385,17 +385,11 @@ To determine when this frame is, for a given operation, choose a frame based on 
     <dt>If such an operation is triggered within an [=XR animation frame=]:</dt>
     <dd>Choose the next [=XR animation frame=], whenever it may occur</dd>
     <dt>If such an operation is triggered outside of an [=XR animation frame=]:</dt>
-    <dd>Choose a frame based on the following:
-        <dl class=switch>
-            <dt>If there are no callbacks in the [=list of animation frame callbacks=]:</dt>
-            <dd>Choose the next [=XR animation frame=], whenever it may occur</dd>
-            <dt>Otherwise:</dt>
-            <dd>Choose the next-to-next [=XR animation frame=], whenever it may occur</dd>
-        </dl>
+    <dd>Choose either the next or next-to-next [=XR animation frame=]. The precise choice is up to the user agent and may be dependent on the exact timing of these events.
     </dd>
     </dl>
 
-NOTE: The reason we defer an extra frame when there are pending animation frame callbacks is to avoid having to deal with potential race conditions when the device is ready to trigger an animation frame callback, but has not yet. In practice, this means that tests should be written so that they wait until they have performed all such operations <i>before</i> calling the next {{XRSession/requestAnimationFrame()}}
+NOTE: The reason we defer an extra frame when there are pending animation frame callbacks is to avoid having to deal with potential race conditions when the device is ready to trigger an animation frame callback, but has not yet. In practice, this means that tests should be written so that they wait until they have performed all such operations <i>before</i> calling the next {{XRSession/requestAnimationFrame()}}, and in case they are running outside of an [=XR animation frame=], should always wait two frames before expecting any updates to take effect.
 </div>
 
 <div class="algorithm" data-algorithm="set-views">
