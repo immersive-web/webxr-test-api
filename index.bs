@@ -163,9 +163,7 @@ Every [=simulated XR input source=] has a <dfn for="simulated XR input source">h
 
 Every [=simulated XR input source=] has a <dfn for="simulated XR input source">targetRayMode</dfn> which is an {{XRTargetRayMode}} value that MUST be returned for the corresponding [=/XR input source|XR input source's=] {{XRInputSource/targetRayMode}} attribute.
 
-Every [=simulated XR input source=] has a <dfn for="simulated XR input source">pointerOrigin</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/targetRaySpace}}. The basis for this origin depends on the value of [=targetRayMode=].
-
-Issue(immersive-web/webxr-test-api#57): How this origin is defined needs to be determined. Current thinking is that for {{XRTargetRayMode/"gaze"}} and {{XRTargetRayMode/"screen"}} this origin is in the {{XRReferenceSpaceType/"viewer"}} {{XRReferenceSpace}}. While {{XRTargetRayMode/"tracked-pointer"}} may be in either {{XRInputSource/gripSpace}} or in the {{XRReferenceSpaceType/"local"}} space.
+Every [=simulated XR input source=] has a <dfn for="simulated XR input source">pointerOrigin</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/targetRaySpace}}.
 
 A [=simulated XR input source=] may have a <dfn for="simulated XR input source">gripOrigin</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/gripSpace}}. If this is <code>null</code> the [=simulated XR input source=] is not tracked.
 
