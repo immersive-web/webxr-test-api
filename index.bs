@@ -216,7 +216,6 @@ When this method is invoked, the user agent MUST run the following steps:
         1. Let |v| be the result of running [=parse a view=] on |view|.
         1. If running [=parse a view=] threw an error, reject |promise| with this error and abort these steps.
         1. [=list/Append=] |v| to |device|'s list of views.
-    1. If |init|'s {{FakeXRDeviceInit/supportedFeatures}} is set, set |device|'s [=capable of supporting|list of features it is capable of supporting=] to |init|'s {{FakeXRDeviceInit/supportedFeatures}}.
     1. If |init|'s {{FakeXRDeviceInit/boundsCoordinates}} is set, perform the following steps:
         1. If |init|'s {{FakeXRDeviceInit/boundsCoordinates}} has less than 3 elements, reject |promise| with {{TypeError}} and abort these steps.
         1. Set |device|'s [=simulated XR device/native bounds geometry=] to |init|'s {{FakeXRDeviceInit/boundsCoordinates}}.
@@ -236,6 +235,11 @@ When this method is invoked, the user agent MUST run the following steps:
             1. If |init|'s {{FakeXRDeviceInit/supportsImmersive}} is <code>true</code>, append <code>"immersive-vr"</code> to |supportedModes|.
         </dd>
         </dl>
+    1. If |init|'s {{FakeXRDeviceInit/supportedFeatures}} is set, for each |mode| in |supportedModes|:
+       1. Associate |init|'s {{FakeXRDeviceInit/supportedFeatures}} to |mode|
+
+NOTE: each |device| stores a [=capable of supporting|list of features it is capable of supporting=] per {{XRSessionMode}}. Most tests only test one mode anyway so there isn't much to be gained by splitting features per mode in {{FakeXRDeviceInit}}. Users wishing different modes supporting different features should create multiple devices instead.
+
     1. Set |device|'s [=list of supported modes=] to |supportedModes|.
     1. Register |device| based on the following:
         1. If |supportedModes| contains <code>"immersive-vr"</code> or <code>"immersive-ar"</code>, append |device| to the {{Navigator/xr}}'s [=list of immersive XR devices=].
