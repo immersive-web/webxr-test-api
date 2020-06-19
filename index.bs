@@ -701,38 +701,30 @@ The anchors extensions for test API SHOULD be implemented by all user agents tha
 
 <script type="idl">
 
+dictionary FakeXRAnchorCreationParameters {
+  FakeXRRigidTransformInit requestedAnchorOrigin;
+  boolean isAttachedToEntity;
+};
+
+callback FakeXRAnchorCreationCallback = Promise<boolean> (FakeXRAnchorCreationParameters parameters, FakeXRAnchorController anchorController);
+
 partial interface FakeXRDevice {
-  attribute EventHandler onanchorcreate;
+  void setAnchorCreationCallback(FakeXRAnchorCreationCallback? callback);
 };
 
 </script>
 
-The {{FakeXRDevice/onanchorcreate}} attribute is an [=Event handler IDL attribute=] for the [=anchorcreate=] event type.
+The {{FakeXRAnchorCreationCallback}} callback can be used by the Web Platform Tests to control the result of a call to create an anchor, and to be able to subsequently control the newly created anchor.
 
-A user agent MUST dispatch an <dfn>anchorcreate</dfn> event on a {{FakeXRDevice}} when it receives a request to create an anchor. The event MUST be of type {{FakeXRAnchorCreationEvent}}.
+The {{FakeXRDevice}} interface is extended with <dfn for="FakeXRDevice">anchorCreationCallback</dfn>, initially set to <code>null</code>. When the device receives a request to create an anchor, it MUST invoke the [=FakeXRDevice/anchorCreationCallback=] if it is not <code>null</code>. If the [=FakeXRDevice/anchorCreationCallback=] is <code>null</code>, the anchor creation request MUST be treated as failed. Otherwise, the status of anchor creation MUST be the same as the value to which the promise returned by the [=FakeXRDevice/anchorCreationCallback=] got resolved to.
 
-<script type="idl">
+The WPTs can set the anchor creation callback that is supposed to be used by calling {{FakeXRDevice/setAnchorCreationCallback(callback)}}.
 
-interface FakeXRAnchorCreationEvent : Event {
-  [SameObject] readonly attribute FakeXRRigidTransformInit requestedAnchorOrigin;
-  readonly attribute boolean isAttachedToEntity;
+The {{FakeXRAnchorCreationParameters/requestedAnchorOrigin}} attribute represents a transform from the requested anchor origin to the [=base reference space=] used by the device.
 
-  attribute boolean success;
+The {{FakeXRAnchorCreationParameters/isAttachedToEntity}} attribute will be set to <code>true</code> if the created anchor should be treated as attached to some entity. If so, the tests could emulate entity changing location by appropriately controlling the anchor via {{FakeXRAnchorCreationEvent/anchorController}}.
 
-  [SameObject] readonly attribute FakeXRAnchorController anchorController;
-};
-
-</script>
-
-The {{FakeXRAnchorCreationEvent}} interface can be used by the Web Platform Tests to control the result of a call to create an anchor, and to be able to subsequently control the newly created anchor.
-
-The {{FakeXRAnchorCreationEvent/requestedAnchorOrigin}} attribute represents a transform from the requested anchor origin to the [=base reference space=] used by the device.
-
-The {{FakeXRAnchorCreationEvent/isAttachedToEntity}} attribute will be set to <code>true</code> if the created anchor should be treated as attached to some entity. If so, the tests could emulate entity changing location by appropriately controlling the anchor via {{FakeXRAnchorCreationEvent/anchorController}}.
-
-The {{FakeXRAnchorCreationEvent/success}} attribute SHOULD be set by the event handler to signal the result of the anchor creation request. It is initialized to <code>false</code> - as a consequence, if the event handler does not set it to <code>true</code>, the anchor creation request will be treated as failed.
-
-The {{FakeXRAnchorCreationEvent/anchorController}} attribute can be used to update the state of the anchor, assuming that the creation request was deemed successful. Tests SHOULD store it and issue commands to it for the entire duration of controlled anchor's lifetime.
+The <dfn for=FakeXRAnchorCreationCallback>anchorController</dfn> parameter passed in to {{FakeXRAnchorCreationCallback}} can be used to update the state of the anchor, assuming that the creation request was deemed successful. Tests SHOULD store it and issue commands to it for the entire duration of controlled anchor's lifetime.
 
 <script type="idl">
 
