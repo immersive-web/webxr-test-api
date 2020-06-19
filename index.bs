@@ -57,7 +57,6 @@ spec:WebXR Anchors Module; urlPrefix: https://immersive-web.github.io/anchors/#
 <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
 
 <style>
-<style>
   .unstable::before {
     content: "This section is not stable";
     display: block;
@@ -716,13 +715,24 @@ partial interface FakeXRDevice {
 
 The {{FakeXRAnchorCreationCallback}} callback can be used by the Web Platform Tests to control the result of a call to create an anchor, and to be able to subsequently control the newly created anchor.
 
-The {{FakeXRDevice}} interface is extended with internal <dfn for="FakeXRDevice">anchorCreationCallback</dfn>, initially set to <code>null</code>. When the device receives a request to create an anchor, it MUST invoke the [=FakeXRDevice/anchorCreationCallback=] if it is not <code>null</code>. If the [=FakeXRDevice/anchorCreationCallback=] is <code>null</code>, the anchor creation request MUST be treated as failed. Otherwise, the status of anchor creation MUST be the same as the value to which the promise returned by the [=FakeXRDevice/anchorCreationCallback=] resolved to. If the promise was rejected, the anchor creation MUST be treated as failed.
+The {{FakeXRDevice}} interface is extended with internal <dfn for="FakeXRDevice">anchorCreationCallback</dfn>, initially set to <code>null</code>. When the device receives a request to create an anchor, it MUST run the [=determine if the anchor creation succeeded=] algorithm.
+
+<div class="algorithm" data-algorithm="determine-if-anchor-creation-succeded">
+
+In order to <dfn>determine if the anchor creation succeeded</dfn>, the {{FakeXRDevice}} |device| MUST run the following steps:
+1. If the |device|'s [=FakeXRDevice/anchorCreationCallback=] is <code>null</code>, return <code>false</code> and abort these steps.
+1. Let |promise| be the result of invoking [=FakeXRDevice/anchorCreationCallback=] with parameters set so that they reflect the parameters passed to anchor creation request.
+1. [=React=] to |promise|:
+    - If |promise| was fulfilled with value |v|, then return |v| and abort these steps.
+    - If |promise| was rejected, then return <code>false</code> and abort these steps.
+
+</div>
 
 The WPTs can set the anchor creation callback by calling {{FakeXRDevice/setAnchorCreationCallback(callback)}}.
 
-The {{FakeXRAnchorCreationParameters/requestedAnchorOrigin}} attribute represents a transform from the requested anchor origin to the [=base reference space=] used by the device.
+The {{FakeXRAnchorCreationParameters/requestedAnchorOrigin}} attribute represents a transform expressed relative to [=base reference space=] used by the device.
 
-The {{FakeXRAnchorCreationParameters/isAttachedToEntity}} attribute will be set to <code>true</code> if the created anchor should be treated as attached to some entity. If so, the tests could emulate entity changing location by appropriately controlling the anchor via {{FakeXRAnchorCreationEvent/anchorController}}.
+The {{FakeXRAnchorCreationParameters/isAttachedToEntity}} attribute will be set to <code>true</code> if the created anchor should be treated as attached to some entity. If so, the tests could emulate entity changing location by appropriately controlling the anchor via [=FakeXRAnchorCreationCallback/anchorController=].
 
 The <dfn for=FakeXRAnchorCreationCallback>anchorController</dfn> parameter passed in to {{FakeXRAnchorCreationCallback}} can be used to update the state of the anchor, assuming that the creation request was deemed successful. Tests SHOULD store it and issue commands to it for the entire duration of controlled anchor's lifetime.
 
