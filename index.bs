@@ -716,9 +716,9 @@ partial interface FakeXRDevice {
 
 The {{FakeXRAnchorCreationCallback}} callback can be used by the Web Platform Tests to control the result of a call to create an anchor, and to be able to subsequently control the newly created anchor.
 
-The {{FakeXRDevice}} interface is extended with <dfn for="FakeXRDevice">anchorCreationCallback</dfn>, initially set to <code>null</code>. When the device receives a request to create an anchor, it MUST invoke the [=FakeXRDevice/anchorCreationCallback=] if it is not <code>null</code>. If the [=FakeXRDevice/anchorCreationCallback=] is <code>null</code>, the anchor creation request MUST be treated as failed. Otherwise, the status of anchor creation MUST be the same as the value to which the promise returned by the [=FakeXRDevice/anchorCreationCallback=] got resolved to.
+The {{FakeXRDevice}} interface is extended with internal <dfn for="FakeXRDevice">anchorCreationCallback</dfn>, initially set to <code>null</code>. When the device receives a request to create an anchor, it MUST invoke the [=FakeXRDevice/anchorCreationCallback=] if it is not <code>null</code>. If the [=FakeXRDevice/anchorCreationCallback=] is <code>null</code>, the anchor creation request MUST be treated as failed. Otherwise, the status of anchor creation MUST be the same as the value to which the promise returned by the [=FakeXRDevice/anchorCreationCallback=] resolved to. If the promise was rejected, the anchor creation MUST be treated as failed.
 
-The WPTs can set the anchor creation callback that is supposed to be used by calling {{FakeXRDevice/setAnchorCreationCallback(callback)}}.
+The WPTs can set the anchor creation callback by calling {{FakeXRDevice/setAnchorCreationCallback(callback)}}.
 
 The {{FakeXRAnchorCreationParameters/requestedAnchorOrigin}} attribute represents a transform from the requested anchor origin to the [=base reference space=] used by the device.
 
