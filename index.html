@@ -1175,7 +1175,7 @@ Possible extra rowspan handling
 		   1. When table < content column, centers table in column.
 		   2. When content < table < available, left-aligns.
 		   3. When table > available, fills available + scroll bar.
-		*/ 
+		*/
 		display: grid;
 		grid-template-columns: minmax(0, 50em);
 	}
@@ -1222,11 +1222,10 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/W3C-ED" rel="stylesheet" type="text/css">
-  <meta content="Bikeshed version e3f9ab1a, updated Fri Apr 24 17:43:54 2020 -0700" name="generator">
+  <meta content="Bikeshed version 40de15f9, updated Thu Jun 11 17:47:04 2020 -0700" name="generator">
   <link href="https://immersive-web.github.io/webxr-test-api/" rel="canonical">
   <link href="favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
   <link href="favicon-96x96.png" rel="icon" sizes="96x96" type="image/png">
-<style>
 <style>
   .unstable::before {
     content: "This section is not stable";
@@ -1538,7 +1537,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">WebXR Test API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2020-05-01">1 May 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2020-06-23">23 June 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -2210,28 +2209,41 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>When <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRInputController" data-dfn-type="method" data-export id="dom-fakexrinputcontroller-setoverlaypointerposition"><code>setOverlayPointerPosition(x, y)</code></dfn> is called, it sets a position within the DOM overlay in DOM coordinates for the next <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xr-animation-frame" id="ref-for-xr-animation-frame⑤">XR animation frame</a>, and is cleared after that frame. It is intended to be used along with a <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#primary-action" id="ref-for-primary-action②">primary action</a> for that frame, simulating that the user is interacting with the DOM overlay. The UA will emit a <a data-link-type="dfn" href="https://immersive-web.github.io/dom-overlays#beforexrselect" id="ref-for-beforexrselect">beforexrselect</a> event at this location before generating XR select events.</p>
    <h2 class="heading settled" data-level="8" id="anchors-extensions"><span class="secno">8. </span><span class="content">Anchors extensions</span><a class="self-link" href="#anchors-extensions"></a></h2>
    <p>The anchors extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/anchors/">WebXR Anchors</a>.</p>
-<pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#fakexrdevice" id="ref-for-fakexrdevice⑦"><c- g>FakeXRDevice</c-></a> {
-  <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="https://html.spec.whatwg.org/multipage/webappapis.html#eventhandler" id="ref-for-eventhandler"><c- n>EventHandler</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="attribute" data-export data-type="EventHandler" id="dom-fakexrdevice-onanchorcreate"><code><c- g>onanchorcreate</c-></code></dfn>;
+<pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexranchorcreationparameters"><code><c- g>FakeXRAnchorCreationParameters</c-></code></dfn> {
+  <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit①②"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorCreationParameters" data-dfn-type="dict-member" data-export data-type="FakeXRRigidTransformInit " id="dom-fakexranchorcreationparameters-requestedanchororigin"><code><c- g>requestedAnchorOrigin</c-></code></dfn>;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑧"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorCreationParameters" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-fakexranchorcreationparameters-isattachedtoentity"><code><c- g>isAttachedToEntity</c-></code></dfn>;
+};
+
+<c- b>callback</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="callback" data-export id="callbackdef-fakexranchorcreationcallback"><code><c- g>FakeXRAnchorCreationCallback</c-></code></dfn> = <c- b>Promise</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑨"><c- b>boolean</c-></a>> (<a class="n" data-link-type="idl-name" href="#dictdef-fakexranchorcreationparameters" id="ref-for-dictdef-fakexranchorcreationparameters"><c- n>FakeXRAnchorCreationParameters</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRAnchorCreationCallback" data-dfn-type="argument" data-export id="dom-fakexranchorcreationcallback-parameters"><code><c- g>parameters</c-></code><a class="self-link" href="#dom-fakexranchorcreationcallback-parameters"></a></dfn>, <a class="n" data-link-type="idl-name" href="#fakexranchorcontroller" id="ref-for-fakexranchorcontroller"><c- n>FakeXRAnchorController</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRAnchorCreationCallback" data-dfn-type="argument" data-export id="dom-fakexranchorcreationcallback-anchorcontroller"><code><c- g>anchorController</c-></code><a class="self-link" href="#dom-fakexranchorcreationcallback-anchorcontroller"></a></dfn>);
+
+<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#fakexrdevice" id="ref-for-fakexrdevice⑦"><c- g>FakeXRDevice</c-></a> {
+  <c- b>void</c-> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="method" data-export data-lt="setAnchorCreationCallback(callback)" id="dom-fakexrdevice-setanchorcreationcallback"><code><c- g>setAnchorCreationCallback</c-></code></dfn>(<a class="n" data-link-type="idl-name" href="#callbackdef-fakexranchorcreationcallback" id="ref-for-callbackdef-fakexranchorcreationcallback"><c- n>FakeXRAnchorCreationCallback</c-></a>? <dfn class="idl-code" data-dfn-for="FakeXRDevice/setAnchorCreationCallback(callback)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setanchorcreationcallback-callback-callback"><code><c- g>callback</c-></code><a class="self-link" href="#dom-fakexrdevice-setanchorcreationcallback-callback-callback"></a></dfn>);
 };
 
 </pre>
-   <p>The <code class="idl"><a data-link-type="idl" href="#dom-fakexrdevice-onanchorcreate" id="ref-for-dom-fakexrdevice-onanchorcreate">onanchorcreate</a></code> attribute is an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#event-handler-idl-attributes" id="ref-for-event-handler-idl-attributes">Event handler IDL attribute</a> for the <a data-link-type="dfn" href="#anchorcreate" id="ref-for-anchorcreate">anchorcreate</a> event type.</p>
-   <p>A user agent MUST dispatch an <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="anchorcreate">anchorcreate</dfn> event on a <code class="idl"><a data-link-type="idl" href="#fakexrdevice" id="ref-for-fakexrdevice⑧">FakeXRDevice</a></code> when it receives a request to create an anchor. The event MUST be of type <code class="idl"><a data-link-type="idl" href="#fakexranchorcreationevent" id="ref-for-fakexranchorcreationevent">FakeXRAnchorCreationEvent</a></code>.</p>
-<pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="fakexranchorcreationevent"><code><c- g>FakeXRAnchorCreationEvent</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="https://dom.spec.whatwg.org/#event" id="ref-for-event"><c- n>Event</c-></a> {
-  [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SameObject" id="ref-for-SameObject①"><c- g>SameObject</c-></a>] <c- b>readonly</c-> <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit①②"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorCreationEvent" data-dfn-type="attribute" data-export data-readonly data-type="FakeXRRigidTransformInit" id="dom-fakexranchorcreationevent-requestedanchororigin"><code><c- g>requestedAnchorOrigin</c-></code></dfn>;
-  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑧"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorCreationEvent" data-dfn-type="attribute" data-export data-readonly data-type="boolean" id="dom-fakexranchorcreationevent-isattachedtoentity"><code><c- g>isAttachedToEntity</c-></code></dfn>;
-
-  <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑨"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorCreationEvent" data-dfn-type="attribute" data-export data-type="boolean" id="dom-fakexranchorcreationevent-success"><code><c- g>success</c-></code></dfn>;
-
-  [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SameObject" id="ref-for-SameObject②"><c- g>SameObject</c-></a>] <c- b>readonly</c-> <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="#fakexranchorcontroller" id="ref-for-fakexranchorcontroller"><c- n>FakeXRAnchorController</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorCreationEvent" data-dfn-type="attribute" data-export data-readonly data-type="FakeXRAnchorController" id="dom-fakexranchorcreationevent-anchorcontroller"><code><c- g>anchorController</c-></code></dfn>;
-};
-
-</pre>
-   <p>The <code class="idl"><a data-link-type="idl" href="#fakexranchorcreationevent" id="ref-for-fakexranchorcreationevent①">FakeXRAnchorCreationEvent</a></code> interface can be used by the Web Platform Tests to control the result of a call to create an anchor, and to be able to subsequently control the newly created anchor.</p>
-   <p>The <code class="idl"><a data-link-type="idl" href="#dom-fakexranchorcreationevent-requestedanchororigin" id="ref-for-dom-fakexranchorcreationevent-requestedanchororigin">requestedAnchorOrigin</a></code> attribute represents a transform from the requested anchor origin to the <a data-link-type="dfn" href="#base-reference-space" id="ref-for-base-reference-space②">base reference space</a> used by the device.</p>
-   <p>The <code class="idl"><a data-link-type="idl" href="#dom-fakexranchorcreationevent-isattachedtoentity" id="ref-for-dom-fakexranchorcreationevent-isattachedtoentity">isAttachedToEntity</a></code> attribute will be set to <code>true</code> if the created anchor should be treated as attached to some entity. If so, the tests could emulate entity changing location by appropriately controlling the anchor via <code class="idl"><a data-link-type="idl" href="#dom-fakexranchorcreationevent-anchorcontroller" id="ref-for-dom-fakexranchorcreationevent-anchorcontroller">anchorController</a></code>.</p>
-   <p>The <code class="idl"><a data-link-type="idl" href="#dom-fakexranchorcreationevent-success" id="ref-for-dom-fakexranchorcreationevent-success">success</a></code> attribute SHOULD be set by the event handler to signal the result of the anchor creation request. It is initialized to <code>false</code> - as a consequence, if the event handler does not set it to <code>true</code>, the anchor creation request will be treated as failed.</p>
-   <p>The <code class="idl"><a data-link-type="idl" href="#dom-fakexranchorcreationevent-anchorcontroller" id="ref-for-dom-fakexranchorcreationevent-anchorcontroller①">anchorController</a></code> attribute can be used to update the state of the anchor, assuming that the creation request was deemed successful. Tests SHOULD store it and issue commands to it for the entire duration of controlled anchor’s lifetime.</p>
+   <p>The <code class="idl"><a data-link-type="idl" href="#callbackdef-fakexranchorcreationcallback" id="ref-for-callbackdef-fakexranchorcreationcallback①">FakeXRAnchorCreationCallback</a></code> callback can be used by the Web Platform Tests to control the result of a call to create an anchor, and to be able to subsequently control the newly created anchor.</p>
+   <p>The <code class="idl"><a data-link-type="idl" href="#fakexrdevice" id="ref-for-fakexrdevice⑧">FakeXRDevice</a></code> interface is extended with internal <dfn class="dfn-paneled" data-dfn-for="FakeXRDevice" data-dfn-type="dfn" data-noexport id="fakexrdevice-anchorcreationcallback">anchorCreationCallback</dfn>, initially set to <code>null</code>. When the device receives a request to create an anchor, it MUST run the <a data-link-type="dfn" href="#determine-if-the-anchor-creation-succeeded" id="ref-for-determine-if-the-anchor-creation-succeeded">determine if the anchor creation succeeded</a> algorithm.</p>
+   <div class="algorithm" data-algorithm="determine-if-anchor-creation-succeded">
+    <p>In order to <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="determine-if-the-anchor-creation-succeeded">determine if the anchor creation succeeded</dfn>, the <code class="idl"><a data-link-type="idl" href="#fakexrdevice" id="ref-for-fakexrdevice⑨">FakeXRDevice</a></code> <var>device</var> MUST run the following steps:</p>
+    <ol>
+     <li data-md>
+      <p>If the <var>device</var>’s <a data-link-type="dfn" href="#fakexrdevice-anchorcreationcallback" id="ref-for-fakexrdevice-anchorcreationcallback">anchorCreationCallback</a> is <code>null</code>, return <code>false</code> and abort these steps.</p>
+     <li data-md>
+      <p>Let <var>promise</var> be the result of invoking <a data-link-type="dfn" href="#fakexrdevice-anchorcreationcallback" id="ref-for-fakexrdevice-anchorcreationcallback①">anchorCreationCallback</a> with parameters set so that they reflect the parameters passed to anchor creation request.</p>
+     <li data-md>
+      <p><a data-link-type="dfn" href="https://heycam.github.io/webidl/#dfn-perform-steps-once-promise-is-settled" id="ref-for-dfn-perform-steps-once-promise-is-settled">React</a> to <var>promise</var>:</p>
+      <ul>
+       <li data-md>
+        <p>If <var>promise</var> was fulfilled with value <var>v</var>, then return <var>v</var> and abort these steps.</p>
+       <li data-md>
+        <p>If <var>promise</var> was rejected, then return <code>false</code> and abort these steps.</p>
+      </ul>
+    </ol>
+   </div>
+   <p>The WPTs can set the anchor creation callback by calling <code class="idl"><a data-link-type="idl" href="#dom-fakexrdevice-setanchorcreationcallback" id="ref-for-dom-fakexrdevice-setanchorcreationcallback">setAnchorCreationCallback(callback)</a></code>.</p>
+   <p>The <code class="idl"><a data-link-type="idl" href="#dom-fakexranchorcreationparameters-requestedanchororigin" id="ref-for-dom-fakexranchorcreationparameters-requestedanchororigin">requestedAnchorOrigin</a></code> attribute represents a transform expressed relative to <a data-link-type="dfn" href="#base-reference-space" id="ref-for-base-reference-space②">base reference space</a> used by the device.</p>
+   <p>The <code class="idl"><a data-link-type="idl" href="#dom-fakexranchorcreationparameters-isattachedtoentity" id="ref-for-dom-fakexranchorcreationparameters-isattachedtoentity">isAttachedToEntity</a></code> attribute will be set to <code>true</code> if the created anchor should be treated as attached to some entity. If so, the tests could emulate entity changing location by appropriately controlling the anchor via <a data-link-type="dfn" href="#fakexranchorcreationcallback-anchorcontroller" id="ref-for-fakexranchorcreationcallback-anchorcontroller">anchorController</a>.</p>
+   <p>The <dfn class="dfn-paneled" data-dfn-for="FakeXRAnchorCreationCallback" data-dfn-type="dfn" data-noexport id="fakexranchorcreationcallback-anchorcontroller">anchorController</dfn> parameter passed in to <code class="idl"><a data-link-type="idl" href="#callbackdef-fakexranchorcreationcallback" id="ref-for-callbackdef-fakexranchorcreationcallback②">FakeXRAnchorCreationCallback</a></code> can be used to update the state of the anchor, assuming that the creation request was deemed successful. Tests SHOULD store it and issue commands to it for the entire duration of controlled anchor’s lifetime.</p>
 <pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="fakexranchorcontroller"><code><c- g>FakeXRAnchorController</c-></code></dfn> {
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean①⓪"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorController" data-dfn-type="attribute" data-export data-readonly data-type="boolean" id="dom-fakexranchorcontroller-deleted"><code><c- g>deleted</c-></code></dfn>;
 
@@ -2258,8 +2270,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#dom-fakexranchorcreationevent-anchorcontroller">anchorController</a><span>, in §8</span>
-   <li><a href="#anchorcreate">anchorcreate</a><span>, in §8</span>
+   <li><a href="#fakexranchorcreationcallback-anchorcontroller">anchorController</a><span>, in §8</span>
+   <li><a href="#fakexrdevice-anchorcreationcallback">anchorCreationCallback</a><span>, in §8</span>
    <li><a href="#fakexranchorcontroller-anchor-origin">anchor origin</a><span>, in §8</span>
    <li><a href="#base-reference-space">base reference space</a><span>, in §4.4</span>
    <li><a href="#dom-fakexrdeviceinit-boundscoordinates">boundsCoordinates</a><span>, in §4.3</span>
@@ -2271,6 +2283,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#dom-fakexrdevice-clearworld">clearWorld()</a><span>, in §5.1</span>
    <li><a href="#simulated-xr-input-source-connectionstate">connectionState</a><span>, in §3.2</span>
    <li><a href="#dom-fakexranchorcontroller-deleted">deleted</a><span>, in §8</span>
+   <li><a href="#determine-if-the-anchor-creation-succeeded">determine if the anchor creation succeeded</a><span>, in §8</span>
    <li><a href="#fakexrdevice-device">device</a><span>, in §5.1</span>
    <li><a href="#view-device-resolution">device resolution</a><span>, in §3.1</span>
    <li>
@@ -2286,7 +2299,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#dom-fakexrviewinit-eye">eye</a><span>, in §4.3</span>
    <li><a href="#dom-fakexrregioninit-faces">faces</a><span>, in §6</span>
    <li><a href="#fakexranchorcontroller">FakeXRAnchorController</a><span>, in §8</span>
-   <li><a href="#fakexranchorcreationevent">FakeXRAnchorCreationEvent</a><span>, in §8</span>
+   <li><a href="#callbackdef-fakexranchorcreationcallback">FakeXRAnchorCreationCallback</a><span>, in §8</span>
+   <li><a href="#dictdef-fakexranchorcreationparameters">FakeXRAnchorCreationParameters</a><span>, in §8</span>
    <li><a href="#dictdef-fakexrboundspoint">FakeXRBoundsPoint</a><span>, in §4.3</span>
    <li><a href="#dictdef-fakexrbuttonstateinit">FakeXRButtonStateInit</a><span>, in §5.2</span>
    <li><a href="#enumdef-fakexrbuttontype">FakeXRButtonType</a><span>, in §5.2</span>
@@ -2322,12 +2336,11 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#dom-fakexrdeviceresolution-height">height</a><span>, in §4.3</span>
    <li><a href="#dom-fakexrworldinit-hittestregions">hitTestRegions</a><span>, in §6</span>
    <li><a href="#fakexrinputcontroller-inputsource">inputSource</a><span>, in §5.2</span>
-   <li><a href="#dom-fakexranchorcreationevent-isattachedtoentity">isAttachedToEntity</a><span>, in §8</span>
+   <li><a href="#dom-fakexranchorcreationparameters-isattachedtoentity">isAttachedToEntity</a><span>, in §8</span>
    <li><a href="#dom-fakexrfieldofviewinit-leftdegrees">leftDegrees</a><span>, in §4.3</span>
    <li><a href="#dom-fakexrregiontype-mesh">"mesh"</a><span>, in §6</span>
    <li><a href="#simulated-xr-device-native-bounds-geometry">native bounds geometry</a><span>, in §3.1</span>
    <li><a href="#xrsession-next-animation-frame">next animation frame</a><span>, in §5.1</span>
-   <li><a href="#dom-fakexrdevice-onanchorcreate">onanchorcreate</a><span>, in §8</span>
    <li><a href="#dom-fakexrbuttontype-optional-button">"optional-button"</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrbuttontype-optional-thumbstick">"optional-thumbstick"</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrrigidtransforminit-orientation">orientation</a><span>, in §4.3</span>
@@ -2355,12 +2368,13 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     </ul>
    <li><a href="#dom-fakexrviewinit-projectionmatrix">projectionMatrix</a><span>, in §4.3</span>
    <li><a href="#dom-fakexrinputcontroller-reconnect">reconnect()</a><span>, in §5.2</span>
-   <li><a href="#dom-fakexranchorcreationevent-requestedanchororigin">requestedAnchorOrigin</a><span>, in §8</span>
+   <li><a href="#dom-fakexranchorcreationparameters-requestedanchororigin">requestedAnchorOrigin</a><span>, in §8</span>
    <li><a href="#dom-fakexrviewinit-resolution">resolution</a><span>, in §4.3</span>
    <li><a href="#dom-fakexranchorcontroller-resumetracking">resumeTracking()</a><span>, in §8</span>
    <li><a href="#dom-fakexrfieldofviewinit-rightdegrees">rightDegrees</a><span>, in §4.3</span>
    <li><a href="#dom-fakexrinputsourceinit-selectionclicked">selectionClicked</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrinputsourceinit-selectionstarted">selectionStarted</a><span>, in §5.2</span>
+   <li><a href="#dom-fakexrdevice-setanchorcreationcallback">setAnchorCreationCallback(callback)</a><span>, in §8</span>
    <li><a href="#dom-fakexranchorcontroller-setanchororigin">setAnchorOrigin(anchorOrigin)</a><span>, in §8</span>
    <li><a href="#dom-fakexrdevice-setboundsgeometry">setBoundsGeometry(boundsCoordinates)</a><span>, in §5.1</span>
    <li><a href="#dom-fakexrdevice-setfloororigin">setFloorOrigin(origin)</a><span>, in §5.1</span>
@@ -2390,7 +2404,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#dom-fakexrinputcontroller-startselection">startSelection()</a><span>, in §5.2</span>
    <li><a href="#stop-a-primary-action">stop a primary action</a><span>, in §5.2</span>
    <li><a href="#dom-fakexranchorcontroller-stoptracking">stopTracking()</a><span>, in §8</span>
-   <li><a href="#dom-fakexranchorcreationevent-success">success</a><span>, in §8</span>
    <li><a href="#dom-fakexrinputsourceinit-supportedbuttons">supportedButtons</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrdeviceinit-supportedfeatures">supportedFeatures</a><span>, in §4.3</span>
    <li><a href="#dom-fakexrdeviceinit-supportedmodes">supportedModes</a><span>, in §4.3</span>
@@ -2423,12 +2436,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#dom-fakexrbuttonstateinit-yvalue">yValue</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrboundspoint-z">z</a><span>, in §4.3</span>
   </ul>
-  <aside class="dfn-panel" data-for="term-for-event">
-   <a href="https://dom.spec.whatwg.org/#event">https://dom.spec.whatwg.org/#event</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-event">8. Anchors extensions</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="term-for-eventtarget">
    <a href="https://dom.spec.whatwg.org/#eventtarget">https://dom.spec.whatwg.org/#eventtarget</a><b>Referenced in:</b>
    <ul>
@@ -2479,18 +2486,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-dom-dompointinit-z">4.3. FakeXRDeviceInit</a> <a href="#ref-for-dom-dompointinit-z①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-eventhandler">
-   <a href="https://html.spec.whatwg.org/multipage/webappapis.html#eventhandler">https://html.spec.whatwg.org/multipage/webappapis.html#eventhandler</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-eventhandler">8. Anchors extensions</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-event-handler-idl-attributes">
-   <a href="https://html.spec.whatwg.org/multipage/webappapis.html#event-handler-idl-attributes">https://html.spec.whatwg.org/multipage/webappapis.html#event-handler-idl-attributes</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-event-handler-idl-attributes">8. Anchors extensions</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="term-for-in-parallel">
    <a href="https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel">https://html.spec.whatwg.org/multipage/infrastructure.html#in-parallel</a><b>Referenced in:</b>
    <ul>
@@ -2539,7 +2534,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <a href="https://heycam.github.io/webidl/#SameObject">https://heycam.github.io/webidl/#SameObject</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-SameObject">4.1. navigator.xr.test</a>
-    <li><a href="#ref-for-SameObject①">8. Anchors extensions</a> <a href="#ref-for-SameObject②">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-exceptiondef-typeerror">
@@ -2584,6 +2578,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <a href="https://heycam.github.io/webidl/#idl-long">https://heycam.github.io/webidl/#idl-long</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-idl-long">4.3. FakeXRDeviceInit</a> <a href="#ref-for-idl-long①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-dfn-perform-steps-once-promise-is-settled">
+   <a href="https://heycam.github.io/webidl/#dfn-perform-steps-once-promise-is-settled">https://heycam.github.io/webidl/#dfn-perform-steps-once-promise-is-settled</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dfn-perform-steps-once-promise-is-settled">8. Anchors extensions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-resolve">
@@ -2963,7 +2963,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li>
     <a data-link-type="biblio">[DOM]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-event" style="color:initial">Event</span>
      <li><span class="dfn-paneled" id="term-for-eventtarget" style="color:initial">EventTarget</span>
      <li><span class="dfn-paneled" id="term-for-context-object" style="color:initial">context object</span>
     </ul>
@@ -2980,8 +2979,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-eventhandler" style="color:initial">EventHandler</span>
-     <li><span class="dfn-paneled" id="term-for-event-handler-idl-attributes" style="color:initial">event handler idl attribute</span>
      <li><span class="dfn-paneled" id="term-for-in-parallel" style="color:initial">in parallel</span>
      <li><span class="dfn-paneled" id="term-for-transient-activation" style="color:initial">transient activation</span>
     </ul>
@@ -3004,6 +3001,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <li><span class="dfn-paneled" id="term-for-idl-double" style="color:initial">double</span>
      <li><span class="dfn-paneled" id="term-for-idl-float" style="color:initial">float</span>
      <li><span class="dfn-paneled" id="term-for-idl-long" style="color:initial">long</span>
+     <li><span class="dfn-paneled" id="term-for-dfn-perform-steps-once-promise-is-settled" style="color:initial">react</span>
      <li><span class="dfn-paneled" id="term-for-resolve" style="color:initial">resolve</span>
     </ul>
    <li>
@@ -3249,18 +3247,15 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setoverlaypointerposition"><c- g>setOverlayPointerPosition</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float"><c- b>float</c-></a> <a href="#dom-fakexrinputcontroller-setoverlaypointerposition-x-y-x"><code><c- g>x</c-></code></a>, <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float"><c- b>float</c-></a> <a href="#dom-fakexrinputcontroller-setoverlaypointerposition-x-y-y"><code><c- g>y</c-></code></a>);
 };
 
-<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#fakexrdevice"><c- g>FakeXRDevice</c-></a> {
-  <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="https://html.spec.whatwg.org/multipage/webappapis.html#eventhandler"><c- n>EventHandler</c-></a> <a data-type="EventHandler" href="#dom-fakexrdevice-onanchorcreate"><code><c- g>onanchorcreate</c-></code></a>;
+<c- b>dictionary</c-> <a href="#dictdef-fakexranchorcreationparameters"><code><c- g>FakeXRAnchorCreationParameters</c-></code></a> {
+  <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a data-type="FakeXRRigidTransformInit " href="#dom-fakexranchorcreationparameters-requestedanchororigin"><code><c- g>requestedAnchorOrigin</c-></code></a>;
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a data-type="boolean " href="#dom-fakexranchorcreationparameters-isattachedtoentity"><code><c- g>isAttachedToEntity</c-></code></a>;
 };
 
+<c- b>callback</c-> <a href="#callbackdef-fakexranchorcreationcallback"><code><c- g>FakeXRAnchorCreationCallback</c-></code></a> = <c- b>Promise</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a>> (<a class="n" data-link-type="idl-name" href="#dictdef-fakexranchorcreationparameters"><c- n>FakeXRAnchorCreationParameters</c-></a> <a href="#dom-fakexranchorcreationcallback-parameters"><code><c- g>parameters</c-></code></a>, <a class="n" data-link-type="idl-name" href="#fakexranchorcontroller"><c- n>FakeXRAnchorController</c-></a> <a href="#dom-fakexranchorcreationcallback-anchorcontroller"><code><c- g>anchorController</c-></code></a>);
 
-<c- b>interface</c-> <a href="#fakexranchorcreationevent"><code><c- g>FakeXRAnchorCreationEvent</c-></code></a> : <a class="n" data-link-type="idl-name" href="https://dom.spec.whatwg.org/#event"><c- n>Event</c-></a> {
-  [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SameObject"><c- g>SameObject</c-></a>] <c- b>readonly</c-> <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a data-readonly data-type="FakeXRRigidTransformInit" href="#dom-fakexranchorcreationevent-requestedanchororigin"><code><c- g>requestedAnchorOrigin</c-></code></a>;
-  <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a data-readonly data-type="boolean" href="#dom-fakexranchorcreationevent-isattachedtoentity"><code><c- g>isAttachedToEntity</c-></code></a>;
-
-  <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a data-type="boolean" href="#dom-fakexranchorcreationevent-success"><code><c- g>success</c-></code></a>;
-
-  [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SameObject"><c- g>SameObject</c-></a>] <c- b>readonly</c-> <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="#fakexranchorcontroller"><c- n>FakeXRAnchorController</c-></a> <a data-readonly data-type="FakeXRAnchorController" href="#dom-fakexranchorcreationevent-anchorcontroller"><code><c- g>anchorController</c-></code></a>;
+<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#fakexrdevice"><c- g>FakeXRDevice</c-></a> {
+  <c- b>void</c-> <a href="#dom-fakexrdevice-setanchorcreationcallback"><code><c- g>setAnchorCreationCallback</c-></code></a>(<a class="n" data-link-type="idl-name" href="#callbackdef-fakexranchorcreationcallback"><c- n>FakeXRAnchorCreationCallback</c-></a>? <a href="#dom-fakexrdevice-setanchorcreationcallback-callback-callback"><code><c- g>callback</c-></code></a>);
 };
 
 
@@ -3585,7 +3580,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-fakexrdevice①">4.2. XRTest</a> <a href="#ref-for-fakexrdevice②">(2)</a>
     <li><a href="#ref-for-fakexrdevice③">5.1. FakeXRDevice</a> <a href="#ref-for-fakexrdevice④">(2)</a> <a href="#ref-for-fakexrdevice⑤">(3)</a>
     <li><a href="#ref-for-fakexrdevice⑥">6. Hit test extensions</a>
-    <li><a href="#ref-for-fakexrdevice⑦">8. Anchors extensions</a> <a href="#ref-for-fakexrdevice⑧">(2)</a>
+    <li><a href="#ref-for-fakexrdevice⑦">8. Anchors extensions</a> <a href="#ref-for-fakexrdevice⑧">(2)</a> <a href="#ref-for-fakexrdevice⑨">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="fakexrdevice-device">
@@ -3975,46 +3970,52 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-dom-fakexrinputcontroller-setoverlaypointerposition">7. DOM overlay extensions</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-fakexrdevice-onanchorcreate">
-   <b><a href="#dom-fakexrdevice-onanchorcreate">#dom-fakexrdevice-onanchorcreate</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dictdef-fakexranchorcreationparameters">
+   <b><a href="#dictdef-fakexranchorcreationparameters">#dictdef-fakexranchorcreationparameters</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-fakexrdevice-onanchorcreate">8. Anchors extensions</a>
+    <li><a href="#ref-for-dictdef-fakexranchorcreationparameters">8. Anchors extensions</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="anchorcreate">
-   <b><a href="#anchorcreate">#anchorcreate</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-fakexranchorcreationparameters-requestedanchororigin">
+   <b><a href="#dom-fakexranchorcreationparameters-requestedanchororigin">#dom-fakexranchorcreationparameters-requestedanchororigin</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-anchorcreate">8. Anchors extensions</a>
+    <li><a href="#ref-for-dom-fakexranchorcreationparameters-requestedanchororigin">8. Anchors extensions</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="fakexranchorcreationevent">
-   <b><a href="#fakexranchorcreationevent">#fakexranchorcreationevent</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-fakexranchorcreationparameters-isattachedtoentity">
+   <b><a href="#dom-fakexranchorcreationparameters-isattachedtoentity">#dom-fakexranchorcreationparameters-isattachedtoentity</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-fakexranchorcreationevent">8. Anchors extensions</a> <a href="#ref-for-fakexranchorcreationevent①">(2)</a>
+    <li><a href="#ref-for-dom-fakexranchorcreationparameters-isattachedtoentity">8. Anchors extensions</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-fakexranchorcreationevent-requestedanchororigin">
-   <b><a href="#dom-fakexranchorcreationevent-requestedanchororigin">#dom-fakexranchorcreationevent-requestedanchororigin</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="callbackdef-fakexranchorcreationcallback">
+   <b><a href="#callbackdef-fakexranchorcreationcallback">#callbackdef-fakexranchorcreationcallback</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-fakexranchorcreationevent-requestedanchororigin">8. Anchors extensions</a>
+    <li><a href="#ref-for-callbackdef-fakexranchorcreationcallback">8. Anchors extensions</a> <a href="#ref-for-callbackdef-fakexranchorcreationcallback①">(2)</a> <a href="#ref-for-callbackdef-fakexranchorcreationcallback②">(3)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-fakexranchorcreationevent-isattachedtoentity">
-   <b><a href="#dom-fakexranchorcreationevent-isattachedtoentity">#dom-fakexranchorcreationevent-isattachedtoentity</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-fakexrdevice-setanchorcreationcallback">
+   <b><a href="#dom-fakexrdevice-setanchorcreationcallback">#dom-fakexrdevice-setanchorcreationcallback</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-fakexranchorcreationevent-isattachedtoentity">8. Anchors extensions</a>
+    <li><a href="#ref-for-dom-fakexrdevice-setanchorcreationcallback">8. Anchors extensions</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-fakexranchorcreationevent-success">
-   <b><a href="#dom-fakexranchorcreationevent-success">#dom-fakexranchorcreationevent-success</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="fakexrdevice-anchorcreationcallback">
+   <b><a href="#fakexrdevice-anchorcreationcallback">#fakexrdevice-anchorcreationcallback</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-fakexranchorcreationevent-success">8. Anchors extensions</a>
+    <li><a href="#ref-for-fakexrdevice-anchorcreationcallback">8. Anchors extensions</a> <a href="#ref-for-fakexrdevice-anchorcreationcallback①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-fakexranchorcreationevent-anchorcontroller">
-   <b><a href="#dom-fakexranchorcreationevent-anchorcontroller">#dom-fakexranchorcreationevent-anchorcontroller</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="determine-if-the-anchor-creation-succeeded">
+   <b><a href="#determine-if-the-anchor-creation-succeeded">#determine-if-the-anchor-creation-succeeded</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-fakexranchorcreationevent-anchorcontroller">8. Anchors extensions</a> <a href="#ref-for-dom-fakexranchorcreationevent-anchorcontroller①">(2)</a>
+    <li><a href="#ref-for-determine-if-the-anchor-creation-succeeded">8. Anchors extensions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="fakexranchorcreationcallback-anchorcontroller">
+   <b><a href="#fakexranchorcreationcallback-anchorcontroller">#fakexranchorcreationcallback-anchorcontroller</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-fakexranchorcreationcallback-anchorcontroller">8. Anchors extensions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="fakexranchorcontroller">
