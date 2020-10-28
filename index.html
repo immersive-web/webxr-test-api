@@ -68,9 +68,18 @@
  *
  ******************************************************************************/
 
+/* color variables included separately for reliability */
+
 /******************************************************************************/
 /*                                   Body                                     */
 /******************************************************************************/
+
+	html {
+		color: black;
+		color: var(--text);
+		background-color: white;
+		background-color: var(--bg);
+	}
 
 	body {
 		counter-reset: example figure issue;
@@ -90,9 +99,7 @@
 		overflow-wrap: break-word;
 		hyphens: auto;
 
-		/* Colors */
-		color: black;
-		background: white top left fixed no-repeat;
+		background: transparent top left fixed no-repeat;
 		background-size: 25px auto;
 	}
 
@@ -124,10 +131,13 @@
 	.head img[src*="logos/W3C"] {
 		display: block;
 		border: solid #1a5e9a;
+		border: solid var(--logo-bg);
 		border-width: .65rem .7rem .6rem;
 		border-radius: .4rem;
 		background: #1a5e9a;
+		background: var(--logo-bg);
 		color: white;
+		color: var(--logo-text);
 		font-weight: bold;
 	}
 
@@ -138,7 +148,9 @@
 
 	.head a:active > img[src*="logos/W3C"] {
 		background: #c00;
+		background: var(--logo-active-bg);
 		border-color: #c00;
+		border-color: var(--logo-active-bg);
 	}
 
 	/* see also additional rules in Link Styling section */
@@ -165,7 +177,6 @@
 			border-top-right-radius: 2rem;
 			box-shadow: 0 0 2px;
 			font-size: 1.5em;
-			color: black;
 		}
 		#toc-nav > a {
 			display: block;
@@ -175,23 +186,32 @@
 			padding: .1em 0.3em;
 			margin: 0;
 
-			background: white;
 			box-shadow: 0 0 2px;
 			border: none;
 			border-top-right-radius: 1.33em;
+
+			color: #707070;
+			color: var(--tocnav-normal-text);
 			background: white;
+			background: var(--tocnav-normal-bg);
 		}
+		#toc-nav > a:hover,
+		#toc-nav > a:focus {
+			color: black;
+			color: var(--tocnav-hover-text);
+			background: #f8f8f8;
+			background: var(--tocnav-hover-bg);
+		}
+		#toc-nav > a:active {
+			color: #c00;
+			color: var(--tocnav-active-text);
+			background: white;
+			background: var(--tocnav-active-bg);
+		}
+
 		#toc-nav > #toc-jump {
 			padding-bottom: 2em;
 			margin-bottom: -1.9em;
-		}
-
-		#toc-nav > a:hover,
-		#toc-nav > a:focus {
-			background: #f8f8f8;
-		}
-		#toc-nav > a:not(:hover):not(:focus) {
-			color: #707070;
 		}
 
 		/* statusbar gets in the way on keyboard focus; remove once browsers fix */
@@ -205,26 +225,6 @@
 		}
 		#toc-nav > a > span + span {
 			padding-right: 0.2em;
-		}
-
-		#toc-toggle-inline {
-			vertical-align: 0.05em;
-			font-size: 80%;
-			color: gray;
-			color: hsla(203,20%,40%,.7);
-			border-style: none;
-			background: transparent;
-			position: relative;
-		}
-		#toc-toggle-inline:hover:not(:active),
-		#toc-toggle-inline:focus:not(:active) {
-			text-shadow: 1px 1px silver;
-			top: -1px;
-			left: -1px;
-		}
-
-		#toc-nav :active {
-			color: #C00;
 		}
 	}
 
@@ -243,10 +243,14 @@
 			padding: 0 1em;
 			padding-left: 42px;
 			padding-left: calc(1em + 26px);
+			color: black;
+			color: var(--tocsidebar-text);
 			background: inherit;
 			background-color: #f7f8f9;
+			background-color: var(--tocsidebar-bg);
 			z-index: 1;
 			box-shadow: -.1em 0 .25em rgba(0,0,0,.1) inset;
+			box-shadow: -.1em 0 .25em var(--tocsidebar-shadow) inset;
 		}
 		body.toc-sidebar #toc h2 {
 			margin-top: .8rem;
@@ -256,6 +260,7 @@
 			font-weight: bold;
 			color: gray;
 			color: hsla(203,20%,40%,.7);
+			color: var(--tocsidebar-heading-text);
 		}
 		body.toc-sidebar #toc-jump:not(:focus) {
 			width: 0;
@@ -283,10 +288,14 @@
 			padding: 0 1em;
 			padding-left: 42px;
 			padding-left: calc(1em + 26px);
+			color: black;
+			color: var(--tocsidebar-text);
 			background: inherit;
 			background-color: #f7f8f9;
+			background-color: var(--tocsidebar-bg);
 			z-index: 1;
 			box-shadow: -.1em 0 .25em rgba(0,0,0,.1) inset;
+			box-shadow: -.1em 0 .25em var(--tocsidebar-shadow) inset;
 		}
 		body:not(.toc-inline) #toc h2 {
 			margin-top: .8rem;
@@ -296,6 +305,7 @@
 			font-weight: bold;
 			color: gray;
 			color: hsla(203,20%,40%,.7);
+			color: var(--tocsidebar-heading-text);
 		}
 
 		body:not(.toc-inline) {
@@ -338,7 +348,7 @@
 
 	h1, h2, h3 {
 		color: #005A9C;
-		background: transparent;
+		color: var(--heading-text);
 	}
 
 	h1 { font-size: 170%; }
@@ -365,11 +375,13 @@
 
 /** Section divider ***********************************************************/
 
-	:not(.head) > hr {
+	:not(.head) > :not(.head) + hr {
 		font-size: 1.5em;
 		text-align: center;
 		margin: 1em auto;
 		height: auto;
+		color: black;
+		color: var(--hr-text);
 		border: transparent solid 0;
 		background: transparent;
 	}
@@ -412,12 +424,15 @@
 	ol.algorithm ol:not(.algorithm),
 	.algorithm > ol ol:not(.algorithm) {
 	 border-left: 0.5em solid #DEF;
+	 border-left: 0.5em solid var(--algo-border);
 	}
 
 	/* Put nice boxes around each algorithm. */
 	[data-algorithm]:not(.heading) {
 	  padding: .5em;
-	  border: thin solid #ddd; border-radius: .5em;
+	  border: thin solid #ddd;
+	  border: thin solid var(--algo-border);
+	  border-radius: .5em;
 	  margin: .5em calc(-0.5em - 1px);
 	}
 	[data-algorithm]:not(.heading) > :first-child {
@@ -478,8 +493,20 @@
 
 /** Change Marking ************************************************************/
 
-	del { color: red;  text-decoration: line-through; }
-	ins { color: #080; text-decoration: underline;    }
+	del {
+		color: red;
+		color: var(--del-text);
+		background: transparent;
+		background: var(--del-bg);
+		text-decoration: line-through;
+	}
+	ins {
+		color: #080;
+		color: var(--ins-text);
+		background: transparent;
+		background: var(--ins-bg);
+		text-decoration: underline;
+	}
 
 /** Miscellaneous improvements to inline formatting ***************************/
 
@@ -497,9 +524,14 @@
 	pre, code, samp {
 		font-family: Menlo, Consolas, "DejaVu Sans Mono", Monaco, monospace;
 		font-size: .9em;
-		page-break-inside: avoid;
 		hyphens: none;
 		text-transform: none;
+		text-align: left;
+		text-align: start;
+		font-variant: normal;
+		orphans: 3;
+		widows: 3;
+		page-break-before: avoid;
 	}
 	pre code,
 	code code {
@@ -525,14 +557,19 @@
 	/* We hyperlink a lot, so make it less intrusive */
 	a[href] {
 		color: #034575;
+		color: var(--a-normal-text);
 		text-decoration: none;
 		border-bottom: 1px solid #707070;
+		border-bottom: 1px solid var(--a-normal-underline);
 		/* Need a bit of extending for it to look okay */
 		padding: 0 1px 0;
 		margin: 0 -1px 0;
 	}
 	a:visited {
-		border-bottom-color: #BBB;
+		color: #034575;
+		color: var(--a-visited-text);
+		border-bottom-color: #bbb;
+		border-bottom-color: var(--a-visited-underline);
 	}
 
 	/* Use distinguishing colors when user is interacting with the link */
@@ -540,12 +577,15 @@
 	a[href]:hover {
 		background: #f8f8f8;
 		background: rgba(75%, 75%, 75%, .25);
+		background: var(--a-hover-bg);
 		border-bottom-width: 3px;
 		margin-bottom: -2px;
 	}
 	a[href]:active {
-		color: #C00;
-		border-color: #C00;
+		color: #c00;
+		color: var(--a-active-text);
+		border-color: #c00;
+		border-color: var(--a-active-underline);
 	}
 
 	/* Backout above styling for W3C logo */
@@ -564,6 +604,11 @@
 		border-style: none;
 	}
 
+	img, svg {
+		/* Intentionally not color-scheme aware. */
+		background: white;
+	}
+
 	/* For autogen numbers, add
 	   .caption::before, figcaption::before { content: "Figure " counter(figure) ". "; }
 	*/
@@ -577,6 +622,7 @@
 	.figure object, .sidefigure object, figure object {
 		max-width: 100%;
 		margin: auto;
+		height: auto;
 	}
 	.figure pre, .sidefigure pre, figure pre {
 		text-align: left;
@@ -639,25 +685,46 @@
 		margin-bottom: 0;
 	}
 
+
+	.issue::before, .issue > .marker,
+	.example::before, .example > .marker,
+	.note::before, .note > .marker,
+	details.note > summary > .marker {
+		text-transform: uppercase;
+		padding-right: 1em;
+	}
+
+	.example::before, .example > .marker {
+		display: block;
+		padding-right: 0em;
+	}
+
 /** Blockquotes ***************************************************************/
 
 	blockquote {
 		border-color: silver;
+		border-color: var(--blockquote-border);
+		background: transparent;
+		background: var(--blockquote-bg);
+		color: currentcolor;
+		color: var(--blockquote-text);
 	}
 
 /** Open issue ****************************************************************/
 
 	.issue {
-		border-color: #E05252;
-		background: #FBE9E9;
+		border-color: #e05252;
+		border-color: var(--issue-border);
+		background: #fbe9e9;
+		background: var(--issue-bg);
+		color: black;
+		color: var(--issue-text);
 		counter-increment: issue;
 		overflow: auto;
 	}
 	.issue::before, .issue > .marker {
-		text-transform: uppercase;
-		color: #AE1E1E;
-		padding-right: 1em;
-		text-transform: uppercase;
+		color: #831616;
+		color: var(--issueheading-text);
 	}
 	/* Add .issue::before { content: "Issue " counter(issue) " "; } for autogen numbers,
 	   or use class="marker" to mark up the issue number in source. */
@@ -665,17 +732,19 @@
 /** Example *******************************************************************/
 
 	.example {
-		border-color: #E0CB52;
-		background: #FCFAEE;
+		border-color: #e0cb52;
+		border-color: var(--example-border);
+		background: #fcfaee;
+		background: var(--example-bg);
+		color: black;
+		color: var(--example-text);
 		counter-increment: example;
 		overflow: auto;
 		clear: both;
 	}
 	.example::before, .example > .marker {
-		text-transform: uppercase;
-		color: #827017;
-		min-width: 7.5em;
-		display: block;
+		color: #574b0f;
+		color: var(--exampleheading-text);
 	}
 	/* Add .example::before { content: "Example " counter(example) " "; } for autogen numbers,
 	   or use class="marker" to mark up the example number in source. */
@@ -683,27 +752,26 @@
 /** Non-normative Note ********************************************************/
 
 	.note {
-		border-color: #52E052;
-		background: #E9FBE9;
+		border-color: #52e052;
+		border-color: var(--note-border);
+		background: #e9fbe9;
+		background: var(--note-bg);
+		color: black;
+		color: var(--note-text);
 		overflow: auto;
 	}
 
 	.note::before, .note > .marker,
-	details.note > summary::before,
-	details.note > summary > .marker {
-		text-transform: uppercase;
-		display: block;
+	details.note > summary {
 		color: hsl(120, 70%, 30%);
+		color: var(--noteheading-text);
 	}
-	/* Add .note::before { content: "Note"; } for autogen label,
+	/* Add .note::before { content: "Note "; } for autogen label,
 	   or use class="marker" to mark up the label in source. */
 
-	details.note > summary {
-		display: block;
-		color: hsl(120, 70%, 30%);
-	}
 	details.note[open] > summary {
 		border-bottom: 1px silver solid;
+		border-bottom: 1px var(--notesummary-underline) solid;
 	}
 
 /** Assertion Box *************************************************************/
@@ -711,7 +779,11 @@
 
 	.assertion {
 		border-color: #AAA;
+		border-color: var(--assertion-border);
 		background: #EEE;
+		background: var(--assertion-bg);
+		color: black;
+		color: var(--assertion-text);
 	}
 
 /** Advisement Box ************************************************************/
@@ -719,15 +791,20 @@
 
 	.advisement {
 		border-color: orange;
+		border-color: var(--advisement-border);
 		border-style: none solid;
-		background: #FFEECC;
+		background: #fec;
+		background: var(--advisement-bg);
+		color: black;
+		color: var(--advisement-text);
 	}
 	strong.advisement {
 		display: block;
 		text-align: center;
 	}
-	.advisement > .marker {
-		color: #B35F00;
+	.advisement::before, .advisement > .marker {
+		color: #b35f00;
+		color: var(--advisementheading-text);
 	}
 
 /** Spec Obsoletion Notice ****************************************************/
@@ -743,27 +820,30 @@
 	.annoying-warning:not(details),
 	details.annoying-warning:not([open]) > summary,
 	details.annoying-warning[open] {
-		background: #fdd;
-		color: red;
-		font-weight: bold;
+		background: hsla(40,100%,50%,0.95);
+		background: var(--warning-bg);
+		color: black;
+		color: var(--warning-text);
 		padding: .75em 1em;
-		border: thick red;
-		border-style: solid;
-		border-radius: 1em;
+		border: red;
+		border: var(--warning-border);
+		border-style: solid none;
+		box-shadow: 0 2px 8px black;
+		text-align: center;
 	}
 	.annoying-warning :last-child {
 		margin-bottom: 0;
 	}
 
-@media not print {
-	details.annoying-warning[open] {
-		position: fixed;
-		left: 1em;
-		right: 1em;
-		bottom: 1em;
-		z-index: 1000;
+	@media not print {
+		details.annoying-warning[open] {
+			position: fixed;
+			left: 0;
+			right: 0;
+			bottom: 2em;
+			z-index: 1000;
+		}
 	}
-}
 
 	details.annoying-warning:not([open]) > summary {
 		text-align: center;
@@ -773,9 +853,13 @@
 
 	.def {
 		padding: .5em 1em;
-		background: #DEF;
+		background: #def;
+		background: var(--def-bg);
 		margin: 1.2em 0;
-		border-left: 0.5em solid #8CCBF2;
+		border-left: 0.5em solid #8ccbf2;
+		border-left: 0.5em solid var(--def-border);
+		color: black;
+		color: var(--def-text);
 	}
 
 /******************************************************************************/
@@ -800,6 +884,7 @@
 		padding: 0.5em;
 		vertical-align: baseline;
 		border-bottom: 1px solid #bbd7e9;
+		border-bottom: 1px solid var(--defrow-border);
 	}
 
 	table.def > tbody > tr:last-child th,
@@ -820,10 +905,10 @@
 	}
 
 	/* A footnote at the bottom of a def table */
-	table.def           td.footnote {
+	table.def td.footnote {
 		padding-top: 0.6em;
 	}
-	table.def           td.footnote::before {
+	table.def td.footnote::before {
 		content: " ";
 		display: block;
 		height: 0.6em;
@@ -868,6 +953,7 @@
 		padding: 0.5em 1em;
 		border-width: 1px;
 		border-color: silver;
+		border-color: var(--datacell-border);
 		border-top-style: solid;
 	}
 
@@ -892,6 +978,7 @@
 	table.index tbody th:first-child  {
 		border-right: 2px solid;
 		border-top: 1px solid silver;
+		border-top: 1px solid var(--datacell-border);
 		padding-right: 1em;
 	}
 
@@ -903,13 +990,14 @@
 	table.complex.data th,
 	table.complex.data td {
 		border: 1px solid silver;
+		border: 1px solid var(--datacell-border);
 		text-align: center;
 	}
 
 	table.data.longlastcol td:last-child,
 	table.data td.long {
-	 vertical-align: baseline;
-	 text-align: left;
+		vertical-align: baseline;
+		text-align: left;
 	}
 
 	table.data img {
@@ -967,12 +1055,15 @@ Possible extra rowspan handling
 		display: block;
 		/* Reverse color scheme */
 		color: black;
-		border-color: #3980B5;
-		border-bottom-width: 3px !important;
-		margin-bottom: 0px !important;
+		color: var(--toclink-text);
+		border-color: #3980b5;
+		border-color: var(--toclink-underline);
 	}
 	.toc a:visited {
+		color: black;
+		color: var(--toclink-visited-text);
 		border-color: #054572;
+		border-color: var(--toclink-visited-underline);
 	}
 	.toc a:not(:focus):not(:hover) {
 		/* Allow colors to cascade through from link styling */
@@ -1027,6 +1118,15 @@ Possible extra rowspan handling
 			.toc > li li li li .secno    { margin-left: -6rem; }
 			.toc > li li li li li .secno { margin-left: -7rem; }
 		}
+		/* Loosen it on wide screens */
+		@media screen and (min-width: 78em) {
+			body:not(.toc-inline) :not(li) > .toc              { margin-left:  4rem; }
+			body:not(.toc-inline) .toc .secno                  { margin-left: -4rem; }
+			body:not(.toc-inline) .toc > li li li              { margin-left:  1rem; }
+			body:not(.toc-inline) .toc > li li li .secno       { margin-left: -5rem; }
+			body:not(.toc-inline) .toc > li li li li .secno    { margin-left: -6rem; }
+			body:not(.toc-inline) .toc > li li li li li .secno { margin-left: -7rem; }
+	}
 	/* } */
 
 	@supports (display:grid) and (display:contents) {
@@ -1068,9 +1168,12 @@ Possible extra rowspan handling
 			width: auto;
 			margin-right: 1rem;
 		}
-		#toc .content:hover {
+		#toc .content:hover,
+		#toc .content:focus {
 			background: rgba(75%, 75%, 75%, .25);
+			background: var(--a-hover-bg);
 			border-bottom: 3px solid #054572;
+			border-bottom: 3px solid var(--toclink-underline);
 			margin-bottom: -3px;
 		}
 		#toc li li li .content {
@@ -1095,12 +1198,13 @@ Possible extra rowspan handling
 	ul.index ul,
 	ul.index dl { font-size: smaller; }
 	@media not print {
-		ul.index li span {
+		ul.index li span:not(.dfn-paneled) {
 			white-space: nowrap;
 			color: transparent; }
 		ul.index li a:hover + span,
 		ul.index li a:focus + span {
 			color: #707070;
+			color: var(--indexinfo-text);
 		}
 	}
 
@@ -1122,7 +1226,10 @@ Possible extra rowspan handling
 
 	table.index tr:hover td:not([rowspan]),
 	table.index tr:hover th:not([rowspan]) {
+		color: black;
+		color: var(--indextable-hover-text);
 		background: #f7f8f9;
+		background: var(--indextable-hover-bg);
 	}
 
 	/* The link in the first column in the property table (formerly a TD) */
@@ -1147,13 +1254,6 @@ Possible extra rowspan handling
 	@page {
 		margin: 1.5cm 1.1cm;
 	}
-
-/******************************************************************************/
-/*                                    Legacy                                  */
-/******************************************************************************/
-
-	/* This rule is inherited from past style sheets. No idea what it's for. */
-	.hide { display: none }
 
 
 
@@ -1222,7 +1322,7 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/W3C-ED" rel="stylesheet" type="text/css">
-  <meta content="Bikeshed version 40de15f9, updated Thu Jun 11 17:47:04 2020 -0700" name="generator">
+  <meta content="Bikeshed version 89ebb6ab, updated Fri Oct 9 15:32:07 2020 -0700" name="generator">
   <link href="https://immersive-web.github.io/webxr-test-api/" rel="canonical">
   <link href="favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
   <link href="favicon-96x96.png" rel="icon" sizes="96x96" type="image/png">
@@ -1283,7 +1383,7 @@ Possible extra rowspan handling
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
-    color: #005a9c;
+    color: var(--a-normal-text);
     font-size: inherit;
     font-family: inherit;
 }
@@ -1342,6 +1442,114 @@ pre .property::before, pre .property::after {
 [data-link-type=biblio] {
     white-space: pre;
 }</style>
+<style>/* style-colors */
+
+/* Any --*-text not paired with a --*-bg is assumed to have a transparent bg */
+html {
+    color: black;
+    color: var(--text);
+    background-color: white;
+    background-color: var(--bg);
+}
+:root {
+    color-scheme: light dark;
+
+    --text: black;
+    --bg: white;
+
+    --logo-bg: #1a5e9a;
+    --logo-active-bg: #c00;
+    --logo-text: white;
+
+    --tocnav-normal-text: #707070;
+    --tocnav-normal-bg: var(--bg);
+    --tocnav-hover-text: var(--tocnav-normal-text);
+    --tocnav-hover-bg: #f8f8f8;
+    --tocnav-active-text: #c00;
+    --tocnav-active-bg: var(--tocnav-normal-bg);
+
+    --tocsidebar-text: var(--text);
+    --tocsidebar-bg: #f7f8f9;
+    --tocsidebar-shadow: rgba(0,0,0,.1);
+    --tocsidebar-heading-text: hsla(203,20%,40%,.7);
+
+    --toclink-text: var(--text);
+    --toclink-underline: #3980b5;
+    --toclink-visited-text: var(--toclink-text);
+    --toclink-visited-underline: #054572;
+
+    --heading-text: #005a9c;
+
+    --hr-text: var(--text);
+
+    --algo-border: #def;
+
+    --del-text: red;
+    --del-bg: transparent;
+    --ins-text: #080;
+    --ins-bg: transparent;
+
+    --a-normal-text: #034575;
+    --a-normal-underline: #707070;
+    --a-visited-text: var(--a-normal-text);
+    --a-visited-underline: #bbb;
+    --a-hover-bg: rgba(75%, 75%, 75%, .25);
+    --a-active-text: #c00;
+    --a-active-underline: #c00;
+
+    --blockquote-border: silver;
+    --blockquote-bg: transparent;
+    --blockquote-text: currentcolor;
+
+    --issue-border: #e05252;
+    --issue-bg: #fbe9e9;
+    --issue-text: var(--text);
+    --issueheading-text: #831616;
+
+    --example-border: #e0cb52;
+    --example-bg: #fcfaee;
+    --example-text: var(--text);
+    --exampleheading-text: #574b0f;
+
+    --note-border: #52e052;
+    --note-bg: #e9fbe9;
+    --note-text: var(--text);
+    --noteheading-text: hsl(120, 70%, 30%);
+    --notesummary-underline: silver;
+
+    --assertion-border: #aaa;
+    --assertion-bg: #eee;
+    --assertion-text: black;
+
+    --advisement-border: orange;
+    --advisement-bg: #fec;
+    --advisement-text: var(--text);
+    --advisementheading-text: #b35f00;
+
+    --warning-border: red;
+    --warning-bg: hsla(40,100%,50%,0.95);
+    --warning-text: var(--text);
+
+    --def-border: #8ccbf2;
+    --def-bg: #def;
+    --def-text: var(--text);
+    --defrow-border: #bbd7e9;
+
+    --datacell-border: silver;
+
+    --indexinfo-text: #707070;
+
+    --indextable-hover-text: black;
+    --indextable-hover-bg: #f7f8f9;
+
+    --outdatedspec-bg: rgba(0, 0, 0, .5);
+    --outdatedspec-text: black;
+    --outdated-bg: maroon;
+    --outdated-text: white;
+    --outdated-shadow: red;
+
+    --editedrec-bg: darkorange;
+}</style>
 <style>/* style-counters */
 
 body {
@@ -1373,6 +1581,10 @@ figcaption:not(.no-marker)::before {
 }</style>
 <style>/* style-dfn-panel */
 
+:root {
+    --dfnpanel-bg: #ddd;
+    --dfnpanel-text: var(--text);
+}
 .dfn-panel {
     position: absolute;
     z-index: 35;
@@ -1384,14 +1596,14 @@ figcaption:not(.no-marker)::before {
     overflow: auto;
     padding: 0.5em 0.75em;
     font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
-    background: #DDDDDD;
-    color: black;
+    background: var(--dfnpanel-bg);
+    color: var(--dfnpanel-text);
     border: outset 0.2em;
 }
 .dfn-panel:not(.on) { display: none; }
 .dfn-panel * { margin: 0; padding: 0; text-indent: 0; }
 .dfn-panel > b { display: block; }
-.dfn-panel a { color: black; }
+.dfn-panel a { color: var(--dfnpanel-text); }
 .dfn-panel a:not(:hover) { text-decoration: none !important; border-bottom: none !important; }
 .dfn-panel > b + b { margin-top: 0.25em; }
 .dfn-panel ul { padding: 0; }
@@ -1420,6 +1632,11 @@ figcaption:not(.no-marker)::before {
 }</style>
 <style>/* style-selflinks */
 
+:root {
+    --selflink-text: white;
+    --selflink-bg: gray;
+    --selflink-hover-text: black;
+}
 .heading, .issue, .note, .example, li, dt {
     position: relative;
 }
@@ -1449,8 +1666,8 @@ dfn > a.self-link {
     opacity: 0;
     width: 1.5em;
     height: 1.5em;
-    background: gray;
-    color: white;
+    background: var(--selflink-bg);
+    color: var(--selflink-text);
     font-style: normal;
     transition: opacity .2s, background-color .2s, color .2s;
 }
@@ -1458,17 +1675,23 @@ dfn:hover > a.self-link {
     opacity: 1;
 }
 dfn > a.self-link:hover {
-    color: black;
+    color: var(--selflink-hover-text);
 }
 
 a.self-link::before            { content: "¶"; }
 .heading > a.self-link::before { content: "§"; }
-dfn > a.self-link::before      { content: "#"; }</style>
+dfn > a.self-link::before      { content: "#"; }
+</style>
 <style>/* style-syntax-highlighting */
-pre.idl.highlight { color: #708090; }
-.highlight:not(.idl) { background: hsl(24, 20%, 95%); }
+
+            pre.idl.highlight {
+                background: var(--borderedblock-bg, var(--def-bg));
+            }
+            
 code.highlight { padding: .1em; border-radius: .3em; }
 pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em 0; overflow: auto; border-radius: 0; }
+
+.highlight:not(.idl) { background: rgba(0, 0, 0, .03); }
 c-[a] { color: #990055 } /* Keyword.Declaration */
 c-[b] { color: #990055 } /* Keyword.Type */
 c-[c] { color: #708090 } /* Comment */
@@ -1533,11 +1756,194 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     var.selected5 { background-color: #82DDFF; box-shadow: 0 0 0 2px #82DDFF; }
     var.selected6 { background-color: #FFBCF2; box-shadow: 0 0 0 2px #FFBCF2; }
     </style>
+<style>/* style-darkmode */
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text: #ddd;
+        --bg: black;
+
+        --logo-bg: #1a5e9a;
+        --logo-active-bg: #c00;
+        --logo-text: white;
+
+        --tocnav-normal-text: #999;
+        --tocnav-normal-bg: var(--bg);
+        --tocnav-hover-text: var(--tocnav-normal-text);
+        --tocnav-hover-bg: #080808;
+        --tocnav-active-text: #f44;
+        --tocnav-active-bg: var(--tocnav-normal-bg);
+
+        --tocsidebar-text: var(--text);
+        --tocsidebar-bg: #080808;
+        --tocsidebar-shadow: rgba(255,255,255,.1);
+        --tocsidebar-heading-text: hsla(203,20%,40%,.7);
+
+        --toclink-text: var(--text);
+        --toclink-underline: #6af;
+        --toclink-visited-text: var(--toclink-text);
+        --toclink-visited-underline: #054572;
+
+        --heading-text: #8af;
+
+        --hr-text: var(--text);
+
+        --algo-border: #456;
+
+        --del-text: #f44;
+        --del-bg: transparent;
+        --ins-text: #4a4;
+        --ins-bg: transparent;
+
+        --a-normal-text: #6af;
+        --a-normal-underline: #555;
+        --a-visited-text: var(--a-normal-text);
+        --a-visited-underline: var(--a-normal-underline);
+        --a-hover-bg: rgba(25%, 25%, 25%, .2);
+        --a-active-text: #f44;
+        --a-active-underline: var(--a-active-text);
+
+        --borderedblock-bg: rgba(255, 255, 255, .05);
+
+        --blockquote-border: silver;
+        --blockquote-bg: var(--borderedblock-bg);
+        --blockquote-text: currentcolor;
+
+        --issue-border: #e05252;
+        --issue-bg: var(--borderedblock-bg);
+        --issue-text: var(--text);
+        --issueheading-text: hsl(0deg, 70%, 70%);
+
+        --example-border: hsl(50deg, 90%, 60%);
+        --example-bg: var(--borderedblock-bg);
+        --example-text: var(--text);
+        --exampleheading-text: hsl(50deg, 70%, 70%);
+
+        --note-border: hsl(120deg, 100%, 35%);
+        --note-bg: var(--borderedblock-bg);
+        --note-text: var(--text);
+        --noteheading-text: hsl(120, 70%, 70%);
+        --notesummary-underline: silver;
+
+        --assertion-border: #444;
+        --assertion-bg: var(--borderedblock-bg);
+        --assertion-text: var(--text);
+
+        --advisement-border: orange;
+        --advisement-bg: #222218;
+        --advisement-text: var(--text);
+        --advisementheading-text: #f84;
+
+        --warning-border: red;
+        --warning-bg: hsla(40,100%,20%,0.95);
+        --warning-text: var(--text);
+
+        --def-border: #8ccbf2;
+        --def-bg: #080818;
+        --def-text: var(--text);
+        --defrow-border: #136;
+
+        --datacell-border: silver;
+
+        --indexinfo-text: #aaa;
+
+        --indextable-hover-text: var(--text);
+        --indextable-hover-bg: #181818;
+
+        --outdatedspec-bg: rgba(255, 255, 255, .5);
+        --outdatedspec-text: black;
+        --outdated-bg: maroon;
+        --outdated-text: white;
+        --outdated-shadow: red;
+
+        --editedrec-bg: darkorange;
+    }
+    /* In case a transparent-bg image doesn't expect to be on a dark bg,
+       which is quite common in practice... */
+    img { background: white; }
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --selflink-text: black;
+        --selflink-bg: silver;
+        --selflink-hover-text: white;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --dfnpanel-bg: #222;
+        --dfnpanel-text: var(--text);
+    }
+}
+@media (prefers-color-scheme: dark) {
+    .highlight:not(.idl) { background: rgba(255, 255, 255, .05); }
+
+    c-[a] { color: #d33682 } /* Keyword.Declaration */
+    c-[b] { color: #d33682 } /* Keyword.Type */
+    c-[c] { color: #2aa198 } /* Comment */
+    c-[d] { color: #2aa198 } /* Comment.Multiline */
+    c-[e] { color: #268bd2 } /* Name.Attribute */
+    c-[f] { color: #b58900 } /* Name.Tag */
+    c-[g] { color: #cb4b16 } /* Name.Variable */
+    c-[k] { color: #d33682 } /* Keyword */
+    c-[l] { color: #657b83 } /* Literal */
+    c-[m] { color: #657b83 } /* Literal.Number */
+    c-[n] { color: #268bd2 } /* Name */
+    c-[o] { color: #657b83 } /* Operator */
+    c-[p] { color: #657b83 } /* Punctuation */
+    c-[s] { color: #6c71c4 } /* Literal.String */
+    c-[t] { color: #6c71c4 } /* Literal.String.Single */
+    c-[u] { color: #6c71c4 } /* Literal.String.Double */
+    c-[ch] { color: #2aa198 } /* Comment.Hashbang */
+    c-[cp] { color: #2aa198 } /* Comment.Preproc */
+    c-[cpf] { color: #2aa198 } /* Comment.PreprocFile */
+    c-[c1] { color: #2aa198 } /* Comment.Single */
+    c-[cs] { color: #2aa198 } /* Comment.Special */
+    c-[kc] { color: #d33682 } /* Keyword.Constant */
+    c-[kn] { color: #d33682 } /* Keyword.Namespace */
+    c-[kp] { color: #d33682 } /* Keyword.Pseudo */
+    c-[kr] { color: #d33682 } /* Keyword.Reserved */
+    c-[ld] { color: #657b83 } /* Literal.Date */
+    c-[nc] { color: #268bd2 } /* Name.Class */
+    c-[no] { color: #268bd2 } /* Name.Constant */
+    c-[nd] { color: #268bd2 } /* Name.Decorator */
+    c-[ni] { color: #268bd2 } /* Name.Entity */
+    c-[ne] { color: #268bd2 } /* Name.Exception */
+    c-[nf] { color: #268bd2 } /* Name.Function */
+    c-[nl] { color: #268bd2 } /* Name.Label */
+    c-[nn] { color: #268bd2 } /* Name.Namespace */
+    c-[py] { color: #268bd2 } /* Name.Property */
+    c-[ow] { color: #657b83 } /* Operator.Word */
+    c-[mb] { color: #657b83 } /* Literal.Number.Bin */
+    c-[mf] { color: #657b83 } /* Literal.Number.Float */
+    c-[mh] { color: #657b83 } /* Literal.Number.Hex */
+    c-[mi] { color: #657b83 } /* Literal.Number.Integer */
+    c-[mo] { color: #657b83 } /* Literal.Number.Oct */
+    c-[sa] { color: #6c71c4 } /* Literal.String.Affix */
+    c-[sb] { color: #6c71c4 } /* Literal.String.Backtick */
+    c-[sc] { color: #6c71c4 } /* Literal.String.Char */
+    c-[dl] { color: #6c71c4 } /* Literal.String.Delimiter */
+    c-[sd] { color: #6c71c4 } /* Literal.String.Doc */
+    c-[se] { color: #6c71c4 } /* Literal.String.Escape */
+    c-[sh] { color: #6c71c4 } /* Literal.String.Heredoc */
+    c-[si] { color: #6c71c4 } /* Literal.String.Interpol */
+    c-[sx] { color: #6c71c4 } /* Literal.String.Other */
+    c-[sr] { color: #6c71c4 } /* Literal.String.Regex */
+    c-[ss] { color: #6c71c4 } /* Literal.String.Symbol */
+    c-[fm] { color: #268bd2 } /* Name.Function.Magic */
+    c-[vc] { color: #cb4b16 } /* Name.Variable.Class */
+    c-[vg] { color: #cb4b16 } /* Name.Variable.Global */
+    c-[vi] { color: #cb4b16 } /* Name.Variable.Instance */
+    c-[vm] { color: #cb4b16 } /* Name.Variable.Magic */
+    c-[il] { color: #657b83 } /* Literal.Number.Integer.Long */
+}
+</style>
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">WebXR Test API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2020-06-25">25 June 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2020-10-28">28 October 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1576,12 +1982,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p> Publication as an Editors' Draft does not imply endorsement by the <abbr title="World Wide Web Consortium">W3C</abbr> Membership. This is a draft document and may
     be updated, replaced or obsoleted by other documents at any time. It is inappropriate to cite
     this document as other than work in progress. </p>
-   <p> This document was produced by a group operating under the <a href="http://www.w3.org/Consortium/Patent-Policy/"> <abbr title="World Wide Web Consortium">W3C</abbr> Patent Policy</a>. <abbr title="World Wide Web Consortium">W3C</abbr> maintains a <a href="https://www.w3.org/2004/01/pp-impl/109735/status" rel="disclosure">public list of any
+   <p> This document was produced by a group operating under the <a href="http://www.w3.org/Consortium/Patent-Policy-20170801/"> <abbr title="World Wide Web Consortium">W3C</abbr> Patent Policy</a>. <abbr title="World Wide Web Consortium">W3C</abbr> maintains a <a href="https://www.w3.org/2004/01/pp-impl/109735/status" rel="disclosure">public list of any
     patent disclosures</a> made in connection with the deliverables of the group; that page also
     includes instructions for disclosing a patent. An individual who has actual knowledge of a
-    patent which the individual believes contains <a href="http://www.w3.org/Consortium/Patent-Policy/#def-essential">Essential
-    Claim(s)</a> must disclose the information in accordance with <a href="http://www.w3.org/Consortium/Patent-Policy/#sec-Disclosure">section 6 of the <abbr title="World Wide Web Consortium">W3C</abbr> Patent Policy</a>. </p>
-   <p> This document is governed by the <a href="https://www.w3.org/2019/Process-20190301/" id="w3c_process_revision">1 March 2019 W3C Process Document</a>. </p>
+    patent which the individual believes contains <a href="http://www.w3.org/Consortium/Patent-Policy-20170801/#def-essential">Essential
+    Claim(s)</a> must disclose the information in accordance with <a href="http://www.w3.org/Consortium/Patent-Policy-20170801/#sec-Disclosure">section 6 of the <abbr title="World Wide Web Consortium">W3C</abbr> Patent Policy</a>. </p>
+   <p> This document is governed by the <a href="https://www.w3.org/2020/Process-20200915/" id="w3c_process_revision">15 September 2020 W3C Process Document</a>. </p>
    <p></p>
   </div>
   <div data-fill-with="at-risk"></div>
@@ -1658,16 +2064,16 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <h2 class="heading settled" data-level="4" id="initialization"><span class="secno">4. </span><span class="content">Initialization</span><a class="self-link" href="#initialization"></a></h2>
    <h3 class="heading settled" data-level="4.1" id="xr-test-attribute"><span class="secno">4.1. </span><span class="content">navigator.xr.test</span><a class="self-link" href="#xr-test-attribute"></a></h3>
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://immersive-web.github.io/webxr/#xrsystem" id="ref-for-xrsystem"><c- g>XRSystem</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SameObject" id="ref-for-SameObject"><c- g>SameObject</c-></a>] <c- b>readonly</c-> <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="#xrtest" id="ref-for-xrtest"><c- n>XRTest</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="XRTest" href="#dom-xrsystem-test" id="ref-for-dom-xrsystem-test"><c- g>test</c-></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SameObject" id="ref-for-SameObject"><c- g>SameObject</c-></a>] <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="#xrtest" id="ref-for-xrtest"><c- n>XRTest</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="XRTest" href="#dom-xrsystem-test" id="ref-for-dom-xrsystem-test"><c- g>test</c-></a>;
 };
 </pre>
    <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="XRSystem" data-dfn-type="attribute" data-export id="dom-xrsystem-test"><code>test</code></dfn> attribute’s getter MUST return the <code class="idl"><a data-link-type="idl" href="#xrtest" id="ref-for-xrtest①">XRTest</a></code> object that is associated with it. This object MAY be lazily created.</p>
    <h3 class="heading settled" data-level="4.2" id="xrtest-interface"><span class="secno">4.2. </span><span class="content">XRTest</span><a class="self-link" href="#xrtest-interface"></a></h3>
    <p>The <code class="idl"><a data-link-type="idl" href="#xrtest" id="ref-for-xrtest②">XRTest</a></code> object is the entry point for all testing.</p>
 <pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="xrtest"><code><c- g>XRTest</c-></code></dfn> {
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#fakexrdevice" id="ref-for-fakexrdevice①"><c- n>FakeXRDevice</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-xrtest-simulatedeviceconnection" id="ref-for-dom-xrtest-simulatedeviceconnection"><c- g>simulateDeviceConnection</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrdeviceinit" id="ref-for-dictdef-fakexrdeviceinit"><c- n>FakeXRDeviceInit</c-></a> <dfn class="idl-code" data-dfn-for="XRTest/simulateDeviceConnection(init)" data-dfn-type="argument" data-export id="dom-xrtest-simulatedeviceconnection-init-init"><code><c- g>init</c-></code><a class="self-link" href="#dom-xrtest-simulatedeviceconnection-init-init"></a></dfn>);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-xrtest-simulateuseractivation" id="ref-for-dom-xrtest-simulateuseractivation"><c- g>simulateUserActivation</c-></a>(<a class="n" data-link-type="idl-name" href="https://heycam.github.io/webidl/#Function" id="ref-for-Function"><c- n>Function</c-></a> <dfn class="idl-code" data-dfn-for="XRTest/simulateUserActivation(f)" data-dfn-type="argument" data-export id="dom-xrtest-simulateuseractivation-f-f"><code><c- g>f</c-></code><a class="self-link" href="#dom-xrtest-simulateuseractivation-f-f"></a></dfn>);
-  <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-xrtest-disconnectalldevices" id="ref-for-dom-xrtest-disconnectalldevices"><c- g>disconnectAllDevices</c-></a>();
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise" id="ref-for-idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="#fakexrdevice" id="ref-for-fakexrdevice①"><c- n>FakeXRDevice</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-xrtest-simulatedeviceconnection" id="ref-for-dom-xrtest-simulatedeviceconnection"><c- g>simulateDeviceConnection</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrdeviceinit" id="ref-for-dictdef-fakexrdeviceinit"><c- n>FakeXRDeviceInit</c-></a> <dfn class="idl-code" data-dfn-for="XRTest/simulateDeviceConnection(init)" data-dfn-type="argument" data-export id="dom-xrtest-simulatedeviceconnection-init-init"><code><c- g>init</c-></code><a class="self-link" href="#dom-xrtest-simulatedeviceconnection-init-init"></a></dfn>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-xrtest-simulateuseractivation" id="ref-for-dom-xrtest-simulateuseractivation"><c- g>simulateUserActivation</c-></a>(<a data-link-type="idl-name" href="https://heycam.github.io/webidl/#Function" id="ref-for-Function"><c- n>Function</c-></a> <dfn class="idl-code" data-dfn-for="XRTest/simulateUserActivation(f)" data-dfn-type="argument" data-export id="dom-xrtest-simulateuseractivation-f-f"><code><c- g>f</c-></code><a class="self-link" href="#dom-xrtest-simulateuseractivation-f-f"></a></dfn>);
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise" id="ref-for-idl-promise①"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name"><c- n>void</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-xrtest-disconnectalldevices" id="ref-for-dom-xrtest-disconnectalldevices"><c- g>disconnectAllDevices</c-></a>();
 };
 </pre>
    <div class="algorithm" data-algorithm="simulate-device-connection">
@@ -1754,28 +2160,28 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     </ol>
    </div>
    <p>When <dfn class="dfn-paneled idl-code" data-dfn-for="XRTest" data-dfn-type="method" data-export id="dom-xrtest-simulateuseractivation"><code>simulateUserActivation(f)</code></dfn> is called, invoke <code>f</code> as if it had <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/interaction.html#transient-activation" id="ref-for-transient-activation">transient activation</a>.</p>
-   <p>When <dfn class="dfn-paneled idl-code" data-dfn-for="XRTest" data-dfn-type="method" data-export id="dom-xrtest-disconnectalldevices"><code>disconnectAllDevices()</code></dfn> is called, remove all <a data-link-type="dfn" href="#simulated-xr-device" id="ref-for-simulated-xr-device①①">simulated XR devices</a> from the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#context-object" id="ref-for-context-object">context object</a>'s <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webxr/#xr" id="ref-for-xr">XR</a></code> object’s <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#list-of-immersive-xr-devices" id="ref-for-list-of-immersive-xr-devices①">list of immersive XR devices</a> as if they were disconnected. If the <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device①">inline XR device</a> is a <a data-link-type="dfn" href="#simulated-xr-device" id="ref-for-simulated-xr-device①②">simulated XR device</a>, reset it to the default <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device②">inline XR device</a>.</p>
+   <p>When <dfn class="dfn-paneled idl-code" data-dfn-for="XRTest" data-dfn-type="method" data-export id="dom-xrtest-disconnectalldevices"><code>disconnectAllDevices()</code></dfn> is called, remove all <a data-link-type="dfn" href="#simulated-xr-device" id="ref-for-simulated-xr-device①①">simulated XR devices</a> from the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#context-object" id="ref-for-context-object">context object</a>'s <code class="idl"><a data-link-type="idl">XR</a></code> object’s <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#list-of-immersive-xr-devices" id="ref-for-list-of-immersive-xr-devices①">list of immersive XR devices</a> as if they were disconnected. If the <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device①">inline XR device</a> is a <a data-link-type="dfn" href="#simulated-xr-device" id="ref-for-simulated-xr-device①②">simulated XR device</a>, reset it to the default <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device②">inline XR device</a>.</p>
    <h3 class="heading settled" data-level="4.3" id="fakexrdeviceinit-dict"><span class="secno">4.3. </span><span class="content">FakeXRDeviceInit</span><a class="self-link" href="#fakexrdeviceinit-dict"></a></h3>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexrdeviceinit"><code><c- g>FakeXRDeviceInit</c-></code></dfn> {
     <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-fakexrdeviceinit-supportsimmersive"><code><c- g>supportsImmersive</c-></code></dfn>;
-    <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrsessionmode" id="ref-for-enumdef-xrsessionmode②"><c- n>XRSessionMode</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="sequence<XRSessionMode> " id="dom-fakexrdeviceinit-supportedmodes"><code><c- g>supportedModes</c-></code></dfn>;
-    <c- b>required</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrviewinit" id="ref-for-dictdef-fakexrviewinit"><c- n>FakeXRViewInit</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="sequence<FakeXRViewInit> " id="dom-fakexrdeviceinit-views"><code><c- g>views</c-></code></dfn>;
+    <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrsessionmode" id="ref-for-enumdef-xrsessionmode②"><c- n>XRSessionMode</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="sequence<XRSessionMode> " id="dom-fakexrdeviceinit-supportedmodes"><code><c- g>supportedModes</c-></code></dfn>;
+    <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence①"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrviewinit" id="ref-for-dictdef-fakexrviewinit"><c- n>FakeXRViewInit</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="sequence<FakeXRViewInit> " id="dom-fakexrdeviceinit-views"><code><c- g>views</c-></code></dfn>;
 
-    <c- b>sequence</c->&lt;<c- b>any</c->> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="sequence<any> " id="dom-fakexrdeviceinit-supportedfeatures"><code><c- g>supportedFeatures</c-></code></dfn>;
-    <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrboundspoint" id="ref-for-dictdef-fakexrboundspoint"><c- n>FakeXRBoundsPoint</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="sequence<FakeXRBoundsPoint> " id="dom-fakexrdeviceinit-boundscoordinates"><code><c- g>boundsCoordinates</c-></code></dfn>;
-    <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="FakeXRRigidTransformInit " id="dom-fakexrdeviceinit-floororigin"><code><c- g>floorOrigin</c-></code></dfn>;
-    <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit①"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="FakeXRRigidTransformInit " id="dom-fakexrdeviceinit-viewerorigin"><code><c- g>viewerOrigin</c-></code></dfn>;
+    <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence②"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-any" id="ref-for-idl-any"><c- b>any</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="sequence<any> " id="dom-fakexrdeviceinit-supportedfeatures"><code><c- g>supportedFeatures</c-></code></dfn>;
+    <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence③"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrboundspoint" id="ref-for-dictdef-fakexrboundspoint"><c- n>FakeXRBoundsPoint</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="sequence<FakeXRBoundsPoint> " id="dom-fakexrdeviceinit-boundscoordinates"><code><c- g>boundsCoordinates</c-></code></dfn>;
+    <a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="FakeXRRigidTransformInit " id="dom-fakexrdeviceinit-floororigin"><code><c- g>floorOrigin</c-></code></dfn>;
+    <a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit①"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="FakeXRRigidTransformInit " id="dom-fakexrdeviceinit-viewerorigin"><code><c- g>viewerOrigin</c-></code></dfn>;
 
     // Hit test extensions:
-    <a class="n" data-link-type="idl-name" href="#dictdef-fakexrworldinit" id="ref-for-dictdef-fakexrworldinit"><c- n>FakeXRWorldInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="FakeXRWorldInit " id="dom-fakexrdeviceinit-world"><code><c- g>world</c-></code><a class="self-link" href="#dom-fakexrdeviceinit-world"></a></dfn>;
+    <a data-link-type="idl-name" href="#dictdef-fakexrworldinit" id="ref-for-dictdef-fakexrworldinit"><c- n>FakeXRWorldInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="FakeXRWorldInit " id="dom-fakexrdeviceinit-world"><code><c- g>world</c-></code><a class="self-link" href="#dom-fakexrdeviceinit-world"></a></dfn>;
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexrviewinit"><code><c- g>FakeXRViewInit</c-></code></dfn> {
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xreye" id="ref-for-enumdef-xreye"><c- n>XREye</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRViewInit" data-dfn-type="dict-member" data-export data-type="XREye " id="dom-fakexrviewinit-eye"><code><c- g>eye</c-></code></dfn>;
-  <c- b>required</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float" id="ref-for-idl-float"><c- b>float</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRViewInit" data-dfn-type="dict-member" data-export data-type="sequence<float> " id="dom-fakexrviewinit-projectionmatrix"><code><c- g>projectionMatrix</c-></code></dfn>;
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#dictdef-fakexrdeviceresolution" id="ref-for-dictdef-fakexrdeviceresolution①"><c- n>FakeXRDeviceResolution</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRViewInit" data-dfn-type="dict-member" data-export data-type="FakeXRDeviceResolution " id="dom-fakexrviewinit-resolution"><code><c- g>resolution</c-></code></dfn>;
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit②"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRViewInit" data-dfn-type="dict-member" data-export data-type="FakeXRRigidTransformInit " id="dom-fakexrviewinit-viewoffset"><code><c- g>viewOffset</c-></code></dfn>;
-  <a class="n" data-link-type="idl-name" href="#dictdef-fakexrfieldofviewinit" id="ref-for-dictdef-fakexrfieldofviewinit①"><c- n>FakeXRFieldOfViewInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRViewInit" data-dfn-type="dict-member" data-export data-type="FakeXRFieldOfViewInit " id="dom-fakexrviewinit-fieldofview"><code><c- g>fieldOfView</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xreye" id="ref-for-enumdef-xreye"><c- n>XREye</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRViewInit" data-dfn-type="dict-member" data-export data-type="XREye " id="dom-fakexrviewinit-eye"><code><c- g>eye</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence④"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float" id="ref-for-idl-float"><c- b>float</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRViewInit" data-dfn-type="dict-member" data-export data-type="sequence<float> " id="dom-fakexrviewinit-projectionmatrix"><code><c- g>projectionMatrix</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="#dictdef-fakexrdeviceresolution" id="ref-for-dictdef-fakexrdeviceresolution①"><c- n>FakeXRDeviceResolution</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRViewInit" data-dfn-type="dict-member" data-export data-type="FakeXRDeviceResolution " id="dom-fakexrviewinit-resolution"><code><c- g>resolution</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit②"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRViewInit" data-dfn-type="dict-member" data-export data-type="FakeXRRigidTransformInit " id="dom-fakexrviewinit-viewoffset"><code><c- g>viewOffset</c-></code></dfn>;
+  <a data-link-type="idl-name" href="#dictdef-fakexrfieldofviewinit" id="ref-for-dictdef-fakexrfieldofviewinit①"><c- n>FakeXRFieldOfViewInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRViewInit" data-dfn-type="dict-member" data-export data-type="FakeXRFieldOfViewInit " id="dom-fakexrviewinit-fieldofview"><code><c- g>fieldOfView</c-></code></dfn>;
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexrfieldofviewinit"><code><c- g>FakeXRFieldOfViewInit</c-></code></dfn> {
@@ -1795,8 +2201,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexrrigidtransforminit"><code><c- g>FakeXRRigidTransformInit</c-></code></dfn> {
-  <c- b>required</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float" id="ref-for-idl-float⑤"><c- b>float</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRRigidTransformInit" data-dfn-type="dict-member" data-export data-type="sequence<float> " id="dom-fakexrrigidtransforminit-position"><code><c- g>position</c-></code></dfn>;
-  <c- b>required</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float" id="ref-for-idl-float⑥"><c- b>float</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRRigidTransformInit" data-dfn-type="dict-member" data-export data-type="sequence<float> " id="dom-fakexrrigidtransforminit-orientation"><code><c- g>orientation</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence⑤"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float" id="ref-for-idl-float⑤"><c- b>float</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRRigidTransformInit" data-dfn-type="dict-member" data-export data-type="sequence<float> " id="dom-fakexrrigidtransforminit-position"><code><c- g>position</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence⑥"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float" id="ref-for-idl-float⑥"><c- b>float</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRRigidTransformInit" data-dfn-type="dict-member" data-export data-type="sequence<float> " id="dom-fakexrrigidtransforminit-orientation"><code><c- g>orientation</c-></code></dfn>;
 };
 
 </pre>
@@ -1853,25 +2259,25 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     The WebXR API never exposes native origins directly, instead exposing transforms between them, so we need to specify a <dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="base-reference-space">base reference space</dfn> for <code class="idl"><a data-link-type="idl" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit④">FakeXRRigidTransformInit</a></code>s so that we can have consistent numerical values across implementations. When used as an origin, <code class="idl"><a data-link-type="idl" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit⑤">FakeXRRigidTransformInit</a></code>s are in the <a data-link-type="dfn" href="#base-reference-space" id="ref-for-base-reference-space">base reference space</a> where the <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#viewer" id="ref-for-viewer②">viewer</a>'s <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xrspace-native-origin" id="ref-for-xrspace-native-origin">native origin</a> is identity at initialization, unless otherwise specified. In this space, the <code class="idl"><a data-link-type="idl" href="https://immersive-web.github.io/webxr/#dom-xrreferencespacetype-local" id="ref-for-dom-xrreferencespacetype-local">"local"</a></code> reference space has a <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xrspace-native-origin" id="ref-for-xrspace-native-origin①">native origin</a> of identity. This is an arbitrary choice: changing this reference space doesn’t affect the data returned by the WebXR API, but we must make such a choice so that the tests produce the same results across different UAs. When used as an origin it is logically a transform <i>from</i> the origin’s space <i>to</i> the underlying <a data-link-type="dfn" href="#base-reference-space" id="ref-for-base-reference-space①">base reference space</a> described above. 
    <h2 class="heading settled" data-level="5" id="mocking"><span class="secno">5. </span><span class="content">Mocking</span><a class="self-link" href="#mocking"></a></h2>
    <h3 class="heading settled" data-level="5.1" id="fakexrdevice-interface"><span class="secno">5.1. </span><span class="content">FakeXRDevice</span><a class="self-link" href="#fakexrdevice-interface"></a></h3>
-<pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="fakexrdevice"><code><c- g>FakeXRDevice</c-></code></dfn> : <a class="n" data-link-type="idl-name" href="https://dom.spec.whatwg.org/#eventtarget" id="ref-for-eventtarget"><c- n>EventTarget</c-></a> {
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setviews" id="ref-for-dom-fakexrdevice-setviews"><c- g>setViews</c-></a>(<c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrviewinit" id="ref-for-dictdef-fakexrviewinit②"><c- n>FakeXRViewInit</c-></a>> <dfn class="idl-code" data-dfn-for="FakeXRDevice/setViews(views)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setviews-views-views"><code><c- g>views</c-></code><a class="self-link" href="#dom-fakexrdevice-setviews-views-views"></a></dfn>);
+<pre class="idl highlight def"><c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="fakexrdevice"><code><c- g>FakeXRDevice</c-></code></dfn> : <a data-link-type="idl-name" href="https://dom.spec.whatwg.org/#eventtarget" id="ref-for-eventtarget"><c- n>EventTarget</c-></a> {
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setviews" id="ref-for-dom-fakexrdevice-setviews"><c- g>setViews</c-></a>(<a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence⑦"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrviewinit" id="ref-for-dictdef-fakexrviewinit②"><c- n>FakeXRViewInit</c-></a>> <dfn class="idl-code" data-dfn-for="FakeXRDevice/setViews(views)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setviews-views-views"><code><c- g>views</c-></code><a class="self-link" href="#dom-fakexrdevice-setviews-views-views"></a></dfn>);
 
-  <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-disconnect" id="ref-for-dom-fakexrdevice-disconnect"><c- g>disconnect</c-></a>();
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise" id="ref-for-idl-promise②"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name"><c- n>void</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-disconnect" id="ref-for-dom-fakexrdevice-disconnect"><c- g>disconnect</c-></a>();
 
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setviewerorigin" id="ref-for-dom-fakexrdevice-setviewerorigin"><c- g>setViewerOrigin</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit⑥"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice/setViewerOrigin(origin, emulatedPosition), FakeXRDevice/setViewerOrigin(origin)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setviewerorigin-origin-emulatedposition-origin"><code><c- g>origin</c-></code><a class="self-link" href="#dom-fakexrdevice-setviewerorigin-origin-emulatedposition-origin"></a></dfn>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean①"><c- b>boolean</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice/setViewerOrigin(origin, emulatedPosition), FakeXRDevice/setViewerOrigin(origin)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setviewerorigin-origin-emulatedposition-emulatedposition"><code><c- g>emulatedPosition</c-></code><a class="self-link" href="#dom-fakexrdevice-setviewerorigin-origin-emulatedposition-emulatedposition"></a></dfn> = <c- b>false</c->);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-clearviewerorigin" id="ref-for-dom-fakexrdevice-clearviewerorigin"><c- g>clearViewerOrigin</c-></a>();
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setfloororigin" id="ref-for-dom-fakexrdevice-setfloororigin"><c- g>setFloorOrigin</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit⑦"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice/setFloorOrigin(origin)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setfloororigin-origin-origin"><code><c- g>origin</c-></code><a class="self-link" href="#dom-fakexrdevice-setfloororigin-origin-origin"></a></dfn>);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-clearfloororigin" id="ref-for-dom-fakexrdevice-clearfloororigin"><c- g>clearFloorOrigin</c-></a>();
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setboundsgeometry" id="ref-for-dom-fakexrdevice-setboundsgeometry"><c- g>setBoundsGeometry</c-></a>(<c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrboundspoint" id="ref-for-dictdef-fakexrboundspoint①"><c- n>FakeXRBoundsPoint</c-></a>> <dfn class="idl-code" data-dfn-for="FakeXRDevice/setBoundsGeometry(boundsCoordinates)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setboundsgeometry-boundscoordinates-boundscoordinates"><code><c- g>boundsCoordinates</c-></code><a class="self-link" href="#dom-fakexrdevice-setboundsgeometry-boundscoordinates-boundscoordinates"></a></dfn>);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-simulateresetpose" id="ref-for-dom-fakexrdevice-simulateresetpose"><c- g>simulateResetPose</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setviewerorigin" id="ref-for-dom-fakexrdevice-setviewerorigin"><c- g>setViewerOrigin</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit⑥"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice/setViewerOrigin(origin, emulatedPosition), FakeXRDevice/setViewerOrigin(origin)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setviewerorigin-origin-emulatedposition-origin"><code><c- g>origin</c-></code><a class="self-link" href="#dom-fakexrdevice-setviewerorigin-origin-emulatedposition-origin"></a></dfn>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean①"><c- b>boolean</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice/setViewerOrigin(origin, emulatedPosition), FakeXRDevice/setViewerOrigin(origin)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setviewerorigin-origin-emulatedposition-emulatedposition"><code><c- g>emulatedPosition</c-></code><a class="self-link" href="#dom-fakexrdevice-setviewerorigin-origin-emulatedposition-emulatedposition"></a></dfn> = <c- b>false</c->);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-clearviewerorigin" id="ref-for-dom-fakexrdevice-clearviewerorigin"><c- g>clearViewerOrigin</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setfloororigin" id="ref-for-dom-fakexrdevice-setfloororigin"><c- g>setFloorOrigin</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit⑦"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice/setFloorOrigin(origin)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setfloororigin-origin-origin"><code><c- g>origin</c-></code><a class="self-link" href="#dom-fakexrdevice-setfloororigin-origin-origin"></a></dfn>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-clearfloororigin" id="ref-for-dom-fakexrdevice-clearfloororigin"><c- g>clearFloorOrigin</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setboundsgeometry" id="ref-for-dom-fakexrdevice-setboundsgeometry"><c- g>setBoundsGeometry</c-></a>(<a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence⑧"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrboundspoint" id="ref-for-dictdef-fakexrboundspoint①"><c- n>FakeXRBoundsPoint</c-></a>> <dfn class="idl-code" data-dfn-for="FakeXRDevice/setBoundsGeometry(boundsCoordinates)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setboundsgeometry-boundscoordinates-boundscoordinates"><code><c- g>boundsCoordinates</c-></code><a class="self-link" href="#dom-fakexrdevice-setboundsgeometry-boundscoordinates-boundscoordinates"></a></dfn>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-simulateresetpose" id="ref-for-dom-fakexrdevice-simulateresetpose"><c- g>simulateResetPose</c-></a>();
 
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-simulatevisibilitychange" id="ref-for-dom-fakexrdevice-simulatevisibilitychange"><c- g>simulateVisibilityChange</c-></a>(<a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrvisibilitystate" id="ref-for-enumdef-xrvisibilitystate①"><c- n>XRVisibilityState</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice/simulateVisibilityChange(state)" data-dfn-type="argument" data-export id="dom-fakexrdevice-simulatevisibilitychange-state-state"><code><c- g>state</c-></code><a class="self-link" href="#dom-fakexrdevice-simulatevisibilitychange-state-state"></a></dfn>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-simulatevisibilitychange" id="ref-for-dom-fakexrdevice-simulatevisibilitychange"><c- g>simulateVisibilityChange</c-></a>(<a data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrvisibilitystate" id="ref-for-enumdef-xrvisibilitystate①"><c- n>XRVisibilityState</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice/simulateVisibilityChange(state)" data-dfn-type="argument" data-export id="dom-fakexrdevice-simulatevisibilitychange-state-state"><code><c- g>state</c-></code><a class="self-link" href="#dom-fakexrdevice-simulatevisibilitychange-state-state"></a></dfn>);
 
-  <a class="n" data-link-type="idl-name" href="#fakexrinputcontroller" id="ref-for-fakexrinputcontroller①"><c- n>FakeXRInputController</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-simulateinputsourceconnection" id="ref-for-dom-fakexrdevice-simulateinputsourceconnection"><c- g>simulateInputSourceConnection</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrinputsourceinit" id="ref-for-dictdef-fakexrinputsourceinit"><c- n>FakeXRInputSourceInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice/simulateInputSourceConnection(init)" data-dfn-type="argument" data-export id="dom-fakexrdevice-simulateinputsourceconnection-init-init"><code><c- g>init</c-></code><a class="self-link" href="#dom-fakexrdevice-simulateinputsourceconnection-init-init"></a></dfn>);
+  <a data-link-type="idl-name" href="#fakexrinputcontroller" id="ref-for-fakexrinputcontroller①"><c- n>FakeXRInputController</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-simulateinputsourceconnection" id="ref-for-dom-fakexrdevice-simulateinputsourceconnection"><c- g>simulateInputSourceConnection</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrinputsourceinit" id="ref-for-dictdef-fakexrinputsourceinit"><c- n>FakeXRInputSourceInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice/simulateInputSourceConnection(init)" data-dfn-type="argument" data-export id="dom-fakexrdevice-simulateinputsourceconnection-init-init"><code><c- g>init</c-></code><a class="self-link" href="#dom-fakexrdevice-simulateinputsourceconnection-init-init"></a></dfn>);
 
   // Hit test extensions:
-  <c- b>void</c-> <dfn class="idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="method" data-export data-lt="setWorld(world)" id="dom-fakexrdevice-setworld"><code><c- g>setWorld</c-></code><a class="self-link" href="#dom-fakexrdevice-setworld"></a></dfn>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrworldinit" id="ref-for-dictdef-fakexrworldinit①"><c- n>FakeXRWorldInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice/setWorld(world)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setworld-world-world"><code><c- g>world</c-></code><a class="self-link" href="#dom-fakexrdevice-setworld-world-world"></a></dfn>);
-  <c- b>void</c-> <dfn class="idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="method" data-export data-lt="clearWorld()" id="dom-fakexrdevice-clearworld"><code><c- g>clearWorld</c-></code><a class="self-link" href="#dom-fakexrdevice-clearworld"></a></dfn>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="method" data-export data-lt="setWorld(world)" id="dom-fakexrdevice-setworld"><code><c- g>setWorld</c-></code><a class="self-link" href="#dom-fakexrdevice-setworld"></a></dfn>(<a data-link-type="idl-name" href="#dictdef-fakexrworldinit" id="ref-for-dictdef-fakexrworldinit①"><c- n>FakeXRWorldInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice/setWorld(world)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setworld-world-world"><code><c- g>world</c-></code><a class="self-link" href="#dom-fakexrdevice-setworld-world-world"></a></dfn>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="method" data-export data-lt="clearWorld()" id="dom-fakexrdevice-clearworld"><code><c- g>clearWorld</c-></code><a class="self-link" href="#dom-fakexrdevice-clearworld"></a></dfn>();
 };
 
 </pre>
@@ -1912,7 +2318,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <p>When <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="method" data-export id="dom-fakexrdevice-disconnect"><code>disconnect()</code></dfn> method is called, perform the following steps:</p>
     <ol>
      <li data-md>
-      <p>Remove <a data-link-type="dfn" href="#fakexrdevice-device" id="ref-for-fakexrdevice-device③">device</a> from the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#context-object" id="ref-for-context-object①">context object</a>'s <code class="idl"><a data-link-type="idl" href="https://www.w3.org/TR/webxr/#xr" id="ref-for-xr①">XR</a></code> object’s <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#list-of-immersive-xr-devices" id="ref-for-list-of-immersive-xr-devices②">list of immersive XR devices</a> as if it were disconnected.</p>
+      <p>Remove <a data-link-type="dfn" href="#fakexrdevice-device" id="ref-for-fakexrdevice-device③">device</a> from the <a data-link-type="dfn" href="https://dom.spec.whatwg.org/#context-object" id="ref-for-context-object①">context object</a>'s <code class="idl"><a data-link-type="idl">XR</a></code> object’s <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#list-of-immersive-xr-devices" id="ref-for-list-of-immersive-xr-devices②">list of immersive XR devices</a> as if it were disconnected.</p>
      <li data-md>
       <p>If the <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device③">inline XR device</a> is equal to the <code class="idl"><a data-link-type="idl" href="#fakexrdevice" id="ref-for-fakexrdevice⑤">FakeXRDevice</a></code>, reset it to the default <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#inline-xr-device" id="ref-for-inline-xr-device④">inline XR device</a>.</p>
     </ol>
@@ -1986,33 +2392,33 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    </div>
    <h3 class="heading settled" data-level="5.2" id="fakexrinputcontroller-init"><span class="secno">5.2. </span><span class="content">FakeXRInputController</span><a class="self-link" href="#fakexrinputcontroller-init"></a></h3>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexrinputsourceinit"><code><c- g>FakeXRInputSourceInit</c-></code></dfn> {
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrhandedness" id="ref-for-enumdef-xrhandedness①"><c- n>XRHandedness</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRInputSourceInit" data-dfn-type="dict-member" data-export data-type="XRHandedness " id="dom-fakexrinputsourceinit-handedness"><code><c- g>handedness</c-></code></dfn>;
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrtargetraymode" id="ref-for-enumdef-xrtargetraymode①"><c- n>XRTargetRayMode</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRInputSourceInit" data-dfn-type="dict-member" data-export data-type="XRTargetRayMode " id="dom-fakexrinputsourceinit-targetraymode"><code><c- g>targetRayMode</c-></code></dfn>;
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit⑧"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRInputSourceInit" data-dfn-type="dict-member" data-export data-type="FakeXRRigidTransformInit " id="dom-fakexrinputsourceinit-pointerorigin"><code><c- g>pointerOrigin</c-></code></dfn>;
-  <c- b>required</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString" id="ref-for-idl-DOMString①"><c- b>DOMString</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRInputSourceInit" data-dfn-type="dict-member" data-export data-type="sequence<DOMString> " id="dom-fakexrinputsourceinit-profiles"><code><c- g>profiles</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrhandedness" id="ref-for-enumdef-xrhandedness①"><c- n>XRHandedness</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRInputSourceInit" data-dfn-type="dict-member" data-export data-type="XRHandedness " id="dom-fakexrinputsourceinit-handedness"><code><c- g>handedness</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrtargetraymode" id="ref-for-enumdef-xrtargetraymode①"><c- n>XRTargetRayMode</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRInputSourceInit" data-dfn-type="dict-member" data-export data-type="XRTargetRayMode " id="dom-fakexrinputsourceinit-targetraymode"><code><c- g>targetRayMode</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit⑧"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRInputSourceInit" data-dfn-type="dict-member" data-export data-type="FakeXRRigidTransformInit " id="dom-fakexrinputsourceinit-pointerorigin"><code><c- g>pointerOrigin</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence⑨"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString" id="ref-for-idl-DOMString①"><c- b>DOMString</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRInputSourceInit" data-dfn-type="dict-member" data-export data-type="sequence<DOMString> " id="dom-fakexrinputsourceinit-profiles"><code><c- g>profiles</c-></code></dfn>;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean②"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FakeXRInputSourceInit" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-fakexrinputsourceinit-selectionstarted"><code><c- g>selectionStarted</c-></code></dfn> = <c- b>false</c->;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean③"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-default="false" data-dfn-for="FakeXRInputSourceInit" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-fakexrinputsourceinit-selectionclicked"><code><c- g>selectionClicked</c-></code></dfn> = <c- b>false</c->;
-  <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrbuttonstateinit" id="ref-for-dictdef-fakexrbuttonstateinit①"><c- n>FakeXRButtonStateInit</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRInputSourceInit" data-dfn-type="dict-member" data-export data-type="sequence<FakeXRButtonStateInit> " id="dom-fakexrinputsourceinit-supportedbuttons"><code><c- g>supportedButtons</c-></code></dfn>;
-  <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit⑨"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRInputSourceInit" data-dfn-type="dict-member" data-export data-type="FakeXRRigidTransformInit " id="dom-fakexrinputsourceinit-griporigin"><code><c- g>gripOrigin</c-></code></dfn>;
+  <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence①⓪"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrbuttonstateinit" id="ref-for-dictdef-fakexrbuttonstateinit①"><c- n>FakeXRButtonStateInit</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRInputSourceInit" data-dfn-type="dict-member" data-export data-type="sequence<FakeXRButtonStateInit> " id="dom-fakexrinputsourceinit-supportedbuttons"><code><c- g>supportedButtons</c-></code></dfn>;
+  <a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit⑨"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRInputSourceInit" data-dfn-type="dict-member" data-export data-type="FakeXRRigidTransformInit " id="dom-fakexrinputsourceinit-griporigin"><code><c- g>gripOrigin</c-></code></dfn>;
 };
 
 <c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="fakexrinputcontroller"><code><c- g>FakeXRInputController</c-></code></dfn> {
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-sethandedness" id="ref-for-dom-fakexrinputcontroller-sethandedness"><c- g>setHandedness</c-></a>(<a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrhandedness" id="ref-for-enumdef-xrhandedness②"><c- n>XRHandedness</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setHandedness(handedness)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-sethandedness-handedness-handedness"><code><c- g>handedness</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-sethandedness-handedness-handedness"></a></dfn>);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-settargetraymode" id="ref-for-dom-fakexrinputcontroller-settargetraymode"><c- g>setTargetRayMode</c-></a>(<a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrtargetraymode" id="ref-for-enumdef-xrtargetraymode②"><c- n>XRTargetRayMode</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setTargetRayMode(targetRayMode)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-settargetraymode-targetraymode-targetraymode"><code><c- g>targetRayMode</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-settargetraymode-targetraymode-targetraymode"></a></dfn>);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setprofiles" id="ref-for-dom-fakexrinputcontroller-setprofiles"><c- g>setProfiles</c-></a>(<c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString" id="ref-for-idl-DOMString②"><c- b>DOMString</c-></a>> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setProfiles(profiles)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setprofiles-profiles-profiles"><code><c- g>profiles</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setprofiles-profiles-profiles"></a></dfn>);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setgriporigin" id="ref-for-dom-fakexrinputcontroller-setgriporigin"><c- g>setGripOrigin</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit①⓪"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setGripOrigin(gripOrigin, emulatedPosition), FakeXRInputController/setGripOrigin(gripOrigin)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setgriporigin-griporigin-emulatedposition-griporigin"><code><c- g>gripOrigin</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setgriporigin-griporigin-emulatedposition-griporigin"></a></dfn>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean④"><c- b>boolean</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setGripOrigin(gripOrigin, emulatedPosition), FakeXRInputController/setGripOrigin(gripOrigin)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setgriporigin-griporigin-emulatedposition-emulatedposition"><code><c- g>emulatedPosition</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setgriporigin-griporigin-emulatedposition-emulatedposition"></a></dfn> = <c- b>false</c->);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-cleargriporigin" id="ref-for-dom-fakexrinputcontroller-cleargriporigin"><c- g>clearGripOrigin</c-></a>();
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setpointerorigin" id="ref-for-dom-fakexrinputcontroller-setpointerorigin"><c- g>setPointerOrigin</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit①①"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setPointerOrigin(pointerOrigin, emulatedPosition), FakeXRInputController/setPointerOrigin(pointerOrigin)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setpointerorigin-pointerorigin-emulatedposition-pointerorigin"><code><c- g>pointerOrigin</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setpointerorigin-pointerorigin-emulatedposition-pointerorigin"></a></dfn>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑤"><c- b>boolean</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setPointerOrigin(pointerOrigin, emulatedPosition), FakeXRInputController/setPointerOrigin(pointerOrigin)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setpointerorigin-pointerorigin-emulatedposition-emulatedposition"><code><c- g>emulatedPosition</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setpointerorigin-pointerorigin-emulatedposition-emulatedposition"></a></dfn> = <c- b>false</c->);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-sethandedness" id="ref-for-dom-fakexrinputcontroller-sethandedness"><c- g>setHandedness</c-></a>(<a data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrhandedness" id="ref-for-enumdef-xrhandedness②"><c- n>XRHandedness</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setHandedness(handedness)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-sethandedness-handedness-handedness"><code><c- g>handedness</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-sethandedness-handedness-handedness"></a></dfn>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-settargetraymode" id="ref-for-dom-fakexrinputcontroller-settargetraymode"><c- g>setTargetRayMode</c-></a>(<a data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrtargetraymode" id="ref-for-enumdef-xrtargetraymode②"><c- n>XRTargetRayMode</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setTargetRayMode(targetRayMode)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-settargetraymode-targetraymode-targetraymode"><code><c- g>targetRayMode</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-settargetraymode-targetraymode-targetraymode"></a></dfn>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setprofiles" id="ref-for-dom-fakexrinputcontroller-setprofiles"><c- g>setProfiles</c-></a>(<a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence①①"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString" id="ref-for-idl-DOMString②"><c- b>DOMString</c-></a>> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setProfiles(profiles)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setprofiles-profiles-profiles"><code><c- g>profiles</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setprofiles-profiles-profiles"></a></dfn>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setgriporigin" id="ref-for-dom-fakexrinputcontroller-setgriporigin"><c- g>setGripOrigin</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit①⓪"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setGripOrigin(gripOrigin, emulatedPosition), FakeXRInputController/setGripOrigin(gripOrigin)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setgriporigin-griporigin-emulatedposition-griporigin"><code><c- g>gripOrigin</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setgriporigin-griporigin-emulatedposition-griporigin"></a></dfn>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean④"><c- b>boolean</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setGripOrigin(gripOrigin, emulatedPosition), FakeXRInputController/setGripOrigin(gripOrigin)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setgriporigin-griporigin-emulatedposition-emulatedposition"><code><c- g>emulatedPosition</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setgriporigin-griporigin-emulatedposition-emulatedposition"></a></dfn> = <c- b>false</c->);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-cleargriporigin" id="ref-for-dom-fakexrinputcontroller-cleargriporigin"><c- g>clearGripOrigin</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setpointerorigin" id="ref-for-dom-fakexrinputcontroller-setpointerorigin"><c- g>setPointerOrigin</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit①①"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setPointerOrigin(pointerOrigin, emulatedPosition), FakeXRInputController/setPointerOrigin(pointerOrigin)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setpointerorigin-pointerorigin-emulatedposition-pointerorigin"><code><c- g>pointerOrigin</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setpointerorigin-pointerorigin-emulatedposition-pointerorigin"></a></dfn>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑤"><c- b>boolean</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setPointerOrigin(pointerOrigin, emulatedPosition), FakeXRInputController/setPointerOrigin(pointerOrigin)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setpointerorigin-pointerorigin-emulatedposition-emulatedposition"><code><c- g>emulatedPosition</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setpointerorigin-pointerorigin-emulatedposition-emulatedposition"></a></dfn> = <c- b>false</c->);
 
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-disconnect" id="ref-for-dom-fakexrinputcontroller-disconnect"><c- g>disconnect</c-></a>();
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-reconnect" id="ref-for-dom-fakexrinputcontroller-reconnect"><c- g>reconnect</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-disconnect" id="ref-for-dom-fakexrinputcontroller-disconnect"><c- g>disconnect</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-reconnect" id="ref-for-dom-fakexrinputcontroller-reconnect"><c- g>reconnect</c-></a>();
 
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-startselection" id="ref-for-dom-fakexrinputcontroller-startselection"><c- g>startSelection</c-></a>();
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-endselection" id="ref-for-dom-fakexrinputcontroller-endselection"><c- g>endSelection</c-></a>();
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-simulateselect" id="ref-for-dom-fakexrinputcontroller-simulateselect"><c- g>simulateSelect</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-startselection" id="ref-for-dom-fakexrinputcontroller-startselection"><c- g>startSelection</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-endselection" id="ref-for-dom-fakexrinputcontroller-endselection"><c- g>endSelection</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-simulateselect" id="ref-for-dom-fakexrinputcontroller-simulateselect"><c- g>simulateSelect</c-></a>();
 
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setsupportedbuttons" id="ref-for-dom-fakexrinputcontroller-setsupportedbuttons"><c- g>setSupportedButtons</c-></a>(<c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrbuttonstateinit" id="ref-for-dictdef-fakexrbuttonstateinit②"><c- n>FakeXRButtonStateInit</c-></a>> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setSupportedButtons(supportedButtons)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setsupportedbuttons-supportedbuttons-supportedbuttons"><code><c- g>supportedButtons</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setsupportedbuttons-supportedbuttons-supportedbuttons"></a></dfn>);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-updatebuttonstate" id="ref-for-dom-fakexrinputcontroller-updatebuttonstate"><c- g>updateButtonState</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrbuttonstateinit" id="ref-for-dictdef-fakexrbuttonstateinit③"><c- n>FakeXRButtonStateInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/updateButtonState(buttonState)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-updatebuttonstate-buttonstate-buttonstate"><code><c- g>buttonState</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-updatebuttonstate-buttonstate-buttonstate"></a></dfn>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setsupportedbuttons" id="ref-for-dom-fakexrinputcontroller-setsupportedbuttons"><c- g>setSupportedButtons</c-></a>(<a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence①②"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrbuttonstateinit" id="ref-for-dictdef-fakexrbuttonstateinit②"><c- n>FakeXRButtonStateInit</c-></a>> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setSupportedButtons(supportedButtons)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setsupportedbuttons-supportedbuttons-supportedbuttons"><code><c- g>supportedButtons</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setsupportedbuttons-supportedbuttons-supportedbuttons"></a></dfn>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-updatebuttonstate" id="ref-for-dom-fakexrinputcontroller-updatebuttonstate"><c- g>updateButtonState</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrbuttonstateinit" id="ref-for-dictdef-fakexrbuttonstateinit③"><c- n>FakeXRButtonStateInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/updateButtonState(buttonState)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-updatebuttonstate-buttonstate-buttonstate"><code><c- g>buttonState</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-updatebuttonstate-buttonstate-buttonstate"></a></dfn>);
 };
 
 <c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-fakexrbuttontype"><code><c- g>FakeXRButtonType</c-></code></dfn> {
@@ -2024,7 +2430,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexrbuttonstateinit"><code><c- g>FakeXRButtonStateInit</c-></code></dfn> {
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#enumdef-fakexrbuttontype" id="ref-for-enumdef-fakexrbuttontype"><c- n>FakeXRButtonType</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRButtonStateInit" data-dfn-type="dict-member" data-export data-type="FakeXRButtonType " id="dom-fakexrbuttonstateinit-buttontype"><code><c- g>buttonType</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="#enumdef-fakexrbuttontype" id="ref-for-enumdef-fakexrbuttontype"><c- n>FakeXRButtonType</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRButtonStateInit" data-dfn-type="dict-member" data-export data-type="FakeXRButtonType " id="dom-fakexrbuttonstateinit-buttontype"><code><c- g>buttonType</c-></code></dfn>;
   <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑥"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRButtonStateInit" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-fakexrbuttonstateinit-pressed"><code><c- g>pressed</c-></code></dfn>;
   <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑦"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRButtonStateInit" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-fakexrbuttonstateinit-touched"><code><c- g>touched</c-></code></dfn>;
   <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float" id="ref-for-idl-float⑦"><c- b>float</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRButtonStateInit" data-dfn-type="dict-member" data-export data-type="float " id="dom-fakexrbuttonstateinit-pressedvalue"><code><c- g>pressedValue</c-></code></dfn>;
@@ -2170,15 +2576,15 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <h2 class="heading settled" data-level="6" id="hit-test-extensions"><span class="secno">6. </span><span class="content">Hit test extensions</span><a class="self-link" href="#hit-test-extensions"></a></h2>
    <p>The hit test extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/hit-test/">WebXR Hit Test Module</a>.</p>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexrworldinit"><code><c- g>FakeXRWorldInit</c-></code></dfn> {
-  <c- b>required</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrregioninit" id="ref-for-dictdef-fakexrregioninit"><c- n>FakeXRRegionInit</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRWorldInit" data-dfn-type="dict-member" data-export data-type="sequence<FakeXRRegionInit> " id="dom-fakexrworldinit-hittestregions"><code><c- g>hitTestRegions</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence①③"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrregioninit" id="ref-for-dictdef-fakexrregioninit"><c- n>FakeXRRegionInit</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRWorldInit" data-dfn-type="dict-member" data-export data-type="sequence<FakeXRRegionInit> " id="dom-fakexrworldinit-hittestregions"><code><c- g>hitTestRegions</c-></code></dfn>;
 };
 
 </pre>
    <p><code class="idl"><a data-link-type="idl" href="#dictdef-fakexrworldinit" id="ref-for-dictdef-fakexrworldinit②">FakeXRWorldInit</a></code> dictionary describes the state of the world that will be used when computing hit test results on a <code class="idl"><a data-link-type="idl" href="#fakexrdevice" id="ref-for-fakexrdevice⑥">FakeXRDevice</a></code>.</p>
    <p><code class="idl"><a data-link-type="idl" href="#dom-fakexrworldinit-hittestregions" id="ref-for-dom-fakexrworldinit-hittestregions">hitTestRegions</a></code> contains a collection of <code class="idl"><a data-link-type="idl" href="#dictdef-fakexrregioninit" id="ref-for-dictdef-fakexrregioninit①">FakeXRRegionInit</a></code>s that are used to describe specific regions of the fake world. The order of the regions does not matter.</p>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexrregioninit"><code><c- g>FakeXRRegionInit</c-></code></dfn> {
-  <c- b>required</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrtriangleinit" id="ref-for-dictdef-fakexrtriangleinit"><c- n>FakeXRTriangleInit</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRRegionInit" data-dfn-type="dict-member" data-export data-type="sequence<FakeXRTriangleInit> " id="dom-fakexrregioninit-faces"><code><c- g>faces</c-></code></dfn>;
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#enumdef-fakexrregiontype" id="ref-for-enumdef-fakexrregiontype"><c- n>FakeXRRegionType</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRRegionInit" data-dfn-type="dict-member" data-export data-type="FakeXRRegionType " id="dom-fakexrregioninit-type"><code><c- g>type</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence①④"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrtriangleinit" id="ref-for-dictdef-fakexrtriangleinit"><c- n>FakeXRTriangleInit</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRRegionInit" data-dfn-type="dict-member" data-export data-type="sequence<FakeXRTriangleInit> " id="dom-fakexrregioninit-faces"><code><c- g>faces</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="#enumdef-fakexrregiontype" id="ref-for-enumdef-fakexrregiontype"><c- n>FakeXRRegionType</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRRegionInit" data-dfn-type="dict-member" data-export data-type="FakeXRRegionType " id="dom-fakexrregioninit-type"><code><c- g>type</c-></code></dfn>;
 };
 
 </pre>
@@ -2186,7 +2592,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p><code class="idl"><a data-link-type="idl" href="#dom-fakexrregioninit-faces" id="ref-for-dom-fakexrregioninit-faces">faces</a></code> contains a collection of <code class="idl"><a data-link-type="idl" href="#dictdef-fakexrtriangleinit" id="ref-for-dictdef-fakexrtriangleinit①">FakeXRTriangleInit</a></code>s that enumerate all the faces contained by the region. The order of the faces does not matter.</p>
    <p><code class="idl"><a data-link-type="idl" href="#dom-fakexrregioninit-type" id="ref-for-dom-fakexrregioninit-type">type</a></code> contains a type of the region that will be used during computation of hit test results.</p>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexrtriangleinit"><code><c- g>FakeXRTriangleInit</c-></code></dfn> {
-  <c- b>required</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="https://drafts.fxtf.org/geometry-1/#dictdef-dompointinit" id="ref-for-dictdef-dompointinit②"><c- n>DOMPointInit</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRTriangleInit" data-dfn-type="dict-member" data-export data-type="sequence<DOMPointInit> " id="dom-fakexrtriangleinit-vertices"><code><c- g>vertices</c-></code></dfn>;  // size = 3
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence①⑤"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="https://drafts.fxtf.org/geometry-1/#dictdef-dompointinit" id="ref-for-dictdef-dompointinit②"><c- n>DOMPointInit</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRTriangleInit" data-dfn-type="dict-member" data-export data-type="sequence<DOMPointInit> " id="dom-fakexrtriangleinit-vertices"><code><c- g>vertices</c-></code></dfn>;  // size = 3
 };
 
 </pre>
@@ -2203,21 +2609,21 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <h2 class="heading settled" data-level="7" id="dom-overlay-extensions"><span class="secno">7. </span><span class="content">DOM overlay extensions</span><a class="self-link" href="#dom-overlay-extensions"></a></h2>
    <p>The DOM Overlay extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/dom-overlays/">WebXR DOM Overlay Module</a>.</p>
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#fakexrinputcontroller" id="ref-for-fakexrinputcontroller⑤"><c- g>FakeXRInputController</c-></a> {
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setoverlaypointerposition" id="ref-for-dom-fakexrinputcontroller-setoverlaypointerposition"><c- g>setOverlayPointerPosition</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float" id="ref-for-idl-float①⓪"><c- b>float</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setOverlayPointerPosition(x, y)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setoverlaypointerposition-x-y-x"><code><c- g>x</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setoverlaypointerposition-x-y-x"></a></dfn>, <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float" id="ref-for-idl-float①①"><c- b>float</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setOverlayPointerPosition(x, y)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setoverlaypointerposition-x-y-y"><code><c- g>y</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setoverlaypointerposition-x-y-y"></a></dfn>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setoverlaypointerposition" id="ref-for-dom-fakexrinputcontroller-setoverlaypointerposition"><c- g>setOverlayPointerPosition</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float" id="ref-for-idl-float①⓪"><c- b>float</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setOverlayPointerPosition(x, y)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setoverlaypointerposition-x-y-x"><code><c- g>x</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setoverlaypointerposition-x-y-x"></a></dfn>, <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float" id="ref-for-idl-float①①"><c- b>float</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRInputController/setOverlayPointerPosition(x, y)" data-dfn-type="argument" data-export id="dom-fakexrinputcontroller-setoverlaypointerposition-x-y-y"><code><c- g>y</c-></code><a class="self-link" href="#dom-fakexrinputcontroller-setoverlaypointerposition-x-y-y"></a></dfn>);
 };
 </pre>
    <p>When <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRInputController" data-dfn-type="method" data-export id="dom-fakexrinputcontroller-setoverlaypointerposition"><code>setOverlayPointerPosition(x, y)</code></dfn> is called, it sets a position within the DOM overlay in DOM coordinates for the next <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#xr-animation-frame" id="ref-for-xr-animation-frame⑤">XR animation frame</a>, and is cleared after that frame. It is intended to be used along with a <a data-link-type="dfn" href="https://immersive-web.github.io/webxr/#primary-action" id="ref-for-primary-action②">primary action</a> for that frame, simulating that the user is interacting with the DOM overlay. The UA will emit a <a data-link-type="dfn" href="https://immersive-web.github.io/dom-overlays#beforexrselect" id="ref-for-beforexrselect">beforexrselect</a> event at this location before generating XR select events.</p>
    <h2 class="heading settled" data-level="8" id="anchors-extensions"><span class="secno">8. </span><span class="content">Anchors extensions</span><a class="self-link" href="#anchors-extensions"></a></h2>
    <p>The anchors extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/anchors/">WebXR Anchors</a>.</p>
 <pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexranchorcreationparameters"><code><c- g>FakeXRAnchorCreationParameters</c-></code></dfn> {
-  <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit①②"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorCreationParameters" data-dfn-type="dict-member" data-export data-type="FakeXRRigidTransformInit " id="dom-fakexranchorcreationparameters-requestedanchororigin"><code><c- g>requestedAnchorOrigin</c-></code></dfn>;
+  <a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit①②"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorCreationParameters" data-dfn-type="dict-member" data-export data-type="FakeXRRigidTransformInit " id="dom-fakexranchorcreationparameters-requestedanchororigin"><code><c- g>requestedAnchorOrigin</c-></code></dfn>;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑧"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorCreationParameters" data-dfn-type="dict-member" data-export data-type="boolean " id="dom-fakexranchorcreationparameters-isattachedtoentity"><code><c- g>isAttachedToEntity</c-></code></dfn>;
 };
 
-<c- b>callback</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="callback" data-export id="callbackdef-fakexranchorcreationcallback"><code><c- g>FakeXRAnchorCreationCallback</c-></code></dfn> = <c- b>Promise</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑨"><c- b>boolean</c-></a>> (<a class="n" data-link-type="idl-name" href="#dictdef-fakexranchorcreationparameters" id="ref-for-dictdef-fakexranchorcreationparameters"><c- n>FakeXRAnchorCreationParameters</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRAnchorCreationCallback" data-dfn-type="argument" data-export id="dom-fakexranchorcreationcallback-parameters"><code><c- g>parameters</c-></code><a class="self-link" href="#dom-fakexranchorcreationcallback-parameters"></a></dfn>, <a class="n" data-link-type="idl-name" href="#fakexranchorcontroller" id="ref-for-fakexranchorcontroller"><c- n>FakeXRAnchorController</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRAnchorCreationCallback" data-dfn-type="argument" data-export id="dom-fakexranchorcreationcallback-anchorcontroller"><code><c- g>anchorController</c-></code><a class="self-link" href="#dom-fakexranchorcreationcallback-anchorcontroller"></a></dfn>);
+<c- b>callback</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="callback" data-export id="callbackdef-fakexranchorcreationcallback"><code><c- g>FakeXRAnchorCreationCallback</c-></code></dfn> = <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise" id="ref-for-idl-promise③"><c- b>Promise</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean⑨"><c- b>boolean</c-></a>> (<a data-link-type="idl-name" href="#dictdef-fakexranchorcreationparameters" id="ref-for-dictdef-fakexranchorcreationparameters"><c- n>FakeXRAnchorCreationParameters</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRAnchorCreationCallback" data-dfn-type="argument" data-export id="dom-fakexranchorcreationcallback-parameters"><code><c- g>parameters</c-></code><a class="self-link" href="#dom-fakexranchorcreationcallback-parameters"></a></dfn>, <a data-link-type="idl-name" href="#fakexranchorcontroller" id="ref-for-fakexranchorcontroller"><c- n>FakeXRAnchorController</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRAnchorCreationCallback" data-dfn-type="argument" data-export id="dom-fakexranchorcreationcallback-anchorcontroller"><code><c- g>anchorController</c-></code><a class="self-link" href="#dom-fakexranchorcreationcallback-anchorcontroller"></a></dfn>);
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#fakexrdevice" id="ref-for-fakexrdevice⑦"><c- g>FakeXRDevice</c-></a> {
-  <c- b>void</c-> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="method" data-export data-lt="setAnchorCreationCallback(callback)" id="dom-fakexrdevice-setanchorcreationcallback"><code><c- g>setAnchorCreationCallback</c-></code></dfn>(<a class="n" data-link-type="idl-name" href="#callbackdef-fakexranchorcreationcallback" id="ref-for-callbackdef-fakexranchorcreationcallback"><c- n>FakeXRAnchorCreationCallback</c-></a>? <dfn class="idl-code" data-dfn-for="FakeXRDevice/setAnchorCreationCallback(callback)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setanchorcreationcallback-callback-callback"><code><c- g>callback</c-></code><a class="self-link" href="#dom-fakexrdevice-setanchorcreationcallback-callback-callback"></a></dfn>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="method" data-export data-lt="setAnchorCreationCallback(callback)" id="dom-fakexrdevice-setanchorcreationcallback"><code><c- g>setAnchorCreationCallback</c-></code></dfn>(<a data-link-type="idl-name" href="#callbackdef-fakexranchorcreationcallback" id="ref-for-callbackdef-fakexranchorcreationcallback"><c- n>FakeXRAnchorCreationCallback</c-></a>? <dfn class="idl-code" data-dfn-for="FakeXRDevice/setAnchorCreationCallback(callback)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setanchorcreationcallback-callback-callback"><code><c- g>callback</c-></code><a class="self-link" href="#dom-fakexrdevice-setanchorcreationcallback-callback-callback"></a></dfn>);
 };
 
 </pre>
@@ -2248,12 +2654,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean" id="ref-for-idl-boolean①⓪"><c- b>boolean</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorController" data-dfn-type="attribute" data-export data-readonly data-type="boolean" id="dom-fakexranchorcontroller-deleted"><code><c- g>deleted</c-></code></dfn>;
 
   // Controlling anchor state:
-  <c- b>void</c-> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorController" data-dfn-type="method" data-export data-lt="pauseTracking()" id="dom-fakexranchorcontroller-pausetracking"><code><c- g>pauseTracking</c-></code></dfn>();
-  <c- b>void</c-> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorController" data-dfn-type="method" data-export data-lt="resumeTracking()" id="dom-fakexranchorcontroller-resumetracking"><code><c- g>resumeTracking</c-></code></dfn>();
-  <c- b>void</c-> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorController" data-dfn-type="method" data-export data-lt="stopTracking()" id="dom-fakexranchorcontroller-stoptracking"><code><c- g>stopTracking</c-></code></dfn>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorController" data-dfn-type="method" data-export data-lt="pauseTracking()" id="dom-fakexranchorcontroller-pausetracking"><code><c- g>pauseTracking</c-></code></dfn>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorController" data-dfn-type="method" data-export data-lt="resumeTracking()" id="dom-fakexranchorcontroller-resumetracking"><code><c- g>resumeTracking</c-></code></dfn>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorController" data-dfn-type="method" data-export data-lt="stopTracking()" id="dom-fakexranchorcontroller-stoptracking"><code><c- g>stopTracking</c-></code></dfn>();
 
   // Controlling anchor location:
-  <c- b>void</c-> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorController" data-dfn-type="method" data-export data-lt="setAnchorOrigin(anchorOrigin)" id="dom-fakexranchorcontroller-setanchororigin"><code><c- g>setAnchorOrigin</c-></code></dfn>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit①③"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRAnchorController/setAnchorOrigin(anchorOrigin)" data-dfn-type="argument" data-export id="dom-fakexranchorcontroller-setanchororigin-anchororigin-anchororigin"><code><c- g>anchorOrigin</c-></code><a class="self-link" href="#dom-fakexranchorcontroller-setanchororigin-anchororigin-anchororigin"></a></dfn>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRAnchorController" data-dfn-type="method" data-export data-lt="setAnchorOrigin(anchorOrigin)" id="dom-fakexranchorcontroller-setanchororigin"><code><c- g>setAnchorOrigin</c-></code></dfn>(<a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit①③"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRAnchorController/setAnchorOrigin(anchorOrigin)" data-dfn-type="argument" data-export id="dom-fakexranchorcontroller-setanchororigin-anchororigin-anchororigin"><code><c- g>anchorOrigin</c-></code><a class="self-link" href="#dom-fakexranchorcontroller-setanchororigin-anchororigin-anchororigin"></a></dfn>);
 };
 
 </pre>
@@ -2530,6 +2936,14 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-notfounderror">5.2. FakeXRInputController</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-idl-promise">
+   <a href="https://heycam.github.io/webidl/#idl-promise">https://heycam.github.io/webidl/#idl-promise</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-idl-promise">4.2. XRTest</a> <a href="#ref-for-idl-promise①">(2)</a>
+    <li><a href="#ref-for-idl-promise②">5.1. FakeXRDevice</a>
+    <li><a href="#ref-for-idl-promise③">8. Anchors extensions</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-SameObject">
    <a href="https://heycam.github.io/webidl/#SameObject">https://heycam.github.io/webidl/#SameObject</a><b>Referenced in:</b>
    <ul>
@@ -2549,6 +2963,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <a href="https://heycam.github.io/webidl/#a-new-promise">https://heycam.github.io/webidl/#a-new-promise</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-a-new-promise">4.2. XRTest</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-idl-any">
+   <a href="https://heycam.github.io/webidl/#idl-any">https://heycam.github.io/webidl/#idl-any</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-idl-any">4.3. FakeXRDeviceInit</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-boolean">
@@ -2592,6 +3012,15 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-resolve">4.2. XRTest</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-idl-sequence">
+   <a href="https://heycam.github.io/webidl/#idl-sequence">https://heycam.github.io/webidl/#idl-sequence</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-idl-sequence">4.3. FakeXRDeviceInit</a> <a href="#ref-for-idl-sequence①">(2)</a> <a href="#ref-for-idl-sequence②">(3)</a> <a href="#ref-for-idl-sequence③">(4)</a> <a href="#ref-for-idl-sequence④">(5)</a> <a href="#ref-for-idl-sequence⑤">(6)</a> <a href="#ref-for-idl-sequence⑥">(7)</a>
+    <li><a href="#ref-for-idl-sequence⑦">5.1. FakeXRDevice</a> <a href="#ref-for-idl-sequence⑧">(2)</a>
+    <li><a href="#ref-for-idl-sequence⑨">5.2. FakeXRInputController</a> <a href="#ref-for-idl-sequence①⓪">(2)</a> <a href="#ref-for-idl-sequence①①">(3)</a> <a href="#ref-for-idl-sequence①②">(4)</a>
+    <li><a href="#ref-for-idl-sequence①③">6. Hit test extensions</a> <a href="#ref-for-idl-sequence①④">(2)</a> <a href="#ref-for-idl-sequence①⑤">(3)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-dom-xrreferencespacetype-local">
    <a href="https://immersive-web.github.io/webxr/#dom-xrreferencespacetype-local">https://immersive-web.github.io/webxr/#dom-xrreferencespacetype-local</a><b>Referenced in:</b>
    <ul>
@@ -2602,13 +3031,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <a href="https://immersive-web.github.io/webxr/#dom-xrvisibilitystate-visible">https://immersive-web.github.io/webxr/#dom-xrvisibilitystate-visible</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-xrvisibilitystate-visible">3.1. Simulated XR Device</a>
-   </ul>
-  </aside>
-  <aside class="dfn-panel" data-for="term-for-xr">
-   <a href="https://www.w3.org/TR/webxr/#xr">https://www.w3.org/TR/webxr/#xr</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-xr">4.2. XRTest</a>
-    <li><a href="#ref-for-xr①">5.1. FakeXRDevice</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-xrboundedreferencespace">
@@ -2963,119 +3385,121 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li>
     <a data-link-type="biblio">[DOM]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-eventtarget" style="color:initial">EventTarget</span>
-     <li><span class="dfn-paneled" id="term-for-context-object" style="color:initial">context object</span>
+     <li><span class="dfn-paneled" id="term-for-eventtarget">EventTarget</span>
+     <li><span class="dfn-paneled" id="term-for-context-object">context object</span>
     </ul>
    <li>
     <a data-link-type="biblio">[geometry-1]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-dictdef-dompointinit" style="color:initial">DOMPointInit</span>
-     <li><span class="dfn-paneled" id="term-for-dompointreadonly" style="color:initial">DOMPointReadOnly</span>
-     <li><span class="dfn-paneled" id="term-for-dom-dompointinit-w" style="color:initial">w</span>
-     <li><span class="dfn-paneled" id="term-for-dom-dompointinit-x" style="color:initial">x</span>
-     <li><span class="dfn-paneled" id="term-for-dom-dompointinit-y" style="color:initial">y</span>
-     <li><span class="dfn-paneled" id="term-for-dom-dompointinit-z" style="color:initial">z</span>
+     <li><span class="dfn-paneled" id="term-for-dictdef-dompointinit">DOMPointInit</span>
+     <li><span class="dfn-paneled" id="term-for-dompointreadonly">DOMPointReadOnly</span>
+     <li><span class="dfn-paneled" id="term-for-dom-dompointinit-w">w</span>
+     <li><span class="dfn-paneled" id="term-for-dom-dompointinit-x">x</span>
+     <li><span class="dfn-paneled" id="term-for-dom-dompointinit-y">y</span>
+     <li><span class="dfn-paneled" id="term-for-dom-dompointinit-z">z</span>
     </ul>
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-in-parallel" style="color:initial">in parallel</span>
-     <li><span class="dfn-paneled" id="term-for-transient-activation" style="color:initial">transient activation</span>
+     <li><span class="dfn-paneled" id="term-for-in-parallel">in parallel</span>
+     <li><span class="dfn-paneled" id="term-for-transient-activation">transient activation</span>
     </ul>
    <li>
     <a data-link-type="biblio">[INFRA]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-list-append" style="color:initial">append</span>
-     <li><span class="dfn-paneled" id="term-for-list" style="color:initial">list</span>
+     <li><span class="dfn-paneled" id="term-for-list-append">append</span>
+     <li><span class="dfn-paneled" id="term-for-list">list</span>
     </ul>
    <li>
     <a data-link-type="biblio">[WebIDL]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-idl-DOMString" style="color:initial">DOMString</span>
-     <li><span class="dfn-paneled" id="term-for-Function" style="color:initial">Function</span>
-     <li><span class="dfn-paneled" id="term-for-notfounderror" style="color:initial">NotFoundError</span>
-     <li><span class="dfn-paneled" id="term-for-SameObject" style="color:initial">SameObject</span>
-     <li><span class="dfn-paneled" id="term-for-exceptiondef-typeerror" style="color:initial">TypeError</span>
-     <li><span class="dfn-paneled" id="term-for-a-new-promise" style="color:initial">a new promise</span>
-     <li><span class="dfn-paneled" id="term-for-idl-boolean" style="color:initial">boolean</span>
-     <li><span class="dfn-paneled" id="term-for-idl-double" style="color:initial">double</span>
-     <li><span class="dfn-paneled" id="term-for-idl-float" style="color:initial">float</span>
-     <li><span class="dfn-paneled" id="term-for-idl-long" style="color:initial">long</span>
-     <li><span class="dfn-paneled" id="term-for-dfn-perform-steps-once-promise-is-settled" style="color:initial">react</span>
-     <li><span class="dfn-paneled" id="term-for-resolve" style="color:initial">resolve</span>
+     <li><span class="dfn-paneled" id="term-for-idl-DOMString">DOMString</span>
+     <li><span class="dfn-paneled" id="term-for-Function">Function</span>
+     <li><span class="dfn-paneled" id="term-for-notfounderror">NotFoundError</span>
+     <li><span class="dfn-paneled" id="term-for-idl-promise">Promise</span>
+     <li><span class="dfn-paneled" id="term-for-SameObject">SameObject</span>
+     <li><span class="dfn-paneled" id="term-for-exceptiondef-typeerror">TypeError</span>
+     <li><span class="dfn-paneled" id="term-for-a-new-promise">a new promise</span>
+     <li><span class="dfn-paneled" id="term-for-idl-any">any</span>
+     <li><span class="dfn-paneled" id="term-for-idl-boolean">boolean</span>
+     <li><span class="dfn-paneled" id="term-for-idl-double">double</span>
+     <li><span class="dfn-paneled" id="term-for-idl-float">float</span>
+     <li><span class="dfn-paneled" id="term-for-idl-long">long</span>
+     <li><span class="dfn-paneled" id="term-for-dfn-perform-steps-once-promise-is-settled">react</span>
+     <li><span class="dfn-paneled" id="term-for-resolve">resolve</span>
+     <li><span class="dfn-paneled" id="term-for-idl-sequence">sequence</span>
     </ul>
    <li>
     <a data-link-type="biblio">[webxr]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-dom-xrreferencespacetype-local" style="color:initial">"local"</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrvisibilitystate-visible" style="color:initial">"visible"</span>
-     <li><span class="dfn-paneled" id="term-for-xr" style="color:initial">XR</span>
-     <li><span class="dfn-paneled" id="term-for-xrboundedreferencespace" style="color:initial">XRBoundedReferenceSpace</span>
-     <li><span class="dfn-paneled" id="term-for-enumdef-xreye" style="color:initial">XREye</span>
-     <li><span class="dfn-paneled" id="term-for-enumdef-xrhandedness" style="color:initial">XRHandedness</span>
-     <li><span class="dfn-paneled" id="term-for-xrinputsource" style="color:initial">XRInputSource</span>
-     <li><span class="dfn-paneled" id="term-for-xrpose" style="color:initial">XRPose</span>
-     <li><span class="dfn-paneled" id="term-for-xrrigidtransform" style="color:initial">XRRigidTransform</span>
-     <li><span class="dfn-paneled" id="term-for-xrsession" style="color:initial">XRSession</span>
-     <li><span class="dfn-paneled" id="term-for-enumdef-xrsessionmode" style="color:initial">XRSessionMode</span>
-     <li><span class="dfn-paneled" id="term-for-xrsystem" style="color:initial">XRSystem</span>
-     <li><span class="dfn-paneled" id="term-for-enumdef-xrtargetraymode" style="color:initial">XRTargetRayMode</span>
-     <li><span class="dfn-paneled" id="term-for-xrviewport" style="color:initial">XRViewport</span>
-     <li><span class="dfn-paneled" id="term-for-enumdef-xrvisibilitystate" style="color:initial">XRVisibilityState</span>
-     <li><span class="dfn-paneled" id="term-for-capable-of-supporting" style="color:initial">capable of supporting</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrrigidtransform-xrrigidtransform" style="color:initial">constructor()</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrrenderstate-depthfar" style="color:initial">depthFar</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrrenderstate-depthnear" style="color:initial">depthNear</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrpose-emulatedposition" style="color:initial">emulatedPosition</span>
-     <li><span class="dfn-paneled" id="term-for-view-eye" style="color:initial">eye</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrinputsource-gripspace" style="color:initial">gripSpace</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrinputsource-handedness" style="color:initial">handedness</span>
-     <li><span class="dfn-paneled" id="term-for-inline-xr-device" style="color:initial">inline xr device</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrsession-inputsources" style="color:initial">inputSources</span>
-     <li><span class="dfn-paneled" id="term-for-eventdef-xrsession-inputsourceschange" style="color:initial">inputsourceschange</span>
-     <li><span class="dfn-paneled" id="term-for-list-of-immersive-xr-devices" style="color:initial">list of immersive xr devices</span>
-     <li><span class="dfn-paneled" id="term-for-list-of-supported-modes" style="color:initial">list of supported modes</span>
-     <li><span class="dfn-paneled" id="term-for-xrboundedreferencespace-native-bounds-geometry" style="color:initial">native bounds geometry</span>
-     <li><span class="dfn-paneled" id="term-for-xrspace-native-origin" style="color:initial">native origin</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrsession-oninputsourceschange" style="color:initial">oninputsourceschange</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrsession-onselect" style="color:initial">onselect</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrsession-onselectend" style="color:initial">onselectend</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrsession-onvisibilitychange" style="color:initial">onvisibilitychange</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrrigidtransform-orientation" style="color:initial">orientation</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrrigidtransform-position" style="color:initial">position</span>
-     <li><span class="dfn-paneled" id="term-for-primary-action" style="color:initial">primary action</span>
-     <li><span class="dfn-paneled" id="term-for-primary-squeeze-action" style="color:initial">primary squeeze action</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrinputsource-profiles" style="color:initial">profiles</span>
-     <li><span class="dfn-paneled" id="term-for-view-projection-matrix" style="color:initial">projection matrix</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrsession-requestanimationframe" style="color:initial">requestAnimationFrame(callback)</span>
-     <li><span class="dfn-paneled" id="term-for-eventdef-xrreferencespace-reset" style="color:initial">reset</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrinputsource-targetraymode" style="color:initial">targetRayMode</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrinputsource-targetrayspace" style="color:initial">targetRaySpace</span>
-     <li><span class="dfn-paneled" id="term-for-view" style="color:initial">view</span>
-     <li><span class="dfn-paneled" id="term-for-view-offset" style="color:initial">view offset</span>
-     <li><span class="dfn-paneled" id="term-for-viewer" style="color:initial">viewer</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrsession-visibilitystate" style="color:initial">visibilityState</span>
-     <li><span class="dfn-paneled" id="term-for-dom-navigator-xr" style="color:initial">xr</span>
-     <li><span class="dfn-paneled" id="term-for-xr-animation-frame" style="color:initial">xr animation frame</span>
-     <li><span class="dfn-paneled" id="term-for-xr-device" style="color:initial">xr device</span>
-     <li><span class="dfn-paneled" id="term-for-xr-input-source" style="color:initial">xr input source</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrreferencespacetype-local">"local"</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrvisibilitystate-visible">"visible"</span>
+     <li><span class="dfn-paneled" id="term-for-xrboundedreferencespace">XRBoundedReferenceSpace</span>
+     <li><span class="dfn-paneled" id="term-for-enumdef-xreye">XREye</span>
+     <li><span class="dfn-paneled" id="term-for-enumdef-xrhandedness">XRHandedness</span>
+     <li><span class="dfn-paneled" id="term-for-xrinputsource">XRInputSource</span>
+     <li><span class="dfn-paneled" id="term-for-xrpose">XRPose</span>
+     <li><span class="dfn-paneled" id="term-for-xrrigidtransform">XRRigidTransform</span>
+     <li><span class="dfn-paneled" id="term-for-xrsession">XRSession</span>
+     <li><span class="dfn-paneled" id="term-for-enumdef-xrsessionmode">XRSessionMode</span>
+     <li><span class="dfn-paneled" id="term-for-xrsystem">XRSystem</span>
+     <li><span class="dfn-paneled" id="term-for-enumdef-xrtargetraymode">XRTargetRayMode</span>
+     <li><span class="dfn-paneled" id="term-for-xrviewport">XRViewport</span>
+     <li><span class="dfn-paneled" id="term-for-enumdef-xrvisibilitystate">XRVisibilityState</span>
+     <li><span class="dfn-paneled" id="term-for-capable-of-supporting">capable of supporting</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrrigidtransform-xrrigidtransform">constructor()</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrrenderstate-depthfar">depthFar</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrrenderstate-depthnear">depthNear</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrpose-emulatedposition">emulatedPosition</span>
+     <li><span class="dfn-paneled" id="term-for-view-eye">eye</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrinputsource-gripspace">gripSpace</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrinputsource-handedness">handedness</span>
+     <li><span class="dfn-paneled" id="term-for-inline-xr-device">inline xr device</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrsession-inputsources">inputSources</span>
+     <li><span class="dfn-paneled" id="term-for-eventdef-xrsession-inputsourceschange">inputsourceschange</span>
+     <li><span class="dfn-paneled" id="term-for-list-of-immersive-xr-devices">list of immersive xr devices</span>
+     <li><span class="dfn-paneled" id="term-for-list-of-supported-modes">list of supported modes</span>
+     <li><span class="dfn-paneled" id="term-for-xrboundedreferencespace-native-bounds-geometry">native bounds geometry</span>
+     <li><span class="dfn-paneled" id="term-for-xrspace-native-origin">native origin</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrsession-oninputsourceschange">oninputsourceschange</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrsession-onselect">onselect</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrsession-onselectend">onselectend</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrsession-onvisibilitychange">onvisibilitychange</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrrigidtransform-orientation">orientation</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrrigidtransform-position">position</span>
+     <li><span class="dfn-paneled" id="term-for-primary-action">primary action</span>
+     <li><span class="dfn-paneled" id="term-for-primary-squeeze-action">primary squeeze action</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrinputsource-profiles">profiles</span>
+     <li><span class="dfn-paneled" id="term-for-view-projection-matrix">projection matrix</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrsession-requestanimationframe">requestAnimationFrame(callback)</span>
+     <li><span class="dfn-paneled" id="term-for-eventdef-xrreferencespace-reset">reset</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrinputsource-targetraymode">targetRayMode</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrinputsource-targetrayspace">targetRaySpace</span>
+     <li><span class="dfn-paneled" id="term-for-view">view</span>
+     <li><span class="dfn-paneled" id="term-for-view-offset">view offset</span>
+     <li><span class="dfn-paneled" id="term-for-viewer">viewer</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrsession-visibilitystate">visibilityState</span>
+     <li><span class="dfn-paneled" id="term-for-dom-navigator-xr">xr</span>
+     <li><span class="dfn-paneled" id="term-for-xr-animation-frame">xr animation frame</span>
+     <li><span class="dfn-paneled" id="term-for-xr-device">xr device</span>
+     <li><span class="dfn-paneled" id="term-for-xr-input-source">xr input source</span>
     </ul>
    <li>
     <a data-link-type="biblio">[webxr anchors module]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-dom-xranchor-delete" style="color:initial">delete()</span>
-     <li><span class="dfn-paneled" id="term-for-xranchor-native-origin" style="color:initial">native origin</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xranchor-delete">delete()</span>
+     <li><span class="dfn-paneled" id="term-for-xranchor-native-origin">native origin</span>
     </ul>
    <li>
     <a data-link-type="biblio">[webxr-dom-overlays]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-beforexrselect" style="color:initial">beforexrselect</span>
+     <li><span class="dfn-paneled" id="term-for-beforexrselect">beforexrselect</span>
     </ul>
    <li>
     <a data-link-type="biblio">[webxr-gamepads-module-1]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="term-for-dom-gamepadmappingtype-xr-standard" style="color:initial">"xr-standard"</span>
-     <li><span class="dfn-paneled" id="term-for-dom-xrinputsource-gamepad" style="color:initial">gamepad</span>
+     <li><span class="dfn-paneled" id="term-for-dom-gamepadmappingtype-xr-standard">"xr-standard"</span>
+     <li><span class="dfn-paneled" id="term-for-dom-xrinputsource-gamepad">gamepad</span>
     </ul>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
@@ -3092,41 +3516,41 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <dt id="biblio-webidl">[WebIDL]
    <dd>Boris Zbarsky. <a href="https://heycam.github.io/webidl/">Web IDL</a>. 15 December 2016. ED. URL: <a href="https://heycam.github.io/webidl/">https://heycam.github.io/webidl/</a>
    <dt id="biblio-webxr">[WEBXR]
-   <dd>Brandon Jones; Nell Waliczek. <a href="https://www.w3.org/TR/webxr/">WebXR Device API</a>. 10 October 2019. WD. URL: <a href="https://www.w3.org/TR/webxr/">https://www.w3.org/TR/webxr/</a>
+   <dd>Brandon Jones; Manish Goregaokar; Nell Waliczek. <a href="https://www.w3.org/TR/webxr/">WebXR Device API</a>. 24 July 2020. WD. URL: <a href="https://www.w3.org/TR/webxr/">https://www.w3.org/TR/webxr/</a>
    <dt id="biblio-webxr-gamepads-module-1">[WEBXR-GAMEPADS-MODULE-1]
    <dd>Brandon Jones; Nell Waliczek. <a href="https://www.w3.org/TR/webxr-gamepads-module-1/">WebXR Gamepads Module - Level 1</a>. 10 October 2019. WD. URL: <a href="https://www.w3.org/TR/webxr-gamepads-module-1/">https://www.w3.org/TR/webxr-gamepads-module-1/</a>
   </dl>
   <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://immersive-web.github.io/webxr/#xrsystem"><c- g>XRSystem</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SameObject"><c- g>SameObject</c-></a>] <c- b>readonly</c-> <c- b>attribute</c-> <a class="n" data-link-type="idl-name" href="#xrtest"><c- n>XRTest</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="XRTest" href="#dom-xrsystem-test"><c- g>test</c-></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#SameObject"><c- g>SameObject</c-></a>] <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="#xrtest"><c- n>XRTest</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="XRTest" href="#dom-xrsystem-test"><c- g>test</c-></a>;
 };
 
 <c- b>interface</c-> <a href="#xrtest"><code><c- g>XRTest</c-></code></a> {
-  <c- b>Promise</c->&lt;<a class="n" data-link-type="idl-name" href="#fakexrdevice"><c- n>FakeXRDevice</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-xrtest-simulatedeviceconnection"><c- g>simulateDeviceConnection</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrdeviceinit"><c- n>FakeXRDeviceInit</c-></a> <a href="#dom-xrtest-simulatedeviceconnection-init-init"><code><c- g>init</c-></code></a>);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-xrtest-simulateuseractivation"><c- g>simulateUserActivation</c-></a>(<a class="n" data-link-type="idl-name" href="https://heycam.github.io/webidl/#Function"><c- n>Function</c-></a> <a href="#dom-xrtest-simulateuseractivation-f-f"><code><c- g>f</c-></code></a>);
-  <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-xrtest-disconnectalldevices"><c- g>disconnectAllDevices</c-></a>();
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name" href="#fakexrdevice"><c- n>FakeXRDevice</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-xrtest-simulatedeviceconnection"><c- g>simulateDeviceConnection</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrdeviceinit"><c- n>FakeXRDeviceInit</c-></a> <a href="#dom-xrtest-simulatedeviceconnection-init-init"><code><c- g>init</c-></code></a>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-xrtest-simulateuseractivation"><c- g>simulateUserActivation</c-></a>(<a data-link-type="idl-name" href="https://heycam.github.io/webidl/#Function"><c- n>Function</c-></a> <a href="#dom-xrtest-simulateuseractivation-f-f"><code><c- g>f</c-></code></a>);
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name"><c- n>void</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-xrtest-disconnectalldevices"><c- g>disconnectAllDevices</c-></a>();
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-fakexrdeviceinit"><code><c- g>FakeXRDeviceInit</c-></code></a> {
     <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a data-type="boolean " href="#dom-fakexrdeviceinit-supportsimmersive"><code><c- g>supportsImmersive</c-></code></a>;
-    <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrsessionmode"><c- n>XRSessionMode</c-></a>> <a data-type="sequence<XRSessionMode> " href="#dom-fakexrdeviceinit-supportedmodes"><code><c- g>supportedModes</c-></code></a>;
-    <c- b>required</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrviewinit"><c- n>FakeXRViewInit</c-></a>> <a data-type="sequence<FakeXRViewInit> " href="#dom-fakexrdeviceinit-views"><code><c- g>views</c-></code></a>;
+    <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrsessionmode"><c- n>XRSessionMode</c-></a>> <a data-type="sequence<XRSessionMode> " href="#dom-fakexrdeviceinit-supportedmodes"><code><c- g>supportedModes</c-></code></a>;
+    <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrviewinit"><c- n>FakeXRViewInit</c-></a>> <a data-type="sequence<FakeXRViewInit> " href="#dom-fakexrdeviceinit-views"><code><c- g>views</c-></code></a>;
 
-    <c- b>sequence</c->&lt;<c- b>any</c->> <a data-type="sequence<any> " href="#dom-fakexrdeviceinit-supportedfeatures"><code><c- g>supportedFeatures</c-></code></a>;
-    <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrboundspoint"><c- n>FakeXRBoundsPoint</c-></a>> <a data-type="sequence<FakeXRBoundsPoint> " href="#dom-fakexrdeviceinit-boundscoordinates"><code><c- g>boundsCoordinates</c-></code></a>;
-    <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a data-type="FakeXRRigidTransformInit " href="#dom-fakexrdeviceinit-floororigin"><code><c- g>floorOrigin</c-></code></a>;
-    <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a data-type="FakeXRRigidTransformInit " href="#dom-fakexrdeviceinit-viewerorigin"><code><c- g>viewerOrigin</c-></code></a>;
+    <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-any"><c- b>any</c-></a>> <a data-type="sequence<any> " href="#dom-fakexrdeviceinit-supportedfeatures"><code><c- g>supportedFeatures</c-></code></a>;
+    <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrboundspoint"><c- n>FakeXRBoundsPoint</c-></a>> <a data-type="sequence<FakeXRBoundsPoint> " href="#dom-fakexrdeviceinit-boundscoordinates"><code><c- g>boundsCoordinates</c-></code></a>;
+    <a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a data-type="FakeXRRigidTransformInit " href="#dom-fakexrdeviceinit-floororigin"><code><c- g>floorOrigin</c-></code></a>;
+    <a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a data-type="FakeXRRigidTransformInit " href="#dom-fakexrdeviceinit-viewerorigin"><code><c- g>viewerOrigin</c-></code></a>;
 
     // Hit test extensions:
-    <a class="n" data-link-type="idl-name" href="#dictdef-fakexrworldinit"><c- n>FakeXRWorldInit</c-></a> <a data-type="FakeXRWorldInit " href="#dom-fakexrdeviceinit-world"><code><c- g>world</c-></code></a>;
+    <a data-link-type="idl-name" href="#dictdef-fakexrworldinit"><c- n>FakeXRWorldInit</c-></a> <a data-type="FakeXRWorldInit " href="#dom-fakexrdeviceinit-world"><code><c- g>world</c-></code></a>;
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-fakexrviewinit"><code><c- g>FakeXRViewInit</c-></code></a> {
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xreye"><c- n>XREye</c-></a> <a data-type="XREye " href="#dom-fakexrviewinit-eye"><code><c- g>eye</c-></code></a>;
-  <c- b>required</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float"><c- b>float</c-></a>> <a data-type="sequence<float> " href="#dom-fakexrviewinit-projectionmatrix"><code><c- g>projectionMatrix</c-></code></a>;
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#dictdef-fakexrdeviceresolution"><c- n>FakeXRDeviceResolution</c-></a> <a data-type="FakeXRDeviceResolution " href="#dom-fakexrviewinit-resolution"><code><c- g>resolution</c-></code></a>;
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a data-type="FakeXRRigidTransformInit " href="#dom-fakexrviewinit-viewoffset"><code><c- g>viewOffset</c-></code></a>;
-  <a class="n" data-link-type="idl-name" href="#dictdef-fakexrfieldofviewinit"><c- n>FakeXRFieldOfViewInit</c-></a> <a data-type="FakeXRFieldOfViewInit " href="#dom-fakexrviewinit-fieldofview"><code><c- g>fieldOfView</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xreye"><c- n>XREye</c-></a> <a data-type="XREye " href="#dom-fakexrviewinit-eye"><code><c- g>eye</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float"><c- b>float</c-></a>> <a data-type="sequence<float> " href="#dom-fakexrviewinit-projectionmatrix"><code><c- g>projectionMatrix</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="#dictdef-fakexrdeviceresolution"><c- n>FakeXRDeviceResolution</c-></a> <a data-type="FakeXRDeviceResolution " href="#dom-fakexrviewinit-resolution"><code><c- g>resolution</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a data-type="FakeXRRigidTransformInit " href="#dom-fakexrviewinit-viewoffset"><code><c- g>viewOffset</c-></code></a>;
+  <a data-link-type="idl-name" href="#dictdef-fakexrfieldofviewinit"><c- n>FakeXRFieldOfViewInit</c-></a> <a data-type="FakeXRFieldOfViewInit " href="#dom-fakexrviewinit-fieldofview"><code><c- g>fieldOfView</c-></code></a>;
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-fakexrfieldofviewinit"><code><c- g>FakeXRFieldOfViewInit</c-></code></a> {
@@ -3146,61 +3570,61 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-fakexrrigidtransforminit"><code><c- g>FakeXRRigidTransformInit</c-></code></a> {
-  <c- b>required</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float"><c- b>float</c-></a>> <a data-type="sequence<float> " href="#dom-fakexrrigidtransforminit-position"><code><c- g>position</c-></code></a>;
-  <c- b>required</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float"><c- b>float</c-></a>> <a data-type="sequence<float> " href="#dom-fakexrrigidtransforminit-orientation"><code><c- g>orientation</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float"><c- b>float</c-></a>> <a data-type="sequence<float> " href="#dom-fakexrrigidtransforminit-position"><code><c- g>position</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float"><c- b>float</c-></a>> <a data-type="sequence<float> " href="#dom-fakexrrigidtransforminit-orientation"><code><c- g>orientation</c-></code></a>;
 };
 
 
-<c- b>interface</c-> <a href="#fakexrdevice"><code><c- g>FakeXRDevice</c-></code></a> : <a class="n" data-link-type="idl-name" href="https://dom.spec.whatwg.org/#eventtarget"><c- n>EventTarget</c-></a> {
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setviews"><c- g>setViews</c-></a>(<c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrviewinit"><c- n>FakeXRViewInit</c-></a>> <a href="#dom-fakexrdevice-setviews-views-views"><code><c- g>views</c-></code></a>);
+<c- b>interface</c-> <a href="#fakexrdevice"><code><c- g>FakeXRDevice</c-></code></a> : <a data-link-type="idl-name" href="https://dom.spec.whatwg.org/#eventtarget"><c- n>EventTarget</c-></a> {
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setviews"><c- g>setViews</c-></a>(<a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrviewinit"><c- n>FakeXRViewInit</c-></a>> <a href="#dom-fakexrdevice-setviews-views-views"><code><c- g>views</c-></code></a>);
 
-  <c- b>Promise</c->&lt;<c- b>void</c->> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-disconnect"><c- g>disconnect</c-></a>();
+  <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise"><c- b>Promise</c-></a>&lt;<a data-link-type="idl-name"><c- n>void</c-></a>> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-disconnect"><c- g>disconnect</c-></a>();
 
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setviewerorigin"><c- g>setViewerOrigin</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a href="#dom-fakexrdevice-setviewerorigin-origin-emulatedposition-origin"><code><c- g>origin</c-></code></a>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a href="#dom-fakexrdevice-setviewerorigin-origin-emulatedposition-emulatedposition"><code><c- g>emulatedPosition</c-></code></a> = <c- b>false</c->);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-clearviewerorigin"><c- g>clearViewerOrigin</c-></a>();
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setfloororigin"><c- g>setFloorOrigin</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a href="#dom-fakexrdevice-setfloororigin-origin-origin"><code><c- g>origin</c-></code></a>);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-clearfloororigin"><c- g>clearFloorOrigin</c-></a>();
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setboundsgeometry"><c- g>setBoundsGeometry</c-></a>(<c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrboundspoint"><c- n>FakeXRBoundsPoint</c-></a>> <a href="#dom-fakexrdevice-setboundsgeometry-boundscoordinates-boundscoordinates"><code><c- g>boundsCoordinates</c-></code></a>);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-simulateresetpose"><c- g>simulateResetPose</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setviewerorigin"><c- g>setViewerOrigin</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a href="#dom-fakexrdevice-setviewerorigin-origin-emulatedposition-origin"><code><c- g>origin</c-></code></a>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a href="#dom-fakexrdevice-setviewerorigin-origin-emulatedposition-emulatedposition"><code><c- g>emulatedPosition</c-></code></a> = <c- b>false</c->);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-clearviewerorigin"><c- g>clearViewerOrigin</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setfloororigin"><c- g>setFloorOrigin</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a href="#dom-fakexrdevice-setfloororigin-origin-origin"><code><c- g>origin</c-></code></a>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-clearfloororigin"><c- g>clearFloorOrigin</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setboundsgeometry"><c- g>setBoundsGeometry</c-></a>(<a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrboundspoint"><c- n>FakeXRBoundsPoint</c-></a>> <a href="#dom-fakexrdevice-setboundsgeometry-boundscoordinates-boundscoordinates"><code><c- g>boundsCoordinates</c-></code></a>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-simulateresetpose"><c- g>simulateResetPose</c-></a>();
 
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-simulatevisibilitychange"><c- g>simulateVisibilityChange</c-></a>(<a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrvisibilitystate"><c- n>XRVisibilityState</c-></a> <a href="#dom-fakexrdevice-simulatevisibilitychange-state-state"><code><c- g>state</c-></code></a>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-simulatevisibilitychange"><c- g>simulateVisibilityChange</c-></a>(<a data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrvisibilitystate"><c- n>XRVisibilityState</c-></a> <a href="#dom-fakexrdevice-simulatevisibilitychange-state-state"><code><c- g>state</c-></code></a>);
 
-  <a class="n" data-link-type="idl-name" href="#fakexrinputcontroller"><c- n>FakeXRInputController</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-simulateinputsourceconnection"><c- g>simulateInputSourceConnection</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrinputsourceinit"><c- n>FakeXRInputSourceInit</c-></a> <a href="#dom-fakexrdevice-simulateinputsourceconnection-init-init"><code><c- g>init</c-></code></a>);
+  <a data-link-type="idl-name" href="#fakexrinputcontroller"><c- n>FakeXRInputController</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-simulateinputsourceconnection"><c- g>simulateInputSourceConnection</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrinputsourceinit"><c- n>FakeXRInputSourceInit</c-></a> <a href="#dom-fakexrdevice-simulateinputsourceconnection-init-init"><code><c- g>init</c-></code></a>);
 
   // Hit test extensions:
-  <c- b>void</c-> <a href="#dom-fakexrdevice-setworld"><code><c- g>setWorld</c-></code></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrworldinit"><c- n>FakeXRWorldInit</c-></a> <a href="#dom-fakexrdevice-setworld-world-world"><code><c- g>world</c-></code></a>);
-  <c- b>void</c-> <a href="#dom-fakexrdevice-clearworld"><code><c- g>clearWorld</c-></code></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a href="#dom-fakexrdevice-setworld"><code><c- g>setWorld</c-></code></a>(<a data-link-type="idl-name" href="#dictdef-fakexrworldinit"><c- n>FakeXRWorldInit</c-></a> <a href="#dom-fakexrdevice-setworld-world-world"><code><c- g>world</c-></code></a>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a href="#dom-fakexrdevice-clearworld"><code><c- g>clearWorld</c-></code></a>();
 };
 
 
 <c- b>dictionary</c-> <a href="#dictdef-fakexrinputsourceinit"><code><c- g>FakeXRInputSourceInit</c-></code></a> {
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrhandedness"><c- n>XRHandedness</c-></a> <a data-type="XRHandedness " href="#dom-fakexrinputsourceinit-handedness"><code><c- g>handedness</c-></code></a>;
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrtargetraymode"><c- n>XRTargetRayMode</c-></a> <a data-type="XRTargetRayMode " href="#dom-fakexrinputsourceinit-targetraymode"><code><c- g>targetRayMode</c-></code></a>;
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a data-type="FakeXRRigidTransformInit " href="#dom-fakexrinputsourceinit-pointerorigin"><code><c- g>pointerOrigin</c-></code></a>;
-  <c- b>required</c-> <c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString"><c- b>DOMString</c-></a>> <a data-type="sequence<DOMString> " href="#dom-fakexrinputsourceinit-profiles"><code><c- g>profiles</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrhandedness"><c- n>XRHandedness</c-></a> <a data-type="XRHandedness " href="#dom-fakexrinputsourceinit-handedness"><code><c- g>handedness</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrtargetraymode"><c- n>XRTargetRayMode</c-></a> <a data-type="XRTargetRayMode " href="#dom-fakexrinputsourceinit-targetraymode"><code><c- g>targetRayMode</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a data-type="FakeXRRigidTransformInit " href="#dom-fakexrinputsourceinit-pointerorigin"><code><c- g>pointerOrigin</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString"><c- b>DOMString</c-></a>> <a data-type="sequence<DOMString> " href="#dom-fakexrinputsourceinit-profiles"><code><c- g>profiles</c-></code></a>;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-fakexrinputsourceinit-selectionstarted"><code><c- g>selectionStarted</c-></code></a> = <c- b>false</c->;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a data-default="false" data-type="boolean " href="#dom-fakexrinputsourceinit-selectionclicked"><code><c- g>selectionClicked</c-></code></a> = <c- b>false</c->;
-  <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrbuttonstateinit"><c- n>FakeXRButtonStateInit</c-></a>> <a data-type="sequence<FakeXRButtonStateInit> " href="#dom-fakexrinputsourceinit-supportedbuttons"><code><c- g>supportedButtons</c-></code></a>;
-  <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a data-type="FakeXRRigidTransformInit " href="#dom-fakexrinputsourceinit-griporigin"><code><c- g>gripOrigin</c-></code></a>;
+  <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrbuttonstateinit"><c- n>FakeXRButtonStateInit</c-></a>> <a data-type="sequence<FakeXRButtonStateInit> " href="#dom-fakexrinputsourceinit-supportedbuttons"><code><c- g>supportedButtons</c-></code></a>;
+  <a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a data-type="FakeXRRigidTransformInit " href="#dom-fakexrinputsourceinit-griporigin"><code><c- g>gripOrigin</c-></code></a>;
 };
 
 <c- b>interface</c-> <a href="#fakexrinputcontroller"><code><c- g>FakeXRInputController</c-></code></a> {
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-sethandedness"><c- g>setHandedness</c-></a>(<a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrhandedness"><c- n>XRHandedness</c-></a> <a href="#dom-fakexrinputcontroller-sethandedness-handedness-handedness"><code><c- g>handedness</c-></code></a>);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-settargetraymode"><c- g>setTargetRayMode</c-></a>(<a class="n" data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrtargetraymode"><c- n>XRTargetRayMode</c-></a> <a href="#dom-fakexrinputcontroller-settargetraymode-targetraymode-targetraymode"><code><c- g>targetRayMode</c-></code></a>);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setprofiles"><c- g>setProfiles</c-></a>(<c- b>sequence</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString"><c- b>DOMString</c-></a>> <a href="#dom-fakexrinputcontroller-setprofiles-profiles-profiles"><code><c- g>profiles</c-></code></a>);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setgriporigin"><c- g>setGripOrigin</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a href="#dom-fakexrinputcontroller-setgriporigin-griporigin-emulatedposition-griporigin"><code><c- g>gripOrigin</c-></code></a>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a href="#dom-fakexrinputcontroller-setgriporigin-griporigin-emulatedposition-emulatedposition"><code><c- g>emulatedPosition</c-></code></a> = <c- b>false</c->);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-cleargriporigin"><c- g>clearGripOrigin</c-></a>();
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setpointerorigin"><c- g>setPointerOrigin</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a href="#dom-fakexrinputcontroller-setpointerorigin-pointerorigin-emulatedposition-pointerorigin"><code><c- g>pointerOrigin</c-></code></a>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a href="#dom-fakexrinputcontroller-setpointerorigin-pointerorigin-emulatedposition-emulatedposition"><code><c- g>emulatedPosition</c-></code></a> = <c- b>false</c->);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-sethandedness"><c- g>setHandedness</c-></a>(<a data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrhandedness"><c- n>XRHandedness</c-></a> <a href="#dom-fakexrinputcontroller-sethandedness-handedness-handedness"><code><c- g>handedness</c-></code></a>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-settargetraymode"><c- g>setTargetRayMode</c-></a>(<a data-link-type="idl-name" href="https://immersive-web.github.io/webxr/#enumdef-xrtargetraymode"><c- n>XRTargetRayMode</c-></a> <a href="#dom-fakexrinputcontroller-settargetraymode-targetraymode-targetraymode"><code><c- g>targetRayMode</c-></code></a>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setprofiles"><c- g>setProfiles</c-></a>(<a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-DOMString"><c- b>DOMString</c-></a>> <a href="#dom-fakexrinputcontroller-setprofiles-profiles-profiles"><code><c- g>profiles</c-></code></a>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setgriporigin"><c- g>setGripOrigin</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a href="#dom-fakexrinputcontroller-setgriporigin-griporigin-emulatedposition-griporigin"><code><c- g>gripOrigin</c-></code></a>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a href="#dom-fakexrinputcontroller-setgriporigin-griporigin-emulatedposition-emulatedposition"><code><c- g>emulatedPosition</c-></code></a> = <c- b>false</c->);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-cleargriporigin"><c- g>clearGripOrigin</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setpointerorigin"><c- g>setPointerOrigin</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a href="#dom-fakexrinputcontroller-setpointerorigin-pointerorigin-emulatedposition-pointerorigin"><code><c- g>pointerOrigin</c-></code></a>, <c- b>optional</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a href="#dom-fakexrinputcontroller-setpointerorigin-pointerorigin-emulatedposition-emulatedposition"><code><c- g>emulatedPosition</c-></code></a> = <c- b>false</c->);
 
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-disconnect"><c- g>disconnect</c-></a>();
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-reconnect"><c- g>reconnect</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-disconnect"><c- g>disconnect</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-reconnect"><c- g>reconnect</c-></a>();
 
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-startselection"><c- g>startSelection</c-></a>();
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-endselection"><c- g>endSelection</c-></a>();
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-simulateselect"><c- g>simulateSelect</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-startselection"><c- g>startSelection</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-endselection"><c- g>endSelection</c-></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-simulateselect"><c- g>simulateSelect</c-></a>();
 
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setsupportedbuttons"><c- g>setSupportedButtons</c-></a>(<c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrbuttonstateinit"><c- n>FakeXRButtonStateInit</c-></a>> <a href="#dom-fakexrinputcontroller-setsupportedbuttons-supportedbuttons-supportedbuttons"><code><c- g>supportedButtons</c-></code></a>);
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-updatebuttonstate"><c- g>updateButtonState</c-></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrbuttonstateinit"><c- n>FakeXRButtonStateInit</c-></a> <a href="#dom-fakexrinputcontroller-updatebuttonstate-buttonstate-buttonstate"><code><c- g>buttonState</c-></code></a>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setsupportedbuttons"><c- g>setSupportedButtons</c-></a>(<a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrbuttonstateinit"><c- n>FakeXRButtonStateInit</c-></a>> <a href="#dom-fakexrinputcontroller-setsupportedbuttons-supportedbuttons-supportedbuttons"><code><c- g>supportedButtons</c-></code></a>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-updatebuttonstate"><c- g>updateButtonState</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrbuttonstateinit"><c- n>FakeXRButtonStateInit</c-></a> <a href="#dom-fakexrinputcontroller-updatebuttonstate-buttonstate-buttonstate"><code><c- g>buttonState</c-></code></a>);
 };
 
 <c- b>enum</c-> <a href="#enumdef-fakexrbuttontype"><code><c- g>FakeXRButtonType</c-></code></a> {
@@ -3212,7 +3636,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-fakexrbuttonstateinit"><code><c- g>FakeXRButtonStateInit</c-></code></a> {
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#enumdef-fakexrbuttontype"><c- n>FakeXRButtonType</c-></a> <a data-type="FakeXRButtonType " href="#dom-fakexrbuttonstateinit-buttontype"><code><c- g>buttonType</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="#enumdef-fakexrbuttontype"><c- n>FakeXRButtonType</c-></a> <a data-type="FakeXRButtonType " href="#dom-fakexrbuttonstateinit-buttontype"><code><c- g>buttonType</c-></code></a>;
   <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a data-type="boolean " href="#dom-fakexrbuttonstateinit-pressed"><code><c- g>pressed</c-></code></a>;
   <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a data-type="boolean " href="#dom-fakexrbuttonstateinit-touched"><code><c- g>touched</c-></code></a>;
   <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float"><c- b>float</c-></a> <a data-type="float " href="#dom-fakexrbuttonstateinit-pressedvalue"><code><c- g>pressedValue</c-></code></a>;
@@ -3221,18 +3645,18 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-fakexrworldinit"><code><c- g>FakeXRWorldInit</c-></code></a> {
-  <c- b>required</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrregioninit"><c- n>FakeXRRegionInit</c-></a>> <a data-type="sequence<FakeXRRegionInit> " href="#dom-fakexrworldinit-hittestregions"><code><c- g>hitTestRegions</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrregioninit"><c- n>FakeXRRegionInit</c-></a>> <a data-type="sequence<FakeXRRegionInit> " href="#dom-fakexrworldinit-hittestregions"><code><c- g>hitTestRegions</c-></code></a>;
 };
 
 
 <c- b>dictionary</c-> <a href="#dictdef-fakexrregioninit"><code><c- g>FakeXRRegionInit</c-></code></a> {
-  <c- b>required</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="#dictdef-fakexrtriangleinit"><c- n>FakeXRTriangleInit</c-></a>> <a data-type="sequence<FakeXRTriangleInit> " href="#dom-fakexrregioninit-faces"><code><c- g>faces</c-></code></a>;
-  <c- b>required</c-> <a class="n" data-link-type="idl-name" href="#enumdef-fakexrregiontype"><c- n>FakeXRRegionType</c-></a> <a data-type="FakeXRRegionType " href="#dom-fakexrregioninit-type"><code><c- g>type</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="#dictdef-fakexrtriangleinit"><c- n>FakeXRTriangleInit</c-></a>> <a data-type="sequence<FakeXRTriangleInit> " href="#dom-fakexrregioninit-faces"><code><c- g>faces</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="#enumdef-fakexrregiontype"><c- n>FakeXRRegionType</c-></a> <a data-type="FakeXRRegionType " href="#dom-fakexrregioninit-type"><code><c- g>type</c-></code></a>;
 };
 
 
 <c- b>dictionary</c-> <a href="#dictdef-fakexrtriangleinit"><code><c- g>FakeXRTriangleInit</c-></code></a> {
-  <c- b>required</c-> <c- b>sequence</c->&lt;<a class="n" data-link-type="idl-name" href="https://drafts.fxtf.org/geometry-1/#dictdef-dompointinit"><c- n>DOMPointInit</c-></a>> <a data-type="sequence<DOMPointInit> " href="#dom-fakexrtriangleinit-vertices"><code><c- g>vertices</c-></code></a>;  // size = 3
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a data-link-type="idl-name" href="https://drafts.fxtf.org/geometry-1/#dictdef-dompointinit"><c- n>DOMPointInit</c-></a>> <a data-type="sequence<DOMPointInit> " href="#dom-fakexrtriangleinit-vertices"><code><c- g>vertices</c-></code></a>;  // size = 3
 };
 
 
@@ -3244,18 +3668,18 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#fakexrinputcontroller"><c- g>FakeXRInputController</c-></a> {
-  <c- b>void</c-> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setoverlaypointerposition"><c- g>setOverlayPointerPosition</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float"><c- b>float</c-></a> <a href="#dom-fakexrinputcontroller-setoverlaypointerposition-x-y-x"><code><c- g>x</c-></code></a>, <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float"><c- b>float</c-></a> <a href="#dom-fakexrinputcontroller-setoverlaypointerposition-x-y-y"><code><c- g>y</c-></code></a>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrinputcontroller-setoverlaypointerposition"><c- g>setOverlayPointerPosition</c-></a>(<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float"><c- b>float</c-></a> <a href="#dom-fakexrinputcontroller-setoverlaypointerposition-x-y-x"><code><c- g>x</c-></code></a>, <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float"><c- b>float</c-></a> <a href="#dom-fakexrinputcontroller-setoverlaypointerposition-x-y-y"><code><c- g>y</c-></code></a>);
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-fakexranchorcreationparameters"><code><c- g>FakeXRAnchorCreationParameters</c-></code></a> {
-  <a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a data-type="FakeXRRigidTransformInit " href="#dom-fakexranchorcreationparameters-requestedanchororigin"><code><c- g>requestedAnchorOrigin</c-></code></a>;
+  <a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a data-type="FakeXRRigidTransformInit " href="#dom-fakexranchorcreationparameters-requestedanchororigin"><code><c- g>requestedAnchorOrigin</c-></code></a>;
   <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a data-type="boolean " href="#dom-fakexranchorcreationparameters-isattachedtoentity"><code><c- g>isAttachedToEntity</c-></code></a>;
 };
 
-<c- b>callback</c-> <a href="#callbackdef-fakexranchorcreationcallback"><code><c- g>FakeXRAnchorCreationCallback</c-></code></a> = <c- b>Promise</c->&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a>> (<a class="n" data-link-type="idl-name" href="#dictdef-fakexranchorcreationparameters"><c- n>FakeXRAnchorCreationParameters</c-></a> <a href="#dom-fakexranchorcreationcallback-parameters"><code><c- g>parameters</c-></code></a>, <a class="n" data-link-type="idl-name" href="#fakexranchorcontroller"><c- n>FakeXRAnchorController</c-></a> <a href="#dom-fakexranchorcreationcallback-anchorcontroller"><code><c- g>anchorController</c-></code></a>);
+<c- b>callback</c-> <a href="#callbackdef-fakexranchorcreationcallback"><code><c- g>FakeXRAnchorCreationCallback</c-></code></a> = <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-promise"><c- b>Promise</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a>> (<a data-link-type="idl-name" href="#dictdef-fakexranchorcreationparameters"><c- n>FakeXRAnchorCreationParameters</c-></a> <a href="#dom-fakexranchorcreationcallback-parameters"><code><c- g>parameters</c-></code></a>, <a data-link-type="idl-name" href="#fakexranchorcontroller"><c- n>FakeXRAnchorController</c-></a> <a href="#dom-fakexranchorcreationcallback-anchorcontroller"><code><c- g>anchorController</c-></code></a>);
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#fakexrdevice"><c- g>FakeXRDevice</c-></a> {
-  <c- b>void</c-> <a href="#dom-fakexrdevice-setanchorcreationcallback"><code><c- g>setAnchorCreationCallback</c-></code></a>(<a class="n" data-link-type="idl-name" href="#callbackdef-fakexranchorcreationcallback"><c- n>FakeXRAnchorCreationCallback</c-></a>? <a href="#dom-fakexrdevice-setanchorcreationcallback-callback-callback"><code><c- g>callback</c-></code></a>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a href="#dom-fakexrdevice-setanchorcreationcallback"><code><c- g>setAnchorCreationCallback</c-></code></a>(<a data-link-type="idl-name" href="#callbackdef-fakexranchorcreationcallback"><c- n>FakeXRAnchorCreationCallback</c-></a>? <a href="#dom-fakexrdevice-setanchorcreationcallback-callback-callback"><code><c- g>callback</c-></code></a>);
 };
 
 
@@ -3263,12 +3687,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <c- b>readonly</c-> <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-boolean"><c- b>boolean</c-></a> <a data-readonly data-type="boolean" href="#dom-fakexranchorcontroller-deleted"><code><c- g>deleted</c-></code></a>;
 
   // Controlling anchor state:
-  <c- b>void</c-> <a href="#dom-fakexranchorcontroller-pausetracking"><code><c- g>pauseTracking</c-></code></a>();
-  <c- b>void</c-> <a href="#dom-fakexranchorcontroller-resumetracking"><code><c- g>resumeTracking</c-></code></a>();
-  <c- b>void</c-> <a href="#dom-fakexranchorcontroller-stoptracking"><code><c- g>stopTracking</c-></code></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a href="#dom-fakexranchorcontroller-pausetracking"><code><c- g>pauseTracking</c-></code></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a href="#dom-fakexranchorcontroller-resumetracking"><code><c- g>resumeTracking</c-></code></a>();
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a href="#dom-fakexranchorcontroller-stoptracking"><code><c- g>stopTracking</c-></code></a>();
 
   // Controlling anchor location:
-  <c- b>void</c-> <a href="#dom-fakexranchorcontroller-setanchororigin"><code><c- g>setAnchorOrigin</c-></code></a>(<a class="n" data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a href="#dom-fakexranchorcontroller-setanchororigin-anchororigin-anchororigin"><code><c- g>anchorOrigin</c-></code></a>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a href="#dom-fakexranchorcontroller-setanchororigin"><code><c- g>setAnchorOrigin</c-></code></a>(<a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a href="#dom-fakexranchorcontroller-setanchororigin-anchororigin-anchororigin"><code><c- g>anchorOrigin</c-></code></a>);
 };
 
 
