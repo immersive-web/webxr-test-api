@@ -778,7 +778,7 @@ The lighting estimation extensions for test API SHOULD be implemented by all use
 dictionary FakeXRLightEstimateInit {
   required sequence<float> sphericalHarmonicsCoefficients;
   DOMPointInit primaryLightDirection;
-  DOMPointInit primaryLightEstimate;
+  DOMPointInit primaryLightIntensity;
 };
 
 partial interface FakeXRDevice {
@@ -795,7 +795,9 @@ When the <dfn method for="FakeXRDevice">setLightEstimate(|init|)</dfn> method is
   1. Let |c| be |init|'s {{FakeXRLightEstimateInit/sphericalHarmonicsCoefficients}}.
   1. If |c| does not have 27 elements, throw a {{TypeError}} and abort these steps.
   1. Let |d| be |init|'s {{FakeXRLightEstimateInit/primaryLightDirection}}.
-  1. If |d| is set and d's {{DOMPointInit/w}} value does not equal <code>0</code>, throw a {{TypeError}} and abort these steps.
+  1. If |d| is set and |d|'s {{DOMPointInit/w}} value does not equal <code>0</code>, throw a {{TypeError}} and abort these steps.
+  1. Let |i| be |init|'s {{FakeXRLightEstimateInit/primaryLightIntensity}}.
+  1. If |i| is set and |i|'s {{DOMPointInit/w}} value does not equal <code>1</code>, throw a {{TypeError}} and abort these steps.
   1. Set |device|'s [=FakeXRDevice/light estimate=] to |init| by the [=next animation frame=].
 
 </div>
