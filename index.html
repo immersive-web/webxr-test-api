@@ -633,7 +633,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">WebXR Test API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2021-01-15">15 January 2021</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2021-02-08">8 February 2021</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -643,7 +643,6 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <dt class="editor">Editors:
      <dd class="editor p-author h-card vcard" data-editor-id="109489"><a class="p-name fn u-email email" href="mailto:manish@mozilla.com">Manish Goregaokar</a> (<a class="p-org org" href="http://mozilla.org/">Mozilla</a>)
      <dd class="editor p-author h-card vcard" data-editor-id="114716"><a class="p-name fn u-email email" href="mailto:alcooper@google.com">Alex Cooper</a> (<a class="p-org org" href="http://google.com/">Google</a>)
-     <dd class="editor p-author h-card vcard"><span class="p-name fn"></span>
     </dl>
    </div>
    <div data-fill-with="warning">
@@ -709,6 +708,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#hit-test-extensions"><span class="secno">6</span> <span class="content">Hit test extensions</span></a>
     <li><a href="#dom-overlay-extensions"><span class="secno">7</span> <span class="content">DOM overlay extensions</span></a>
     <li><a href="#anchors-extensions"><span class="secno">8</span> <span class="content">Anchors extensions</span></a>
+    <li><a href="#lighting-estimation-extensions"><span class="secno">9</span> <span class="content">Lighting estimation extensions</span></a>
     <li>
      <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
      <ol class="toc">
@@ -1360,6 +1360,39 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>The <code class="idl"><a data-link-type="idl" href="#dom-fakexranchorcontroller-resumetracking" id="ref-for-dom-fakexranchorcontroller-resumetracking">resumeTracking()</a></code> method can be used by the tests to signal that the controlled anchor should have its tracking resumed, if it was temporarily untracked. Calling this method does not modify <a data-link-type="dfn" href="#fakexranchorcontroller-anchor-origin" id="ref-for-fakexranchorcontroller-anchor-origin①">anchor origin</a> of the controller.</p>
    <p>The <code class="idl"><a data-link-type="idl" href="#dom-fakexranchorcontroller-stoptracking" id="ref-for-dom-fakexranchorcontroller-stoptracking">stopTracking()</a></code> method can be used by the tests to signal that the controlled anchor is no longer tracked and that anchor tracking will not be resumed. After calling this method, the other calls on anchor controller will be ignored.</p>
    <p>The <code class="idl"><a data-link-type="idl" href="#dom-fakexranchorcontroller-setanchororigin" id="ref-for-dom-fakexranchorcontroller-setanchororigin">setAnchorOrigin(anchorOrigin)</a></code> method can be used to set the controller’s <a data-link-type="dfn" href="#fakexranchorcontroller-anchor-origin" id="ref-for-fakexranchorcontroller-anchor-origin②">anchor origin</a>. Tests can use this method to simulate updates in anchor pose.</p>
+   <h2 class="heading settled" data-level="9" id="lighting-estimation-extensions"><span class="secno">9. </span><span class="content">Lighting estimation extensions</span><a class="self-link" href="#lighting-estimation-extensions"></a></h2>
+   <p>The lighting estimation extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/lighting-estimation/">WebXR Lighting Estimation</a>.</p>
+<pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexrlightestimateinit"><code><c- g>FakeXRLightEstimateInit</c-></code></dfn> {
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence" id="ref-for-idl-sequence①⑥"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float" id="ref-for-idl-float①②"><c- b>float</c-></a>> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRLightEstimateInit" data-dfn-type="dict-member" data-export data-type="sequence<float> " id="dom-fakexrlightestimateinit-sphericalharmonicscoefficients"><code><c- g>sphericalHarmonicsCoefficients</c-></code></dfn>;
+  <a data-link-type="idl-name" href="https://drafts.fxtf.org/geometry-1/#dictdef-dompointinit" id="ref-for-dictdef-dompointinit④"><c- n>DOMPointInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRLightEstimateInit" data-dfn-type="dict-member" data-export data-type="DOMPointInit " id="dom-fakexrlightestimateinit-primarylightdirection"><code><c- g>primaryLightDirection</c-></code></dfn>;
+  <a data-link-type="idl-name" href="https://drafts.fxtf.org/geometry-1/#dictdef-dompointinit" id="ref-for-dictdef-dompointinit⑤"><c- n>DOMPointInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRLightEstimateInit" data-dfn-type="dict-member" data-export data-type="DOMPointInit " id="dom-fakexrlightestimateinit-primarylightintensity"><code><c- g>primaryLightIntensity</c-></code></dfn>;
+};
+
+<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#fakexrdevice" id="ref-for-fakexrdevice①⓪"><c- g>FakeXRDevice</c-></a> {
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setlightestimate" id="ref-for-dom-fakexrdevice-setlightestimate"><c- g>setLightEstimate</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrlightestimateinit" id="ref-for-dictdef-fakexrlightestimateinit"><c- n>FakeXRLightEstimateInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice/setLightEstimate(init)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setlightestimate-init-init"><code><c- g>init</c-></code><a class="self-link" href="#dom-fakexrdevice-setlightestimate-init-init"></a></dfn>);
+};
+
+</pre>
+   <p>The <code class="idl"><a data-link-type="idl" href="#fakexrdevice" id="ref-for-fakexrdevice①①">FakeXRDevice</a></code> is extended with internal <dfn class="dfn-paneled" data-dfn-for="FakeXRDevice" data-dfn-type="dfn" data-noexport id="fakexrdevice-light-estimate">light estimate</dfn> which is a <code class="idl"><a data-link-type="idl" href="#dictdef-fakexrlightestimateinit" id="ref-for-dictdef-fakexrlightestimateinit①">FakeXRLightEstimateInit</a></code>, used to supply data for any requested <code class="idl"><a data-link-type="idl" href="https://immersive-web.github.io/lighting-estimation/#xrlightestimate-interface" id="ref-for-xrlightestimate-interface">XRLightEstimate</a></code>.</p>
+   <div class="algorithm" data-algorithm="set-light-estimate">
+     When the <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="method" data-export id="dom-fakexrdevice-setlightestimate"><code>setLightEstimate(<var>init</var>)</code></dfn> method is invoked on <code class="idl"><a data-link-type="idl" href="#fakexrdevice" id="ref-for-fakexrdevice①②">FakeXRDevice</a></code> <var>device</var>, run the following steps: 
+    <ol>
+     <li data-md>
+      <p>Let <var>c</var> be <var>init</var>’s <code class="idl"><a data-link-type="idl" href="#dom-fakexrlightestimateinit-sphericalharmonicscoefficients" id="ref-for-dom-fakexrlightestimateinit-sphericalharmonicscoefficients">sphericalHarmonicsCoefficients</a></code>.</p>
+     <li data-md>
+      <p>If <var>c</var> does not have 27 elements, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑧">TypeError</a></code> and abort these steps.</p>
+     <li data-md>
+      <p>Let <var>d</var> be <var>init</var>’s <code class="idl"><a data-link-type="idl" href="#dom-fakexrlightestimateinit-primarylightdirection" id="ref-for-dom-fakexrlightestimateinit-primarylightdirection">primaryLightDirection</a></code>.</p>
+     <li data-md>
+      <p>If <var>d</var> is set and <var>d</var>’s <code class="idl"><a data-link-type="idl" href="https://drafts.fxtf.org/geometry-1/#dom-dompointinit-w" id="ref-for-dom-dompointinit-w②">w</a></code> value does not equal <code>0</code>, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror⑨">TypeError</a></code> and abort these steps.</p>
+     <li data-md>
+      <p>Let <var>i</var> be <var>init</var>’s <code class="idl"><a data-link-type="idl" href="#dom-fakexrlightestimateinit-primarylightintensity" id="ref-for-dom-fakexrlightestimateinit-primarylightintensity">primaryLightIntensity</a></code>.</p>
+     <li data-md>
+      <p>If <var>i</var> is set and <var>i</var>’s <code class="idl"><a data-link-type="idl" href="https://drafts.fxtf.org/geometry-1/#dom-dompointinit-w" id="ref-for-dom-dompointinit-w③">w</a></code> value does not equal <code>1</code>, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①⓪">TypeError</a></code> and abort these steps.</p>
+     <li data-md>
+      <p>Set <var>device</var>’s <a data-link-type="dfn" href="#fakexrdevice-light-estimate" id="ref-for-fakexrdevice-light-estimate">light estimate</a> to <var>init</var> by the <a data-link-type="dfn" href="#xrsession-next-animation-frame" id="ref-for-xrsession-next-animation-frame②①">next animation frame</a>.</p>
+    </ol>
+   </div>
    <p id="back-to-top" role="navigation"><a href="#toc"><abbr title="Back to Top">↑</abbr></a></p>
 <script src="https://www.w3.org/scripts/TR/2016/fixup.js"></script>
   </main>
@@ -1406,6 +1439,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#dictdef-fakexrfieldofviewinit">FakeXRFieldOfViewInit</a><span>, in §4.3</span>
    <li><a href="#fakexrinputcontroller">FakeXRInputController</a><span>, in §5.2</span>
    <li><a href="#dictdef-fakexrinputsourceinit">FakeXRInputSourceInit</a><span>, in §5.2</span>
+   <li><a href="#dictdef-fakexrlightestimateinit">FakeXRLightEstimateInit</a><span>, in §9</span>
    <li><a href="#dictdef-fakexrregioninit">FakeXRRegionInit</a><span>, in §6</span>
    <li><a href="#enumdef-fakexrregiontype">FakeXRRegionType</a><span>, in §6</span>
    <li><a href="#dictdef-fakexrrigidtransforminit">FakeXRRigidTransformInit</a><span>, in §4.3</span>
@@ -1434,6 +1468,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#fakexrinputcontroller-inputsource">inputSource</a><span>, in §5.2</span>
    <li><a href="#dom-fakexranchorcreationparameters-isattachedtoentity">isAttachedToEntity</a><span>, in §8</span>
    <li><a href="#dom-fakexrfieldofviewinit-leftdegrees">leftDegrees</a><span>, in §4.3</span>
+   <li><a href="#fakexrdevice-light-estimate">light estimate</a><span>, in §9</span>
    <li><a href="#dom-fakexrregiontype-mesh">"mesh"</a><span>, in §6</span>
    <li><a href="#simulated-xr-device-native-bounds-geometry">native bounds geometry</a><span>, in §3.1</span>
    <li><a href="#xrsession-next-animation-frame">next animation frame</a><span>, in §5.1</span>
@@ -1456,6 +1491,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#dom-fakexrbuttonstateinit-pressed">pressed</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrbuttonstateinit-pressedvalue">pressedValue</a><span>, in §5.2</span>
    <li><a href="#simulated-xr-input-source-primaryactionstarted">primaryActionStarted</a><span>, in §3.2</span>
+   <li><a href="#dom-fakexrlightestimateinit-primarylightdirection">primaryLightDirection</a><span>, in §9</span>
+   <li><a href="#dom-fakexrlightestimateinit-primarylightintensity">primaryLightIntensity</a><span>, in §9</span>
    <li>
     profiles
     <ul>
@@ -1477,6 +1514,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#dom-fakexrinputcontroller-setgriporigin">setGripOrigin(gripOrigin)</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrinputcontroller-setgriporigin">setGripOrigin(gripOrigin, emulatedPosition)</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrinputcontroller-sethandedness">setHandedness(handedness)</a><span>, in §5.2</span>
+   <li><a href="#dom-fakexrdevice-setlightestimate">setLightEstimate(init)</a><span>, in §9</span>
    <li><a href="#dom-fakexrinputcontroller-setoverlaypointerposition">setOverlayPointerPosition(x, y)</a><span>, in §7</span>
    <li><a href="#dom-fakexrinputcontroller-setpointerorigin">setPointerOrigin(pointerOrigin)</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrinputcontroller-setpointerorigin">setPointerOrigin(pointerOrigin, emulatedPosition)</a><span>, in §5.2</span>
@@ -1496,6 +1534,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#dom-fakexrinputcontroller-simulateselect">simulateSelect()</a><span>, in §5.2</span>
    <li><a href="#dom-xrtest-simulateuseractivation">simulateUserActivation(f)</a><span>, in §4.2</span>
    <li><a href="#dom-fakexrdevice-simulatevisibilitychange">simulateVisibilityChange(state)</a><span>, in §5.1</span>
+   <li><a href="#dom-fakexrlightestimateinit-sphericalharmonicscoefficients">sphericalHarmonicsCoefficients</a><span>, in §9</span>
    <li><a href="#start-a-primary-action">start a primary action</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrinputcontroller-startselection">startSelection()</a><span>, in §5.2</span>
    <li><a href="#stop-a-primary-action">stop a primary action</a><span>, in §5.2</span>
@@ -1550,6 +1589,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <ul>
     <li><a href="#ref-for-dictdef-dompointinit">4.3. FakeXRDeviceInit</a> <a href="#ref-for-dictdef-dompointinit①">(2)</a>
     <li><a href="#ref-for-dictdef-dompointinit②">6. Hit test extensions</a> <a href="#ref-for-dictdef-dompointinit③">(2)</a>
+    <li><a href="#ref-for-dictdef-dompointinit④">9. Lighting estimation extensions</a> <a href="#ref-for-dictdef-dompointinit⑤">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dompointreadonly">
@@ -1562,6 +1602,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <a href="https://drafts.fxtf.org/geometry-1/#dom-dompointinit-w">https://drafts.fxtf.org/geometry-1/#dom-dompointinit-w</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-dompointinit-w">4.3. FakeXRDeviceInit</a> <a href="#ref-for-dom-dompointinit-w①">(2)</a>
+    <li><a href="#ref-for-dom-dompointinit-w②">9. Lighting estimation extensions</a> <a href="#ref-for-dom-dompointinit-w③">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-dompointinit-x">
@@ -1647,6 +1688,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-exceptiondef-typeerror①">4.3. FakeXRDeviceInit</a> <a href="#ref-for-exceptiondef-typeerror②">(2)</a> <a href="#ref-for-exceptiondef-typeerror③">(3)</a>
     <li><a href="#ref-for-exceptiondef-typeerror④">5.1. FakeXRDevice</a>
     <li><a href="#ref-for-exceptiondef-typeerror⑤">5.2. FakeXRInputController</a> <a href="#ref-for-exceptiondef-typeerror⑥">(2)</a> <a href="#ref-for-exceptiondef-typeerror⑦">(3)</a>
+    <li><a href="#ref-for-exceptiondef-typeerror⑧">9. Lighting estimation extensions</a> <a href="#ref-for-exceptiondef-typeerror⑨">(2)</a> <a href="#ref-for-exceptiondef-typeerror①⓪">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-a-new-promise">
@@ -1682,6 +1724,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-idl-float">4.3. FakeXRDeviceInit</a> <a href="#ref-for-idl-float①">(2)</a> <a href="#ref-for-idl-float②">(3)</a> <a href="#ref-for-idl-float③">(4)</a> <a href="#ref-for-idl-float④">(5)</a> <a href="#ref-for-idl-float⑤">(6)</a> <a href="#ref-for-idl-float⑥">(7)</a>
     <li><a href="#ref-for-idl-float⑦">5.2. FakeXRInputController</a> <a href="#ref-for-idl-float⑧">(2)</a> <a href="#ref-for-idl-float⑨">(3)</a>
     <li><a href="#ref-for-idl-float①⓪">7. DOM overlay extensions</a> <a href="#ref-for-idl-float①①">(2)</a>
+    <li><a href="#ref-for-idl-float①②">9. Lighting estimation extensions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-long">
@@ -1709,6 +1752,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-idl-sequence⑦">5.1. FakeXRDevice</a> <a href="#ref-for-idl-sequence⑧">(2)</a>
     <li><a href="#ref-for-idl-sequence⑨">5.2. FakeXRInputController</a> <a href="#ref-for-idl-sequence①⓪">(2)</a> <a href="#ref-for-idl-sequence①①">(3)</a> <a href="#ref-for-idl-sequence①②">(4)</a>
     <li><a href="#ref-for-idl-sequence①③">6. Hit test extensions</a> <a href="#ref-for-idl-sequence①④">(2)</a> <a href="#ref-for-idl-sequence①⑤">(3)</a>
+    <li><a href="#ref-for-idl-sequence①⑥">9. Lighting estimation extensions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-xrreferencespacetype-local">
@@ -2051,6 +2095,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-xranchor-native-origin">8. Anchors extensions</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-xrlightestimate-interface">
+   <a href="https://immersive-web.github.io/lighting-estimation/#xrlightestimate-interface">https://immersive-web.github.io/lighting-estimation/#xrlightestimate-interface</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-xrlightestimate-interface">9. Lighting estimation extensions</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-beforexrselect">
    <a href="https://immersive-web.github.io/dom-overlays#beforexrselect">https://immersive-web.github.io/dom-overlays#beforexrselect</a><b>Referenced in:</b>
    <ul>
@@ -2179,6 +2229,11 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <ul>
      <li><span class="dfn-paneled" id="term-for-dom-xranchor-delete">delete()</span>
      <li><span class="dfn-paneled" id="term-for-xranchor-native-origin">native origin</span>
+    </ul>
+   <li>
+    <a data-link-type="biblio">[webxr lighting estimation]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-xrlightestimate-interface">XRLightEstimate</span>
     </ul>
    <li>
     <a data-link-type="biblio">[webxr-dom-overlays]</a> defines the following terms:
@@ -2383,6 +2438,17 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 
   // Controlling anchor location:
   <a data-link-type="idl-name"><c- n>void</c-></a> <a href="#dom-fakexranchorcontroller-setanchororigin"><code><c- g>setAnchorOrigin</c-></code></a>(<a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a href="#dom-fakexranchorcontroller-setanchororigin-anchororigin-anchororigin"><code><c- g>anchorOrigin</c-></code></a>);
+};
+
+
+<c- b>dictionary</c-> <a href="#dictdef-fakexrlightestimateinit"><code><c- g>FakeXRLightEstimateInit</c-></code></a> {
+  <c- b>required</c-> <a data-link-type="dfn" href="https://heycam.github.io/webidl/#idl-sequence"><c- b>sequence</c-></a>&lt;<a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float"><c- b>float</c-></a>> <a data-type="sequence<float> " href="#dom-fakexrlightestimateinit-sphericalharmonicscoefficients"><code><c- g>sphericalHarmonicsCoefficients</c-></code></a>;
+  <a data-link-type="idl-name" href="https://drafts.fxtf.org/geometry-1/#dictdef-dompointinit"><c- n>DOMPointInit</c-></a> <a data-type="DOMPointInit " href="#dom-fakexrlightestimateinit-primarylightdirection"><code><c- g>primaryLightDirection</c-></code></a>;
+  <a data-link-type="idl-name" href="https://drafts.fxtf.org/geometry-1/#dictdef-dompointinit"><c- n>DOMPointInit</c-></a> <a data-type="DOMPointInit " href="#dom-fakexrlightestimateinit-primarylightintensity"><code><c- g>primaryLightIntensity</c-></code></a>;
+};
+
+<c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#fakexrdevice"><c- g>FakeXRDevice</c-></a> {
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setlightestimate"><c- g>setLightEstimate</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrlightestimateinit"><c- n>FakeXRLightEstimateInit</c-></a> <a href="#dom-fakexrdevice-setlightestimate-init-init"><code><c- g>init</c-></code></a>);
 };
 
 
@@ -2695,6 +2761,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-fakexrdevice③">5.1. FakeXRDevice</a> <a href="#ref-for-fakexrdevice④">(2)</a> <a href="#ref-for-fakexrdevice⑤">(3)</a>
     <li><a href="#ref-for-fakexrdevice⑥">6. Hit test extensions</a>
     <li><a href="#ref-for-fakexrdevice⑦">8. Anchors extensions</a> <a href="#ref-for-fakexrdevice⑧">(2)</a> <a href="#ref-for-fakexrdevice⑨">(3)</a>
+    <li><a href="#ref-for-fakexrdevice①⓪">9. Lighting estimation extensions</a> <a href="#ref-for-fakexrdevice①①">(2)</a> <a href="#ref-for-fakexrdevice①②">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="fakexrdevice-device">
@@ -2710,6 +2777,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-xrsession-next-animation-frame">3.2. Simulated Input Device</a>
     <li><a href="#ref-for-xrsession-next-animation-frame①">5.1. FakeXRDevice</a> <a href="#ref-for-xrsession-next-animation-frame②">(2)</a> <a href="#ref-for-xrsession-next-animation-frame③">(3)</a> <a href="#ref-for-xrsession-next-animation-frame④">(4)</a> <a href="#ref-for-xrsession-next-animation-frame⑤">(5)</a> <a href="#ref-for-xrsession-next-animation-frame⑥">(6)</a> <a href="#ref-for-xrsession-next-animation-frame⑦">(7)</a>
     <li><a href="#ref-for-xrsession-next-animation-frame⑧">5.2. FakeXRInputController</a> <a href="#ref-for-xrsession-next-animation-frame⑨">(2)</a> <a href="#ref-for-xrsession-next-animation-frame①⓪">(3)</a> <a href="#ref-for-xrsession-next-animation-frame①①">(4)</a> <a href="#ref-for-xrsession-next-animation-frame①②">(5)</a> <a href="#ref-for-xrsession-next-animation-frame①③">(6)</a> <a href="#ref-for-xrsession-next-animation-frame①④">(7)</a> <a href="#ref-for-xrsession-next-animation-frame①⑤">(8)</a> <a href="#ref-for-xrsession-next-animation-frame①⑥">(9)</a> <a href="#ref-for-xrsession-next-animation-frame①⑦">(10)</a> <a href="#ref-for-xrsession-next-animation-frame①⑧">(11)</a> <a href="#ref-for-xrsession-next-animation-frame①⑨">(12)</a> <a href="#ref-for-xrsession-next-animation-frame②⓪">(13)</a>
+    <li><a href="#ref-for-xrsession-next-animation-frame②①">9. Lighting estimation extensions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-fakexrdevice-setviews">
@@ -3172,6 +3240,42 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <b><a href="#fakexranchorcontroller-anchor-origin">#fakexranchorcontroller-anchor-origin</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-fakexranchorcontroller-anchor-origin">8. Anchors extensions</a> <a href="#ref-for-fakexranchorcontroller-anchor-origin①">(2)</a> <a href="#ref-for-fakexranchorcontroller-anchor-origin②">(3)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dictdef-fakexrlightestimateinit">
+   <b><a href="#dictdef-fakexrlightestimateinit">#dictdef-fakexrlightestimateinit</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dictdef-fakexrlightestimateinit">9. Lighting estimation extensions</a> <a href="#ref-for-dictdef-fakexrlightestimateinit①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-fakexrlightestimateinit-sphericalharmonicscoefficients">
+   <b><a href="#dom-fakexrlightestimateinit-sphericalharmonicscoefficients">#dom-fakexrlightestimateinit-sphericalharmonicscoefficients</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-fakexrlightestimateinit-sphericalharmonicscoefficients">9. Lighting estimation extensions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-fakexrlightestimateinit-primarylightdirection">
+   <b><a href="#dom-fakexrlightestimateinit-primarylightdirection">#dom-fakexrlightestimateinit-primarylightdirection</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-fakexrlightestimateinit-primarylightdirection">9. Lighting estimation extensions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-fakexrlightestimateinit-primarylightintensity">
+   <b><a href="#dom-fakexrlightestimateinit-primarylightintensity">#dom-fakexrlightestimateinit-primarylightintensity</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-fakexrlightestimateinit-primarylightintensity">9. Lighting estimation extensions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="fakexrdevice-light-estimate">
+   <b><a href="#fakexrdevice-light-estimate">#fakexrdevice-light-estimate</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-fakexrdevice-light-estimate">9. Lighting estimation extensions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-fakexrdevice-setlightestimate">
+   <b><a href="#dom-fakexrdevice-setlightestimate">#dom-fakexrdevice-setlightestimate</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-fakexrdevice-setlightestimate">9. Lighting estimation extensions</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */
