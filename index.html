@@ -633,7 +633,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">WebXR Test API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2021-02-10">10 February 2021</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Editor’s Draft, <time class="dt-updated" datetime="2021-02-16">16 February 2021</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -641,7 +641,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <dt>Issue Tracking:
      <dd><a href="https://github.com/immersive-web/webxr-test-api/issues/">GitHub</a>
      <dt class="editor">Editors:
-     <dd class="editor p-author h-card vcard" data-editor-id="109489"><a class="p-name fn u-email email" href="mailto:manish@mozilla.com">Manish Goregaokar</a> (<a class="p-org org" href="http://mozilla.org/">Mozilla</a>)
+     <dd class="editor p-author h-card vcard" data-editor-id="109489"><a class="p-name fn u-email email" href="mailto:manishearth@google.com">Manish Goregaokar</a> (<span class="p-org org">Google [Mozilla until 2020]</span>)
      <dd class="editor p-author h-card vcard" data-editor-id="114716"><a class="p-name fn u-email email" href="mailto:alcooper@google.com">Alex Cooper</a> (<a class="p-org org" href="http://google.com/">Google</a>)
     </dl>
    </div>
@@ -709,6 +709,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#dom-overlay-extensions"><span class="secno">7</span> <span class="content">DOM overlay extensions</span></a>
     <li><a href="#anchors-extensions"><span class="secno">8</span> <span class="content">Anchors extensions</span></a>
     <li><a href="#lighting-estimation-extensions"><span class="secno">9</span> <span class="content">Lighting estimation extensions</span></a>
+    <li><a href="#depth-sensing-extensions"><span class="secno">10</span> <span class="content">Depth sensing extensions</span></a>
     <li>
      <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
      <ol class="toc">
@@ -864,6 +865,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 
     // Hit test extensions:
     <a data-link-type="idl-name" href="#dictdef-fakexrworldinit" id="ref-for-dictdef-fakexrworldinit"><c- n>FakeXRWorldInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="FakeXRWorldInit " id="dom-fakexrdeviceinit-world"><code><c- g>world</c-></code><a class="self-link" href="#dom-fakexrdeviceinit-world"></a></dfn>;
+
+    // Depth sensing extensions:
+    <a data-link-type="idl-name" href="#dictdef-fakexrdepthsensingdatainit" id="ref-for-dictdef-fakexrdepthsensingdatainit"><c- n>FakeXRDepthSensingDataInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDeviceInit" data-dfn-type="dict-member" data-export data-type="FakeXRDepthSensingDataInit " id="dom-fakexrdeviceinit-depthsensingdata"><code><c- g>depthSensingData</c-></code><a class="self-link" href="#dom-fakexrdeviceinit-depthsensingdata"></a></dfn>;
 };
 
 <c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexrviewinit"><code><c- g>FakeXRViewInit</c-></code></dfn> {
@@ -968,6 +972,10 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   // Hit test extensions:
   <a data-link-type="idl-name"><c- n>void</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="method" data-export data-lt="setWorld(world)" id="dom-fakexrdevice-setworld"><code><c- g>setWorld</c-></code><a class="self-link" href="#dom-fakexrdevice-setworld"></a></dfn>(<a data-link-type="idl-name" href="#dictdef-fakexrworldinit" id="ref-for-dictdef-fakexrworldinit①"><c- n>FakeXRWorldInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice/setWorld(world)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setworld-world-world"><code><c- g>world</c-></code><a class="self-link" href="#dom-fakexrdevice-setworld-world-world"></a></dfn>);
   <a data-link-type="idl-name"><c- n>void</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="method" data-export data-lt="clearWorld()" id="dom-fakexrdevice-clearworld"><code><c- g>clearWorld</c-></code><a class="self-link" href="#dom-fakexrdevice-clearworld"></a></dfn>();
+
+  // Depth sensing extensions:
+  <a data-link-type="idl-name"><c- n>void</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="method" data-export data-lt="setDepthSensingData(depthSensingData)" id="dom-fakexrdevice-setdepthsensingdata"><code><c- g>setDepthSensingData</c-></code></dfn>(<a data-link-type="idl-name" href="#dictdef-fakexrdepthsensingdatainit" id="ref-for-dictdef-fakexrdepthsensingdatainit①"><c- n>FakeXRDepthSensingDataInit</c-></a> <dfn class="idl-code" data-dfn-for="FakeXRDevice/setDepthSensingData(depthSensingData)" data-dfn-type="argument" data-export id="dom-fakexrdevice-setdepthsensingdata-depthsensingdata-depthsensingdata"><code><c- g>depthSensingData</c-></code><a class="self-link" href="#dom-fakexrdevice-setdepthsensingdata-depthsensingdata-depthsensingdata"></a></dfn>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDevice" data-dfn-type="method" data-export data-lt="clearDepthSensingData()" id="dom-fakexrdevice-cleardepthsensingdata"><code><c- g>clearDepthSensingData</c-></code></dfn>();
 };
 
 </pre>
@@ -1393,6 +1401,39 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <p>Set <var>device</var>’s <a data-link-type="dfn" href="#fakexrdevice-light-estimate" id="ref-for-fakexrdevice-light-estimate">light estimate</a> to <var>init</var> by the <a data-link-type="dfn" href="#xrsession-next-animation-frame" id="ref-for-xrsession-next-animation-frame②①">next animation frame</a>.</p>
     </ol>
    </div>
+   <h2 class="heading settled" data-level="10" id="depth-sensing-extensions"><span class="secno">10. </span><span class="content">Depth sensing extensions</span><a class="self-link" href="#depth-sensing-extensions"></a></h2>
+   <p>The depth sensing extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/depth-sensing/">WebXR Depth Sensing Module</a>.</p>
+   <p>The <code class="idl"><a data-link-type="idl" href="#fakexrdevice" id="ref-for-fakexrdevice①③">FakeXRDevice</a></code> is extended with internal <dfn class="dfn-paneled" data-dfn-for="FakeXRDevice" data-dfn-type="dfn" data-noexport id="fakexrdevice-depth-sensing-data">depth sensing data</dfn> which is a <code class="idl"><a data-link-type="idl" href="#dictdef-fakexrdepthsensingdatainit" id="ref-for-dictdef-fakexrdepthsensingdatainit②">FakeXRDepthSensingDataInit</a></code>, used to supply data for requests to <a data-link-type="dfn" href="https://immersive-web.github.io/depth-sensing/#native-depth-sensing" id="ref-for-native-depth-sensing">native depth sensing</a>.</p>
+<pre class="idl highlight def"><c- b>dictionary</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="dictionary" data-export id="dictdef-fakexrdepthsensingdatainit"><code><c- g>FakeXRDepthSensingDataInit</c-></code></dfn> {
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-ArrayBuffer" id="ref-for-idl-ArrayBuffer"><c- b>ArrayBuffer</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDepthSensingDataInit" data-dfn-type="dict-member" data-export data-type="ArrayBuffer " id="dom-fakexrdepthsensingdatainit-depthdata"><code><c- g>depthData</c-></code></dfn>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit" id="ref-for-dictdef-fakexrrigidtransforminit①⑤"><c- n>FakeXRRigidTransformInit</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDepthSensingDataInit" data-dfn-type="dict-member" data-export data-type="FakeXRRigidTransformInit " id="dom-fakexrdepthsensingdatainit-normdepthbufferfromnormview"><code><c- g>normDepthBufferFromNormView</c-></code></dfn>;
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float" id="ref-for-idl-float①③"><c- b>float</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDepthSensingDataInit" data-dfn-type="dict-member" data-export data-type="float " id="dom-fakexrdepthsensingdatainit-rawvaluetometers"><code><c- g>rawValueToMeters</c-></code></dfn>;
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long"><c- b>unsigned</c-> <c- b>long</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDepthSensingDataInit" data-dfn-type="dict-member" data-export data-type="unsigned long " id="dom-fakexrdepthsensingdatainit-width"><code><c- g>width</c-></code></dfn>;
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long" id="ref-for-idl-unsigned-long①"><c- b>unsigned</c-> <c- b>long</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="FakeXRDepthSensingDataInit" data-dfn-type="dict-member" data-export data-type="unsigned long " id="dom-fakexrdepthsensingdatainit-height"><code><c- g>height</c-></code></dfn>;
+};
+
+</pre>
+   <p><code class="idl"><a data-link-type="idl" href="#dictdef-fakexrdepthsensingdatainit" id="ref-for-dictdef-fakexrdepthsensingdatainit③">FakeXRDepthSensingDataInit</a></code> dictionary describes the state of the depth sensing data that should be used when returning latest depth information in <a data-link-type="dfn" href="https://immersive-web.github.io/depth-sensing/#create-a-cpu-depth-information-instance" id="ref-for-create-a-cpu-depth-information-instance">creating a CPU depth information instance</a> and <a data-link-type="dfn" href="https://immersive-web.github.io/depth-sensing/#create-a-gpu-depth-information-instance" id="ref-for-create-a-gpu-depth-information-instance">creating a GPU depth information instance</a> algorithms. All keys present in <code class="idl"><a data-link-type="idl" href="#dictdef-fakexrdepthsensingdatainit" id="ref-for-dictdef-fakexrdepthsensingdatainit④">FakeXRDepthSensingDataInit</a></code> correspond to the data required to be returned by <a data-link-type="dfn" href="https://immersive-web.github.io/depth-sensing/#native-depth-sensing" id="ref-for-native-depth-sensing①">native depth sensing</a> capabilities of the device.</p>
+   <p><code class="idl"><a data-link-type="idl" href="#dom-fakexrdepthsensingdatainit-depthdata" id="ref-for-dom-fakexrdepthsensingdatainit-depthdata">depthData</a></code> corresponds to the desired depth buffer that is to be set on native depth information returned from querying the native device. Not setting <code class="idl"><a data-link-type="idl" href="#dom-fakexrdepthsensingdatainit-depthdata" id="ref-for-dom-fakexrdepthsensingdatainit-depthdata①">depthData</a></code> key in the dictionary signals that the returned native depth information should be <code>null</code>.</p>
+   <p><code class="idl"><a data-link-type="idl" href="#dom-fakexrdepthsensingdatainit-normdepthbufferfromnormview" id="ref-for-dom-fakexrdepthsensingdatainit-normdepthbufferfromnormview">normDepthBufferFromNormView</a></code> corresponds to the desired <a data-link-type="dfn" href="https://immersive-web.github.io/depth-sensing/#depth-coordinates-transformation-matrix" id="ref-for-depth-coordinates-transformation-matrix">depth coordinates transformation matrix</a> that is to be set on native depth information returned from querying the native device.</p>
+   <p><code class="idl"><a data-link-type="idl" href="#dom-fakexrdepthsensingdatainit-rawvaluetometers" id="ref-for-dom-fakexrdepthsensingdatainit-rawvaluetometers">rawValueToMeters</a></code> corresponds to the desired conversion factor that is to be set on native depth information returned from querying the native device.</p>
+   <p><code class="idl"><a data-link-type="idl" href="#dom-fakexrdepthsensingdatainit-width" id="ref-for-dom-fakexrdepthsensingdatainit-width">width</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-fakexrdepthsensingdatainit-height" id="ref-for-dom-fakexrdepthsensingdatainit-height">height</a></code> correspond to the desired dimensions of the depth buffer that are to be set on native depth information returned from querying the native device.</p>
+   <div class="algorithm" data-algorithm="set-depth-sensing-information">
+    <p>When the <code class="idl"><a data-link-type="idl" href="#dom-fakexrdevice-setdepthsensingdata" id="ref-for-dom-fakexrdevice-setdepthsensingdata">setDepthSensingData()</a></code> method is invoked on <code class="idl"><a data-link-type="idl" href="#fakexrdevice" id="ref-for-fakexrdevice①④">FakeXRDevice</a></code> <var>device</var> with <var>depthSensingData</var>, run the following steps:</p>
+    <ol>
+     <li data-md>
+      <p>If <var>depthSensingData</var>’s <code class="idl"><a data-link-type="idl" href="#dom-fakexrdepthsensingdatainit-depthdata" id="ref-for-dom-fakexrdepthsensingdatainit-depthdata②">depthData</a></code> is <code>null</code>, throw a <code class="idl"><a data-link-type="idl" href="https://heycam.github.io/webidl/#exceptiondef-typeerror" id="ref-for-exceptiondef-typeerror①①">TypeError</a></code> and abort these steps.</p>
+     <li data-md>
+      <p>Set <var>device</var>’s <a data-link-type="dfn" href="#fakexrdevice-depth-sensing-data" id="ref-for-fakexrdevice-depth-sensing-data">depth sensing data</a> to <var>depthSensingData</var>.</p>
+    </ol>
+   </div>
+   <div class="algorithm" data-algorithm="clear-depth-sensing-information">
+    <p>When the <code class="idl"><a data-link-type="idl" href="#dom-fakexrdevice-cleardepthsensingdata" id="ref-for-dom-fakexrdevice-cleardepthsensingdata">clearDepthSensingData()</a></code> method is invoked on <code class="idl"><a data-link-type="idl" href="#fakexrdevice" id="ref-for-fakexrdevice①⑤">FakeXRDevice</a></code> <var>device</var>, run the following steps:</p>
+    <ol>
+     <li data-md>
+      <p>Set <var>device</var>’s <a data-link-type="dfn" href="#fakexrdevice-depth-sensing-data" id="ref-for-fakexrdevice-depth-sensing-data①">depth sensing data</a> to <code>null</code>.</p>
+    </ol>
+   </div>
    <p id="back-to-top" role="navigation"><a href="#toc"><abbr title="Back to Top">↑</abbr></a></p>
 <script src="https://www.w3.org/scripts/TR/2016/fixup.js"></script>
   </main>
@@ -1406,12 +1447,16 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#dom-fakexrdeviceinit-boundscoordinates">boundsCoordinates</a><span>, in §4.3</span>
    <li><a href="#simulated-xr-input-source-buttonstate">buttonState</a><span>, in §3.2</span>
    <li><a href="#dom-fakexrbuttonstateinit-buttontype">buttonType</a><span>, in §5.2</span>
+   <li><a href="#dom-fakexrdevice-cleardepthsensingdata">clearDepthSensingData()</a><span>, in §5.1</span>
    <li><a href="#dom-fakexrdevice-clearfloororigin">clearFloorOrigin()</a><span>, in §5.1</span>
    <li><a href="#dom-fakexrinputcontroller-cleargriporigin">clearGripOrigin()</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrdevice-clearviewerorigin">clearViewerOrigin()</a><span>, in §5.1</span>
    <li><a href="#dom-fakexrdevice-clearworld">clearWorld()</a><span>, in §5.1</span>
    <li><a href="#simulated-xr-input-source-connectionstate">connectionState</a><span>, in §3.2</span>
    <li><a href="#dom-fakexranchorcontroller-deleted">deleted</a><span>, in §8</span>
+   <li><a href="#dom-fakexrdepthsensingdatainit-depthdata">depthData</a><span>, in §10</span>
+   <li><a href="#fakexrdevice-depth-sensing-data">depth sensing data</a><span>, in §10</span>
+   <li><a href="#dom-fakexrdeviceinit-depthsensingdata">depthSensingData</a><span>, in §4.3</span>
    <li><a href="#determine-if-the-anchor-creation-succeeded">determine if the anchor creation succeeded</a><span>, in §8</span>
    <li><a href="#fakexrdevice-device">device</a><span>, in §5.1</span>
    <li><a href="#view-device-resolution">device resolution</a><span>, in §3.1</span>
@@ -1433,6 +1478,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#dictdef-fakexrboundspoint">FakeXRBoundsPoint</a><span>, in §4.3</span>
    <li><a href="#dictdef-fakexrbuttonstateinit">FakeXRButtonStateInit</a><span>, in §5.2</span>
    <li><a href="#enumdef-fakexrbuttontype">FakeXRButtonType</a><span>, in §5.2</span>
+   <li><a href="#dictdef-fakexrdepthsensingdatainit">FakeXRDepthSensingDataInit</a><span>, in §10</span>
    <li><a href="#fakexrdevice">FakeXRDevice</a><span>, in §5.1</span>
    <li><a href="#dictdef-fakexrdeviceinit">FakeXRDeviceInit</a><span>, in §4.3</span>
    <li><a href="#dictdef-fakexrdeviceresolution">FakeXRDeviceResolution</a><span>, in §4.3</span>
@@ -1463,7 +1509,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <li><a href="#simulated-xr-input-source-handedness">dfn for simulated XR input source</a><span>, in §3.2</span>
      <li><a href="#dom-fakexrinputsourceinit-handedness">dict-member for FakeXRInputSourceInit</a><span>, in §5.2</span>
     </ul>
-   <li><a href="#dom-fakexrdeviceresolution-height">height</a><span>, in §4.3</span>
+   <li>
+    height
+    <ul>
+     <li><a href="#dom-fakexrdepthsensingdatainit-height">dict-member for FakeXRDepthSensingDataInit</a><span>, in §10</span>
+     <li><a href="#dom-fakexrdeviceresolution-height">dict-member for FakeXRDeviceResolution</a><span>, in §4.3</span>
+    </ul>
    <li><a href="#dom-fakexrworldinit-hittestregions">hitTestRegions</a><span>, in §6</span>
    <li><a href="#fakexrinputcontroller-inputsource">inputSource</a><span>, in §5.2</span>
    <li><a href="#dom-fakexranchorcreationparameters-isattachedtoentity">isAttachedToEntity</a><span>, in §8</span>
@@ -1472,6 +1523,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#dom-fakexrregiontype-mesh">"mesh"</a><span>, in §6</span>
    <li><a href="#simulated-xr-device-native-bounds-geometry">native bounds geometry</a><span>, in §3.1</span>
    <li><a href="#xrsession-next-animation-frame">next animation frame</a><span>, in §5.1</span>
+   <li><a href="#dom-fakexrdepthsensingdatainit-normdepthbufferfromnormview">normDepthBufferFromNormView</a><span>, in §10</span>
    <li><a href="#dom-fakexrbuttontype-optional-button">"optional-button"</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrbuttontype-optional-thumbstick">"optional-thumbstick"</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrrigidtransforminit-orientation">orientation</a><span>, in §4.3</span>
@@ -1500,6 +1552,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <li><a href="#dom-fakexrinputsourceinit-profiles">dict-member for FakeXRInputSourceInit</a><span>, in §5.2</span>
     </ul>
    <li><a href="#dom-fakexrviewinit-projectionmatrix">projectionMatrix</a><span>, in §4.3</span>
+   <li><a href="#dom-fakexrdepthsensingdatainit-rawvaluetometers">rawValueToMeters</a><span>, in §10</span>
    <li><a href="#dom-fakexrinputcontroller-reconnect">reconnect()</a><span>, in §5.2</span>
    <li><a href="#dom-fakexranchorcreationparameters-requestedanchororigin">requestedAnchorOrigin</a><span>, in §8</span>
    <li><a href="#dom-fakexrviewinit-resolution">resolution</a><span>, in §4.3</span>
@@ -1510,6 +1563,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#dom-fakexrdevice-setanchorcreationcallback">setAnchorCreationCallback(callback)</a><span>, in §8</span>
    <li><a href="#dom-fakexranchorcontroller-setanchororigin">setAnchorOrigin(anchorOrigin)</a><span>, in §8</span>
    <li><a href="#dom-fakexrdevice-setboundsgeometry">setBoundsGeometry(boundsCoordinates)</a><span>, in §5.1</span>
+   <li><a href="#dom-fakexrdevice-setdepthsensingdata">setDepthSensingData(depthSensingData)</a><span>, in §5.1</span>
    <li><a href="#dom-fakexrdevice-setfloororigin">setFloorOrigin(origin)</a><span>, in §5.1</span>
    <li><a href="#dom-fakexrinputcontroller-setgriporigin">setGripOrigin(gripOrigin)</a><span>, in §5.2</span>
    <li><a href="#dom-fakexrinputcontroller-setgriporigin">setGripOrigin(gripOrigin, emulatedPosition)</a><span>, in §5.2</span>
@@ -1563,7 +1617,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li><a href="#dom-fakexrviewinit-viewoffset">viewOffset</a><span>, in §4.3</span>
    <li><a href="#dom-fakexrdeviceinit-views">views</a><span>, in §4.3</span>
    <li><a href="#simulated-xr-device-visibility-state">visibility state</a><span>, in §3.1</span>
-   <li><a href="#dom-fakexrdeviceresolution-width">width</a><span>, in §4.3</span>
+   <li>
+    width
+    <ul>
+     <li><a href="#dom-fakexrdepthsensingdatainit-width">dict-member for FakeXRDepthSensingDataInit</a><span>, in §10</span>
+     <li><a href="#dom-fakexrdeviceresolution-width">dict-member for FakeXRDeviceResolution</a><span>, in §4.3</span>
+    </ul>
    <li><a href="#dom-fakexrdeviceinit-world">world</a><span>, in §4.3</span>
    <li><a href="#dom-fakexrboundspoint-x">x</a><span>, in §4.3</span>
    <li><a href="#xrtest">XRTest</a><span>, in §4.2</span>
@@ -1648,6 +1707,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-list">5.1. FakeXRDevice</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-idl-ArrayBuffer">
+   <a href="https://heycam.github.io/webidl/#idl-ArrayBuffer">https://heycam.github.io/webidl/#idl-ArrayBuffer</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-idl-ArrayBuffer">10. Depth sensing extensions</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-idl-DOMString">
    <a href="https://heycam.github.io/webidl/#idl-DOMString">https://heycam.github.io/webidl/#idl-DOMString</a><b>Referenced in:</b>
    <ul>
@@ -1689,6 +1754,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-exceptiondef-typeerror④">5.1. FakeXRDevice</a>
     <li><a href="#ref-for-exceptiondef-typeerror⑤">5.2. FakeXRInputController</a> <a href="#ref-for-exceptiondef-typeerror⑥">(2)</a> <a href="#ref-for-exceptiondef-typeerror⑦">(3)</a>
     <li><a href="#ref-for-exceptiondef-typeerror⑧">9. Lighting estimation extensions</a> <a href="#ref-for-exceptiondef-typeerror⑨">(2)</a> <a href="#ref-for-exceptiondef-typeerror①⓪">(3)</a>
+    <li><a href="#ref-for-exceptiondef-typeerror①①">10. Depth sensing extensions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-a-new-promise">
@@ -1725,6 +1791,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-idl-float⑦">5.2. FakeXRInputController</a> <a href="#ref-for-idl-float⑧">(2)</a> <a href="#ref-for-idl-float⑨">(3)</a>
     <li><a href="#ref-for-idl-float①⓪">7. DOM overlay extensions</a> <a href="#ref-for-idl-float①①">(2)</a>
     <li><a href="#ref-for-idl-float①②">9. Lighting estimation extensions</a>
+    <li><a href="#ref-for-idl-float①③">10. Depth sensing extensions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-idl-long">
@@ -1753,6 +1820,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-idl-sequence⑨">5.2. FakeXRInputController</a> <a href="#ref-for-idl-sequence①⓪">(2)</a> <a href="#ref-for-idl-sequence①①">(3)</a> <a href="#ref-for-idl-sequence①②">(4)</a>
     <li><a href="#ref-for-idl-sequence①③">6. Hit test extensions</a> <a href="#ref-for-idl-sequence①④">(2)</a> <a href="#ref-for-idl-sequence①⑤">(3)</a>
     <li><a href="#ref-for-idl-sequence①⑥">9. Lighting estimation extensions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-idl-unsigned-long">
+   <a href="https://heycam.github.io/webidl/#idl-unsigned-long">https://heycam.github.io/webidl/#idl-unsigned-long</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-idl-unsigned-long">10. Depth sensing extensions</a> <a href="#ref-for-idl-unsigned-long①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-xrreferencespacetype-local">
@@ -2095,6 +2168,30 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-xranchor-native-origin">8. Anchors extensions</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-create-a-cpu-depth-information-instance">
+   <a href="https://immersive-web.github.io/depth-sensing/#create-a-cpu-depth-information-instance">https://immersive-web.github.io/depth-sensing/#create-a-cpu-depth-information-instance</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-create-a-cpu-depth-information-instance">10. Depth sensing extensions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-create-a-gpu-depth-information-instance">
+   <a href="https://immersive-web.github.io/depth-sensing/#create-a-gpu-depth-information-instance">https://immersive-web.github.io/depth-sensing/#create-a-gpu-depth-information-instance</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-create-a-gpu-depth-information-instance">10. Depth sensing extensions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-depth-coordinates-transformation-matrix">
+   <a href="https://immersive-web.github.io/depth-sensing/#depth-coordinates-transformation-matrix">https://immersive-web.github.io/depth-sensing/#depth-coordinates-transformation-matrix</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-depth-coordinates-transformation-matrix">10. Depth sensing extensions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-native-depth-sensing">
+   <a href="https://immersive-web.github.io/depth-sensing/#native-depth-sensing">https://immersive-web.github.io/depth-sensing/#native-depth-sensing</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-native-depth-sensing">10. Depth sensing extensions</a> <a href="#ref-for-native-depth-sensing①">(2)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-xrlightestimate-interface">
    <a href="https://immersive-web.github.io/lighting-estimation/#xrlightestimate-interface">https://immersive-web.github.io/lighting-estimation/#xrlightestimate-interface</a><b>Referenced in:</b>
    <ul>
@@ -2153,6 +2250,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <li>
     <a data-link-type="biblio">[WebIDL]</a> defines the following terms:
     <ul>
+     <li><span class="dfn-paneled" id="term-for-idl-ArrayBuffer">ArrayBuffer</span>
      <li><span class="dfn-paneled" id="term-for-idl-DOMString">DOMString</span>
      <li><span class="dfn-paneled" id="term-for-Function">Function</span>
      <li><span class="dfn-paneled" id="term-for-notfounderror">NotFoundError</span>
@@ -2168,6 +2266,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <li><span class="dfn-paneled" id="term-for-dfn-perform-steps-once-promise-is-settled">react</span>
      <li><span class="dfn-paneled" id="term-for-resolve">resolve</span>
      <li><span class="dfn-paneled" id="term-for-idl-sequence">sequence</span>
+     <li><span class="dfn-paneled" id="term-for-idl-unsigned-long">unsigned long</span>
     </ul>
    <li>
     <a data-link-type="biblio">[webxr]</a> defines the following terms:
@@ -2231,6 +2330,14 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <li><span class="dfn-paneled" id="term-for-xranchor-native-origin">native origin</span>
     </ul>
    <li>
+    <a data-link-type="biblio">[webxr depth sensing module]</a> defines the following terms:
+    <ul>
+     <li><span class="dfn-paneled" id="term-for-create-a-cpu-depth-information-instance">create a cpu depth information instance</span>
+     <li><span class="dfn-paneled" id="term-for-create-a-gpu-depth-information-instance">create a gpu depth information instance</span>
+     <li><span class="dfn-paneled" id="term-for-depth-coordinates-transformation-matrix">depth coordinates transformation matrix</span>
+     <li><span class="dfn-paneled" id="term-for-native-depth-sensing">native depth sensing</span>
+    </ul>
+   <li>
     <a data-link-type="biblio">[webxr lighting estimation]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-xrlightestimate-interface">XRLightEstimate</span>
@@ -2288,6 +2395,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 
     // Hit test extensions:
     <a data-link-type="idl-name" href="#dictdef-fakexrworldinit"><c- n>FakeXRWorldInit</c-></a> <a data-type="FakeXRWorldInit " href="#dom-fakexrdeviceinit-world"><code><c- g>world</c-></code></a>;
+
+    // Depth sensing extensions:
+    <a data-link-type="idl-name" href="#dictdef-fakexrdepthsensingdatainit"><c- n>FakeXRDepthSensingDataInit</c-></a> <a data-type="FakeXRDepthSensingDataInit " href="#dom-fakexrdeviceinit-depthsensingdata"><code><c- g>depthSensingData</c-></code></a>;
 };
 
 <c- b>dictionary</c-> <a href="#dictdef-fakexrviewinit"><code><c- g>FakeXRViewInit</c-></code></a> {
@@ -2339,6 +2449,10 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   // Hit test extensions:
   <a data-link-type="idl-name"><c- n>void</c-></a> <a href="#dom-fakexrdevice-setworld"><code><c- g>setWorld</c-></code></a>(<a data-link-type="idl-name" href="#dictdef-fakexrworldinit"><c- n>FakeXRWorldInit</c-></a> <a href="#dom-fakexrdevice-setworld-world-world"><code><c- g>world</c-></code></a>);
   <a data-link-type="idl-name"><c- n>void</c-></a> <a href="#dom-fakexrdevice-clearworld"><code><c- g>clearWorld</c-></code></a>();
+
+  // Depth sensing extensions:
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a href="#dom-fakexrdevice-setdepthsensingdata"><code><c- g>setDepthSensingData</c-></code></a>(<a data-link-type="idl-name" href="#dictdef-fakexrdepthsensingdatainit"><c- n>FakeXRDepthSensingDataInit</c-></a> <a href="#dom-fakexrdevice-setdepthsensingdata-depthsensingdata-depthsensingdata"><code><c- g>depthSensingData</c-></code></a>);
+  <a data-link-type="idl-name"><c- n>void</c-></a> <a href="#dom-fakexrdevice-cleardepthsensingdata"><code><c- g>clearDepthSensingData</c-></code></a>();
 };
 
 
@@ -2449,6 +2563,15 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="#fakexrdevice"><c- g>FakeXRDevice</c-></a> {
   <a data-link-type="idl-name"><c- n>void</c-></a> <a class="idl-code" data-link-type="method" href="#dom-fakexrdevice-setlightestimate"><c- g>setLightEstimate</c-></a>(<a data-link-type="idl-name" href="#dictdef-fakexrlightestimateinit"><c- n>FakeXRLightEstimateInit</c-></a> <a href="#dom-fakexrdevice-setlightestimate-init-init"><code><c- g>init</c-></code></a>);
+};
+
+
+<c- b>dictionary</c-> <a href="#dictdef-fakexrdepthsensingdatainit"><code><c- g>FakeXRDepthSensingDataInit</c-></code></a> {
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-ArrayBuffer"><c- b>ArrayBuffer</c-></a> <a data-type="ArrayBuffer " href="#dom-fakexrdepthsensingdatainit-depthdata"><code><c- g>depthData</c-></code></a>;
+  <c- b>required</c-> <a data-link-type="idl-name" href="#dictdef-fakexrrigidtransforminit"><c- n>FakeXRRigidTransformInit</c-></a> <a data-type="FakeXRRigidTransformInit " href="#dom-fakexrdepthsensingdatainit-normdepthbufferfromnormview"><code><c- g>normDepthBufferFromNormView</c-></code></a>;
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-float"><c- b>float</c-></a> <a data-type="float " href="#dom-fakexrdepthsensingdatainit-rawvaluetometers"><code><c- g>rawValueToMeters</c-></code></a>;
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long"><c- b>unsigned</c-> <c- b>long</c-></a> <a data-type="unsigned long " href="#dom-fakexrdepthsensingdatainit-width"><code><c- g>width</c-></code></a>;
+  <c- b>required</c-> <a class="idl-code" data-link-type="interface" href="https://heycam.github.io/webidl/#idl-unsigned-long"><c- b>unsigned</c-> <c- b>long</c-></a> <a data-type="unsigned long " href="#dom-fakexrdepthsensingdatainit-height"><code><c- g>height</c-></code></a>;
 };
 
 
@@ -2717,6 +2840,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-dictdef-fakexrrigidtransforminit⑥">5.1. FakeXRDevice</a> <a href="#ref-for-dictdef-fakexrrigidtransforminit⑦">(2)</a>
     <li><a href="#ref-for-dictdef-fakexrrigidtransforminit⑧">5.2. FakeXRInputController</a> <a href="#ref-for-dictdef-fakexrrigidtransforminit⑨">(2)</a> <a href="#ref-for-dictdef-fakexrrigidtransforminit①⓪">(3)</a> <a href="#ref-for-dictdef-fakexrrigidtransforminit①①">(4)</a>
     <li><a href="#ref-for-dictdef-fakexrrigidtransforminit①②">8. Anchors extensions</a> <a href="#ref-for-dictdef-fakexrrigidtransforminit①③">(2)</a> <a href="#ref-for-dictdef-fakexrrigidtransforminit①④">(3)</a>
+    <li><a href="#ref-for-dictdef-fakexrrigidtransforminit①⑤">10. Depth sensing extensions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="dom-fakexrrigidtransforminit-position">
@@ -2762,6 +2886,19 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li><a href="#ref-for-fakexrdevice⑥">6. Hit test extensions</a>
     <li><a href="#ref-for-fakexrdevice⑦">8. Anchors extensions</a> <a href="#ref-for-fakexrdevice⑧">(2)</a> <a href="#ref-for-fakexrdevice⑨">(3)</a>
     <li><a href="#ref-for-fakexrdevice①⓪">9. Lighting estimation extensions</a> <a href="#ref-for-fakexrdevice①①">(2)</a> <a href="#ref-for-fakexrdevice①②">(3)</a>
+    <li><a href="#ref-for-fakexrdevice①③">10. Depth sensing extensions</a> <a href="#ref-for-fakexrdevice①④">(2)</a> <a href="#ref-for-fakexrdevice①⑤">(3)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-fakexrdevice-setdepthsensingdata">
+   <b><a href="#dom-fakexrdevice-setdepthsensingdata">#dom-fakexrdevice-setdepthsensingdata</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-fakexrdevice-setdepthsensingdata">10. Depth sensing extensions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-fakexrdevice-cleardepthsensingdata">
+   <b><a href="#dom-fakexrdevice-cleardepthsensingdata">#dom-fakexrdevice-cleardepthsensingdata</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-fakexrdevice-cleardepthsensingdata">10. Depth sensing extensions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="fakexrdevice-device">
@@ -3276,6 +3413,50 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <b><a href="#dom-fakexrdevice-setlightestimate">#dom-fakexrdevice-setlightestimate</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-fakexrdevice-setlightestimate">9. Lighting estimation extensions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="fakexrdevice-depth-sensing-data">
+   <b><a href="#fakexrdevice-depth-sensing-data">#fakexrdevice-depth-sensing-data</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-fakexrdevice-depth-sensing-data">10. Depth sensing extensions</a> <a href="#ref-for-fakexrdevice-depth-sensing-data①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dictdef-fakexrdepthsensingdatainit">
+   <b><a href="#dictdef-fakexrdepthsensingdatainit">#dictdef-fakexrdepthsensingdatainit</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dictdef-fakexrdepthsensingdatainit">4.3. FakeXRDeviceInit</a>
+    <li><a href="#ref-for-dictdef-fakexrdepthsensingdatainit①">5.1. FakeXRDevice</a>
+    <li><a href="#ref-for-dictdef-fakexrdepthsensingdatainit②">10. Depth sensing extensions</a> <a href="#ref-for-dictdef-fakexrdepthsensingdatainit③">(2)</a> <a href="#ref-for-dictdef-fakexrdepthsensingdatainit④">(3)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-fakexrdepthsensingdatainit-depthdata">
+   <b><a href="#dom-fakexrdepthsensingdatainit-depthdata">#dom-fakexrdepthsensingdatainit-depthdata</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-fakexrdepthsensingdatainit-depthdata">10. Depth sensing extensions</a> <a href="#ref-for-dom-fakexrdepthsensingdatainit-depthdata①">(2)</a> <a href="#ref-for-dom-fakexrdepthsensingdatainit-depthdata②">(3)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-fakexrdepthsensingdatainit-normdepthbufferfromnormview">
+   <b><a href="#dom-fakexrdepthsensingdatainit-normdepthbufferfromnormview">#dom-fakexrdepthsensingdatainit-normdepthbufferfromnormview</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-fakexrdepthsensingdatainit-normdepthbufferfromnormview">10. Depth sensing extensions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-fakexrdepthsensingdatainit-rawvaluetometers">
+   <b><a href="#dom-fakexrdepthsensingdatainit-rawvaluetometers">#dom-fakexrdepthsensingdatainit-rawvaluetometers</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-fakexrdepthsensingdatainit-rawvaluetometers">10. Depth sensing extensions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-fakexrdepthsensingdatainit-width">
+   <b><a href="#dom-fakexrdepthsensingdatainit-width">#dom-fakexrdepthsensingdatainit-width</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-fakexrdepthsensingdatainit-width">10. Depth sensing extensions</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-fakexrdepthsensingdatainit-height">
+   <b><a href="#dom-fakexrdepthsensingdatainit-height">#dom-fakexrdepthsensingdatainit-height</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-fakexrdepthsensingdatainit-height">10. Depth sensing extensions</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */
