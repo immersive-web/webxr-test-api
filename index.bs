@@ -824,11 +824,11 @@ The {{FakeXRDevice}} is extended with internal <dfn for=FakeXRDevice>depth sensi
 <script type="idl">
 
 dictionary FakeXRDepthSensingDataInit {
-  ArrayBuffer depthData;
-  FakeXRRigidTransformInit normDepthBufferFromNormView;
-  float rawValueToMeters;
-  unsigned long width;
-  unsigned long height;
+  required ArrayBuffer depthData;
+  required FakeXRRigidTransformInit normDepthBufferFromNormView;
+  required float rawValueToMeters;
+  required unsigned long width;
+  required unsigned long height;
 };
 
 </script>
@@ -847,7 +847,7 @@ dictionary FakeXRDepthSensingDataInit {
 
 When the {{FakeXRDevice/setDepthSensingData()}} method is invoked on {{FakeXRDevice}} |device| with |depthSensingData|, run the following steps:
 
-1. If |depthSensingData|'s {{FakeXRDepthSensingDataInit/depthData}} is <code>null</code>, set |device|'s [=FakeXRDevice/depth sensing data=] to <code>null</code> and abort these steps.
+1. If |depthSensingData|'s {{FakeXRDepthSensingDataInit/depthData}} is <code>null</code>, throw a {{TypeError}} and abort these steps.
 1. Set |device|'s [=FakeXRDevice/depth sensing data=] to |depthSensingData|.
 
 </div>
