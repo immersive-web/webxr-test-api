@@ -39,7 +39,8 @@ dictionary FakeXRDeviceInit {
     required boolean supportsImmersive;
     // Sequence of modes that should be supported by this device.
     sequence<XRSessionMode> supportedModes;
-    required sequence<FakeXRViewInit> views;
+    required sequence<FakeXRViewInit> primaryViews;
+    required sequence<FakeXRViewInit> secondaryViews;
 
     // https://immersive-web.github.io/webxr/#feature-name
     // The list of feature names that this device supports.
@@ -70,7 +71,7 @@ dictionary FakeXRDeviceInit {
 interface FakeXRDevice {
   // Sets the values to be used for subsequent
   // requestAnimationFrame() callbacks.
-  void setViews(sequence<FakeXRViewInit> views);
+  void setViews(sequence<FakeXRViewInit> primaryViews, sequence<FakeXRViewInit> secondaryViews);
 
   // behaves as if device was disconnected
   Promise<void> disconnect();
