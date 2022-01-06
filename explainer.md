@@ -39,8 +39,8 @@ dictionary FakeXRDeviceInit {
     required boolean supportsImmersive;
     // Sequence of modes that should be supported by this device.
     sequence<XRSessionMode> supportedModes;
-    required sequence<FakeXRViewInit> primaryViews;
-    required sequence<FakeXRViewInit> secondaryViews;
+    required sequence<FakeXRViewInit> views;
+    sequence<FakeXRViewInit> secondaryViews;
 
     // https://immersive-web.github.io/webxr/#feature-name
     // The list of feature names that this device supports.
