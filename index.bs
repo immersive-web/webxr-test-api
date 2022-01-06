@@ -156,6 +156,10 @@ Every [=simulated XR device=] has an <dfn for="simulated XR device">emulated pos
 
 Every [=simulated XR device=] has an <dfn for="simulated XR device">visibility state</dfn> which is an {{XRVisibilityState}} used to set the {{XRSession/visibilityState}} of any {{XRSession}}s associated with the [=simulated XR device=] . This is initially {{XRVisibilityState/"visible"}}. When it is changed, the associated changes must be reflected on the {{XRSession}}, including triggering {{XRSession/onvisibilitychange}} events if necessary.
 
+Every [=simulated XR device=] has a <dfn for="simulated XR device">list of primary views</dfn> which is a list of [=view|views=] that must be rendered to for an immersive experience. There must be at least one primary view.
+
+Every [=simulated XR device=] may have a <dfn for="simulated XR device">list of secondary views</dfn> which is a list of [=view|views=] that may or may not be rendered to. There may be any number of secondary views.
+
 Every [=view=] for a [=simulated XR device=] has an associated <dfn for=view>device resolution</dfn>, which is an instance of {{FakeXRDeviceResolution}}. This resolution must be used when constructing {{XRViewport}} values for the [=view=], based on the canvas size.
 
 Every [=view=] for a [=simulated XR device=] may have an associated <dfn for=view>field of view</dfn>, which is an instance of {{FakeXRFieldOfViewInit}} used to calculate projection matrices using depth values. If the [=field of view=] is set, projection matrix values are calculated using the [=field of view=] and {{XRRenderState/depthNear}} and {{XRRenderState/depthFar}} values.
@@ -218,11 +222,11 @@ When this method is invoked, the user agent MUST run the following steps:
   1. Let |promise| be [=a new Promise=].
   1. Run the following steps [=in parallel=]:
     1. Let |device| be a new [=simulated XR device=].
-    1. For each |primaryView| in |init|'s {{FakeXRDeviceInit/primaryViews}}:
-        1. Let |p| be the result of running [=parse a view=] on |primaryView|.
+    1. For each |view| in |init|'s {{FakeXRDeviceInit/views}}:
+        1. Let |p| be the result of running [=parse a view=] on |view|.
         1. If running [=parse a view=] threw an error, reject |promise| with this error and abort these steps.
         1. [=list/Append=] |p| to |device|'s list of primary views.
-    1. For each |secondaryView| in |init|'s {{FakeXRDeviceInit/secondaryViews}}:
+    1. If |init|'s {{FakeXRDeviceInit/secondaryViews}} is set, for each |secondaryView| in |init|'s {{FakeXRDeviceInit/secondaryViews}}:
         1. Let |s| be the result of running [=parse a view=] on |secondaryView|.
         1. If running [=parse a view=] threw an error, reject |promise| with this error and abort these steps.
         1. [=list/Append=] |s| to |device|'s list of secondary views.
@@ -274,8 +278,8 @@ FakeXRDeviceInit {#fakexrdeviceinit-dict}
 dictionary FakeXRDeviceInit {
     required boolean supportsImmersive;
     sequence<XRSessionMode> supportedModes;
-    required sequence<FakeXRViewInit> primaryViews;
-    required sequence<FakeXRViewInit> secondaryViews;
+    required sequence<FakeXRViewInit> views;
+    sequence<FakeXRViewInit> secondaryViews;
 
     sequence<any> supportedFeatures;
     sequence<FakeXRBoundsPoint> boundsCoordinates;
@@ -366,7 +370,7 @@ FakeXRDevice {#fakexrdevice-interface}
 
 <script type="idl">
 interface FakeXRDevice : EventTarget {
-  void setViews(sequence<FakeXRViewInit> primaryViews, sequence<FakeXRViewInit> secondaryViews);
+  void setViews(sequence<FakeXRViewInit> views, sequence<FakeXRViewInit> secondaryViews);
 
   Promise<void> disconnect();
 
@@ -422,13 +426,13 @@ To <dfn>parse a list of views</dfn> on a [=list=] |views| run the following step
 </div>
 
 <div class="algorithm" data-algorithm="set-views">
-The <dfn method for=FakeXRDevice>setViews(|primaryViews|, |secondaryViews|)</dfn> method performs the following steps:
+The <dfn method for=FakeXRDevice>setViews(|views|, |secondaryViews|)</dfn> method performs the following steps:
 
     1. On the [=next animation frame=], run the following steps:
-        1. Let |p| be the result of running [=parse a list of views=] on |primaryViews|.
+        1. Let |p| be the result of running [=parse a list of views=] on |views|.
         1. Set [=FakeXRDevice/device=]'s list of primary views to |p|.
-        1. Let |s| be the result of running [=parse a list of views=] on |secondaryViews|.
-        1. Set [=FakeXRDevice/device=]'s list of secondary views to |s|.
+        1. If |init|'s {{FakeXRDeviceInit/secondaryViews}} is set, let |s| be the result of running [=parse a list of views=] on |secondaryViews|.
+            1. Set [=FakeXRDevice/device=]'s list of secondary views to |s|.
 
 </div>
 
