@@ -45,6 +45,8 @@ spec:webxr-1;
 </pre>
 
 <pre class="anchors">
+spec: Gamepad; urlPrefix: https://www.w3.org/TR/gamepad/#
+    type: enum-value; text: "xr-standard"; for: GamepadMappingType; url: dfn-xr-standard
 spec:webxr-dom-overlays; urlPrefix: https://immersive-web.github.io/dom-overlays#
     type:dfn; text:beforexrselect
 spec:WebXR Anchors Module; urlPrefix: https://immersive-web.github.io/anchors/#
@@ -209,8 +211,8 @@ The {{XRTest}} object is the entry point for all testing.
 <script type="idl">
 interface XRTest {
   Promise<FakeXRDevice> simulateDeviceConnection(FakeXRDeviceInit init);
-  void simulateUserActivation(Function f);
-  Promise<void> disconnectAllDevices();
+  undefined simulateUserActivation(Function f);
+  Promise<undefined> disconnectAllDevices();
 };
 </script>
 
@@ -267,7 +269,7 @@ NOTE: each |device| stores a [=capable of supporting|list of features it is capa
 When <dfn method for=XRTest>simulateUserActivation(f)</dfn> is called, invoke <code>f</code> as if it had [=transient activation=].
 
 
-When <dfn method for=XRTest>disconnectAllDevices()</dfn> is called, remove all [=simulated XR devices=] from the [=context object=]'s {{XR}} object's [=list of immersive XR devices=] as if they were disconnected. If the [=inline XR device=] is a [=simulated XR device=], reset it to the default [=inline XR device=].
+When <dfn method for=XRTest>disconnectAllDevices()</dfn> is called, remove all [=simulated XR devices=] from the {{Navigator/xr}}'s [=list of immersive XR devices=] as if they were disconnected. If the [=inline XR device=] is a [=simulated XR device=], reset it to the default [=inline XR device=].
 
 
 FakeXRDeviceInit {#fakexrdeviceinit-dict}
@@ -370,28 +372,28 @@ FakeXRDevice {#fakexrdevice-interface}
 
 <script type="idl">
 interface FakeXRDevice : EventTarget {
-  void setViews(sequence<FakeXRViewInit> views, sequence<FakeXRViewInit> secondaryViews);
+  undefined setViews(sequence<FakeXRViewInit> views, sequence<FakeXRViewInit> secondaryViews);
 
-  Promise<void> disconnect();
+  Promise<undefined> disconnect();
 
-  void setViewerOrigin(FakeXRRigidTransformInit origin, optional boolean emulatedPosition = false);
-  void clearViewerOrigin();
-  void setFloorOrigin(FakeXRRigidTransformInit origin);
-  void clearFloorOrigin();
-  void setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoordinates);
-  void simulateResetPose();
+  undefined setViewerOrigin(FakeXRRigidTransformInit origin, optional boolean emulatedPosition = false);
+  undefined clearViewerOrigin();
+  undefined setFloorOrigin(FakeXRRigidTransformInit origin);
+  undefined clearFloorOrigin();
+  undefined setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoordinates);
+  undefined simulateResetPose();
 
-  void simulateVisibilityChange(XRVisibilityState state);
+  undefined simulateVisibilityChange(XRVisibilityState state);
 
   FakeXRInputController simulateInputSourceConnection(FakeXRInputSourceInit init);
 
   // Hit test extensions:
-  void setWorld(FakeXRWorldInit world);
-  void clearWorld();
+  undefined setWorld(FakeXRWorldInit world);
+  undefined clearWorld();
 
   // Depth sensing extensions:
-  void setDepthSensingData(FakeXRDepthSensingDataInit depthSensingData);
-  void clearDepthSensingData();
+  undefined setDepthSensingData(FakeXRDepthSensingDataInit depthSensingData);
+  undefined clearDepthSensingData();
 };
 
 </script>
@@ -431,7 +433,7 @@ The <dfn method for=FakeXRDevice>setViews(|views|, |secondaryViews|)</dfn> metho
     1. On the [=next animation frame=], run the following steps:
         1. Let |p| be the result of running [=parse a list of views=] on |views|.
         1. Set [=FakeXRDevice/device=]'s [=simulated XR device/list of primary views=] to |p|.
-        1. If |init|'s {{FakeXRDeviceInit/secondaryViews}} is set, let |s| be the result of running [=parse a list of views=] on |secondaryViews|.
+        1. If |secondaryViews| is set, let |s| be the result of running [=parse a list of views=] on |secondaryViews|.
             1. Set [=FakeXRDevice/device=]'s [=simulated XR device/list of secondary views=] to |s|.
 
 </div>
@@ -441,8 +443,7 @@ The <dfn method for=FakeXRDevice>setViews(|views|, |secondaryViews|)</dfn> metho
 
 When <dfn method for=FakeXRDevice>disconnect()</dfn> method is called, perform the following steps:
 
-
-    1. Remove [=FakeXRDevice/device=] from the [=context object=]'s {{XR}} object's [=list of immersive XR devices=] as if it were disconnected.
+    1. Remove [=FakeXRDevice/device=] from the {{Navigator/xr}}'s [=list of immersive XR devices=] as if it were disconnected.
     1. If the [=inline XR device=] is equal to the {{FakeXRDevice}}, reset it to the default [=inline XR device=].
 
 </div>
@@ -520,22 +521,22 @@ dictionary FakeXRInputSourceInit {
 };
 
 interface FakeXRInputController {
-  void setHandedness(XRHandedness handedness);
-  void setTargetRayMode(XRTargetRayMode targetRayMode);
-  void setProfiles(sequence<DOMString> profiles);
-  void setGripOrigin(FakeXRRigidTransformInit gripOrigin, optional boolean emulatedPosition = false);
-  void clearGripOrigin();
-  void setPointerOrigin(FakeXRRigidTransformInit pointerOrigin, optional boolean emulatedPosition = false);
+  undefined setHandedness(XRHandedness handedness);
+  undefined setTargetRayMode(XRTargetRayMode targetRayMode);
+  undefined setProfiles(sequence<DOMString> profiles);
+  undefined setGripOrigin(FakeXRRigidTransformInit gripOrigin, optional boolean emulatedPosition = false);
+  undefined clearGripOrigin();
+  undefined setPointerOrigin(FakeXRRigidTransformInit pointerOrigin, optional boolean emulatedPosition = false);
 
-  void disconnect();
-  void reconnect();
+  undefined disconnect();
+  undefined reconnect();
 
-  void startSelection();
-  void endSelection();
-  void simulateSelect();
+  undefined startSelection();
+  undefined endSelection();
+  undefined simulateSelect();
 
-  void setSupportedButtons(sequence<FakeXRButtonStateInit> supportedButtons);
-  void updateButtonState(FakeXRButtonStateInit buttonState);
+  undefined setSupportedButtons(sequence<FakeXRButtonStateInit> supportedButtons);
+  undefined updateButtonState(FakeXRButtonStateInit buttonState);
 };
 
 enum FakeXRButtonType {
@@ -718,7 +719,7 @@ The DOM Overlay extensions for test API SHOULD be implemented by all user agents
 
 <script type="idl">
 partial interface FakeXRInputController {
-  void setOverlayPointerPosition(float x, float y);
+  undefined setOverlayPointerPosition(float x, float y);
 };
 </script>
 
@@ -739,7 +740,7 @@ dictionary FakeXRAnchorCreationParameters {
 callback FakeXRAnchorCreationCallback = Promise<boolean> (FakeXRAnchorCreationParameters parameters, FakeXRAnchorController anchorController);
 
 partial interface FakeXRDevice {
-  void setAnchorCreationCallback(FakeXRAnchorCreationCallback? callback);
+  undefined setAnchorCreationCallback(FakeXRAnchorCreationCallback? callback);
 };
 
 </script>
@@ -773,12 +774,12 @@ interface FakeXRAnchorController {
   readonly attribute boolean deleted;
 
   // Controlling anchor state:
-  void pauseTracking();
-  void resumeTracking();
-  void stopTracking();
+  undefined pauseTracking();
+  undefined resumeTracking();
+  undefined stopTracking();
 
   // Controlling anchor location:
-  void setAnchorOrigin(FakeXRRigidTransformInit anchorOrigin);
+  undefined setAnchorOrigin(FakeXRRigidTransformInit anchorOrigin);
 };
 
 </script>
@@ -811,7 +812,7 @@ dictionary FakeXRLightEstimateInit {
 };
 
 partial interface FakeXRDevice {
-  void setLightEstimate(FakeXRLightEstimateInit init);
+  undefined setLightEstimate(FakeXRLightEstimateInit init);
 };
 
 </script>
