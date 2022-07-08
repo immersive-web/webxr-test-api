@@ -60,6 +60,8 @@ spec: WebXR Depth Sensing Module; urlPrefix: https://immersive-web.github.io/dep
     type: dfn; text: create a GPU depth information instance; url: create-a-gpu-depth-information-instance
     type: dfn; text: depth coordinates transformation matrix; url: depth-coordinates-transformation-matrix
     type: dfn; text: native depth sensing; url: native-depth-sensing
+spec: WebXR Raw Camera Access Module; urlPrefix: https://immersive-web.github.io/raw-camera-access/#
+    type: dfn; text: obtain camera
 </pre>
 
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -301,6 +303,9 @@ dictionary FakeXRViewInit {
   required FakeXRDeviceResolution resolution;
   required FakeXRRigidTransformInit viewOffset;
   FakeXRFieldOfViewInit fieldOfView;
+
+  // Raw camera access extensions:
+  FakeXRCameraImage cameraImageInit;
 };
 
 dictionary FakeXRFieldOfViewInit {
@@ -323,7 +328,6 @@ dictionary FakeXRRigidTransformInit {
   required sequence<float> position;
   required sequence<float> orientation;
 };
-
 </script>
 
 <p class="advisement">
@@ -395,7 +399,6 @@ interface FakeXRDevice : EventTarget {
   undefined setDepthSensingData(FakeXRDepthSensingDataInit depthSensingData);
   undefined clearDepthSensingData();
 };
-
 </script>
 
 
@@ -661,11 +664,9 @@ Hit test extensions {#hit-test-extensions}
 The hit test extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/hit-test/">WebXR Hit Test Module</a>.
 
 <script type="idl">
-
 dictionary FakeXRWorldInit {
   required sequence<FakeXRRegionInit> hitTestRegions;
 };
-
 </script>
 
 {{FakeXRWorldInit}} dictionary describes the state of the world that will be used when computing hit test results on a {{FakeXRDevice}}.
@@ -673,12 +674,10 @@ dictionary FakeXRWorldInit {
 {{FakeXRWorldInit/hitTestRegions}} contains a collection of {{FakeXRRegionInit}}s that are used to describe specific regions of the fake world. The order of the regions does not matter.
 
 <script type="idl">
-
 dictionary FakeXRRegionInit {
   required sequence<FakeXRTriangleInit> faces;
   required FakeXRRegionType type;
 };
-
 </script>
 
 {{FakeXRRegionInit}} dictionary describes the contents of a specific region of the world.
@@ -688,11 +687,9 @@ dictionary FakeXRRegionInit {
 {{FakeXRRegionInit/type}} contains a type of the region that will be used during computation of hit test results.
 
 <script type="idl">
-
 dictionary FakeXRTriangleInit {
   required sequence<DOMPointInit> vertices;  // size = 3
 };
-
 </script>
 
 {{FakeXRTriangleInit}} dictionary describes a single face of a region.
@@ -700,13 +697,11 @@ dictionary FakeXRTriangleInit {
 {{FakeXRTriangleInit/vertices}} contains a collection of {{DOMPointInit}}s that comprise the face. The face will be considered as solid when computing hit test results and as such, the winding order of the vertices does not matter.
 
 <script type="idl">
-
 enum FakeXRRegionType {
   "point",
   "plane",
   "mesh"
 };
-
 </script>
 
 {{FakeXRRegionType}} enum is used to describe a type of the world region.
@@ -731,7 +726,6 @@ Anchors extensions {#anchors-extensions}
 The anchors extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/anchors/">WebXR Anchors</a>.
 
 <script type="idl">
-
 dictionary FakeXRAnchorCreationParameters {
   FakeXRRigidTransformInit requestedAnchorOrigin;
   boolean isAttachedToEntity;
@@ -742,7 +736,6 @@ callback FakeXRAnchorCreationCallback = Promise<boolean> (FakeXRAnchorCreationPa
 partial interface FakeXRDevice {
   undefined setAnchorCreationCallback(FakeXRAnchorCreationCallback? callback);
 };
-
 </script>
 
 The {{FakeXRAnchorCreationCallback}} callback can be used by the Web Platform Tests to control the result of a call to create an anchor, and to be able to subsequently control the newly created anchor.
@@ -769,7 +762,6 @@ The {{FakeXRAnchorCreationParameters/isAttachedToEntity}} attribute will be set 
 The <dfn for=FakeXRAnchorCreationCallback>anchorController</dfn> parameter passed in to {{FakeXRAnchorCreationCallback}} can be used to update the state of the anchor, assuming that the creation request was deemed successful. Tests SHOULD store it and issue commands to it for the entire duration of controlled anchor's lifetime.
 
 <script type="idl">
-
 interface FakeXRAnchorController {
   readonly attribute boolean deleted;
 
@@ -781,7 +773,6 @@ interface FakeXRAnchorController {
   // Controlling anchor location:
   undefined setAnchorOrigin(FakeXRRigidTransformInit anchorOrigin);
 };
-
 </script>
 
 Successfully created anchors can be controlled by the test through the use of {{FakeXRAnchorController}} interface.
@@ -804,7 +795,6 @@ Lighting estimation extensions {#lighting-estimation-extensions}
 The lighting estimation extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/lighting-estimation/">WebXR Lighting Estimation</a>.
 
 <script type="idl">
-
 dictionary FakeXRLightEstimateInit {
   required sequence<float> sphericalHarmonicsCoefficients;
   DOMPointInit primaryLightDirection;
@@ -814,7 +804,6 @@ dictionary FakeXRLightEstimateInit {
 partial interface FakeXRDevice {
   undefined setLightEstimate(FakeXRLightEstimateInit init);
 };
-
 </script>
 
 The {{FakeXRDevice}} is extended with internal <dfn for=FakeXRDevice>light estimate</dfn> which is a {{FakeXRLightEstimateInit}}, used to supply data for any requested {{XRLightEstimate}}.
@@ -840,7 +829,6 @@ The depth sensing extensions for test API SHOULD be implemented by all user agen
 The {{FakeXRDevice}} is extended with internal <dfn for=FakeXRDevice>depth sensing data</dfn> which is a {{FakeXRDepthSensingDataInit}}, used to supply data for requests to [=native depth sensing=].
 
 <script type="idl">
-
 dictionary FakeXRDepthSensingDataInit {
   required ArrayBuffer depthData;
   required FakeXRRigidTransformInit normDepthBufferFromNormView;
@@ -848,7 +836,6 @@ dictionary FakeXRDepthSensingDataInit {
   required unsigned long width;
   required unsigned long height;
 };
-
 </script>
 
 {{FakeXRDepthSensingDataInit}} dictionary describes the state of the depth sensing data that should be used when returning latest depth information in [=creating a CPU depth information instance=] and [=creating a GPU depth information instance=] algorithms. All keys present in {{FakeXRDepthSensingDataInit}} correspond to the data required to be returned by [=native depth sensing=] capabilities of the device.
@@ -877,3 +864,27 @@ When the {{FakeXRDevice/clearDepthSensingData()}} method is invoked on {{FakeXRD
 1. Set |device|'s [=FakeXRDevice/depth sensing data=] to <code>null</code>.
 
 </div>
+
+Raw camera access extensions {#raw-camera-access-extensions}
+============================
+
+The raw camera access extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/raw-camera-access/">WebXR Raw Camera Access Module</a>.
+
+The {{FakeXRViewInit}} dictionary is extended with {{FakeXRViewInit/cameraImageInit}} dictionary of type {{FakeXRDeviceResolution}}. This dictionary carries information about the camera image, and is intended to affect the <code>camera image</code> variable in [=obtain camera=] algorithm. If the {{FakeXRViewInit/cameraImageInit}} key is not present in the {{FakeXRViewInit}} dictionary, the [=obtain camera=] algorithm should treat this as <code>null</code> camera image (and thus the algorithm will return <code>null</code>).
+
+<script type="idl">
+dictionary FakeXRCameraImage {
+  required long width;
+  required long height;
+
+  Uint32Array pixels;
+};
+</script>
+
+The {{FakeXRCameraImage/width}} controls the width of the camera image buffer in [=obtain camera=] algorithm.
+
+The {{FakeXRCameraImage/height}} controls the height of the camera image buffer in [=obtain camera=] algorithm.
+
+The {{FakeXRCameraImage/pixels}} control the camera image contents in [=obtain camera=] algorithm. The pixels will be used to initialize the camera image texture.
+
+The camera image will be initialized as if by a call to <code>gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixels)</code>, where <code>width</code>, <code>height</code>, and <code>pixels</code> are, respectively, {{FakeXRCameraImage/width}}, {{FakeXRCameraImage/height}}, and {{FakeXRCameraImage/pixels}}. In case {{FakeXRCameraImage/pixels}} key is not present in the dictionary, the behavior would be as if a call to <code>gl.texImage2D()</code> variant that omits the <code>pixels</code> parameter was made.
