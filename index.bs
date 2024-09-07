@@ -376,7 +376,7 @@ FakeXRDevice {#fakexrdevice-interface}
 
 <script type="idl">
 interface FakeXRDevice : EventTarget {
-  undefined setViews(sequence<FakeXRViewInit> views, sequence<FakeXRViewInit> secondaryViews);
+  undefined setViews(sequence<FakeXRViewInit> views, optional sequence<FakeXRViewInit> secondaryViews);
 
   Promise<undefined> disconnect();
 
