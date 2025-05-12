@@ -74,6 +74,7 @@ spec: WebXR Depth Sensing Module; urlPrefix: https://immersive-web.github.io/dep
 spec: WebXR Raw Camera Access Module; urlPrefix: https://immersive-web.github.io/raw-camera-access/#
     type: dfn; text: obtain camera
 </pre>
+
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
 
@@ -277,8 +278,6 @@ When this method is invoked, the user agent MUST run the following steps:
         1. If |depthConfig|'s {{FakeXRDepthConfigurationSupport/depthTypes}} is present and its [=list/size=] is greater than 0, set |device|'s [=simulated XR device/supported depth types=] to a copy of |depthConfig|'s {{FakeXRDepthConfigurationSupport/depthTypes}}.
         1. If |depthConfig|'s {{FakeXRDepthConfigurationSupport/depthFormats}} is present and its [=list/size=] is greater than 0, set |device|'s [=simulated XR device/supported depth formats=] to a copy of |depthConfig|'s {{FakeXRDepthConfigurationSupport/depthFormats}}.
         1. If |depthConfig|'s {{FakeXRDepthConfigurationSupport/depthUsages}} is present and its [=list/size=] is greater than 0, set |device|'s [=simulated XR device/supported depth usages=] to a copy of |depthConfig|'s {{FakeXRDepthConfigurationSupport/depthUsages}}.
-
-
 
 NOTE: each |device| stores a [=capable of supporting|list of features it is capable of supporting=] per {{XRSessionMode}}. Most tests only test one mode anyway so there isn't much to be gained by splitting features per mode in {{FakeXRDeviceInit}}. Users wishing different modes supporting different features should create multiple devices instead.
 
@@ -851,7 +850,7 @@ Depth sensing extensions {#depth-sensing-extensions}
 
 The depth sensing extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/depth-sensing/">WebXR Depth Sensing Module</a>.
 
-The {{FakeXRDevice}} is extended with internal <dfn for=FakeXRDevice>depth sensing data</dfn> which is a {{FakeXRDepthSensingDataInit}} instances, used to supply data for requests to [=native depth sensing=].
+The {{FakeXRDevice}} is extended with internal <dfn for=FakeXRDevice>depth sensing data</dfn> which is a {{FakeXRDepthSensingDataInit}}, used to supply data for requests to [=native depth sensing=].
 
 <script type="idl">
 dictionary FakeXRDepthConfigurationSupport {
@@ -861,7 +860,7 @@ dictionary FakeXRDepthConfigurationSupport {
 };
 </script>
 
-The {{FakeXRDepthConfigurationSupport}} dictionary is used to define the [=native depth sensing=] capabilities of a [=simulated XR device=]. Missing or empty sequences for {{FakeXRDepthConfigurationSupport/depthTypes}}, {{FakeXRDepthConfigurationSupport/depthFormats}}, or {{FakeXRDepthConfigurationSupport/depthUsages}} indicate that all possible values for that respective enumeration are supported by the [=simulated XR device=].
+The {{FakeXRDepthConfigurationSupport}} dictionary is used to define the [=native depth sensing=] capabilities of a [=simulated XR device=]. Missing or empty sequences for {{FakeXRDepthConfigurationSupport/depthTypes}}, {{FakeXRDepthConfigurationSupport/depthFormats}}, or {{FakeXRDepthConfigurationSupport/depthUsages}} indicate that all possible values for that respective enumeration are supported by the [=simulated XR device=]. If a User Agent does not support a particular value for any real device that it supports, it SHOULD ignore the presence of that value in any of these lists, in order to generate a more appropriate failure.
 
 Note: For simplicity, the [=simulated XR device=] is presumed to support the cross-product of all supported types, formats, and usages. There is currently no mechanism in this test API to specify support for only specific combinations (e.g., a particular format and type only with a particular usage).
 
@@ -903,6 +902,7 @@ When the {{FakeXRDevice/setDepthSensingData()}} method is invoked on {{FakeXRDev
 </div>
 
 <div class="algorithm" data-algorithm="clear-depth-sensing-information">
+
 When the {{FakeXRDevice/clearDepthSensingData()}} method is invoked on {{FakeXRDevice}} |device|, run the following steps:
 
 1. Set |device|'s [=FakeXRDevice/depth sensing data=] to <code>null</code>.
@@ -911,7 +911,6 @@ When the {{FakeXRDevice/clearDepthSensingData()}} method is invoked on {{FakeXRD
 
 Raw camera access extensions {#raw-camera-access-extensions}
 ============================
-
 
 The raw camera access extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/raw-camera-access/">WebXR Raw Camera Access Module</a>.
 
