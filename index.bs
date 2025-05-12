@@ -23,31 +23,34 @@ spec:infra;
     type:dfn; text:string
     type:dfn; text:list
     type:dfn; for:list; text:extend
-spec:webxr-1;
-    type:event; text:reset
+</pre>
+
+<pre class="anchors">
+spec: WebXR Device API - Level 1; urlPrefix: https://www.w3.org/TR/webxr/#
     type:dfn; text:xr device
-    type:dfn; for: XRBoundedReferenceSpace; text:native bounds geometry
-    type:dfn; for: XRSpace; text:native origin
+    type:event; text:reset
+    for: XRBoundedReferenceSpace;
+        type:dfn; text:native bounds geometry
+    for: XRSpace;
+        type:dfn; text:native origin
     type:dfn; text:viewer
-    type:interface; text: XRView; url: xrview-interface
-    type:dfn; for:view; text:eye
-    type:dfn; for:XRView; text:projectionMatrix; url:dom-xrview-projectionmatrix
-    type:attribute; for:XRView; text:transform; url:dom-xrview-transform
+    type:dfn; text: view; url: view
+    for: view;
+        type:dfn; text:eye
     type:dfn; text:xr animation frame
     type:dfn; text:capable of supporting
     type:dfn; text:list of supported modes
-    type:dfn; text:list of animation frame callbacks
     type:dfn; text:inline xr device
     type:dfn; text:list of immersive xr devices
     type:dfn; text:primary action
     type:dfn; text:primary squeeze action
     type:dfn; text:xr input source
-    type: interface; text: XRViewGeometry; url: xrviewgeometry-interface
-    type: attribute; for: XRViewGeometry; text: projectionMatrix; url: dom-xrviewgeometry-projectionmatrix
-    type: attribute; for: XRViewGeometry; text: transform; url: dom-xrviewgeometry-transform
-</pre>
-
-<pre class="anchors">
+    type: interface; text: XRViewGeometry; url: xrviewgeometry-mixin
+    type: dfn; text: view geometry; url: view-geometry
+    for: view geometry;
+        type: dfn; text: containing object; url: view-geometry-containing-object
+        type: dfn; text: projection matrix; url: view-geometry-projection-matrix
+        type: dfn; text: view offset; url: view-geometry-view-offset
 spec: Gamepad; urlPrefix: https://www.w3.org/TR/gamepad/#
     type: enum-value; text: "xr-standard"; for: GamepadMappingType; url: dfn-xr-standard
 spec:webxr-dom-overlays; urlPrefix: https://immersive-web.github.io/dom-overlays#
@@ -153,7 +156,7 @@ Simulated devices {#simulated-devices}
 
 Simulated XR Device {#simulated-devices-xr}
 ------------
-This API gives tests the ability to spin up a <dfn>simulated XR device</dfn> which is an [=/XR device=] which from the point of view of the WebXR API behaves like a normal [=/XR device=]. These [=simulated XR device|simulated XR devices=] can be controlled by the associated {{FakeXRDevice}} object.
+This API gives tests the ability to spin up a <dfn>simulated XR device</dfn> which is an [=XR device=] which from the point of view of the WebXR API behaves like a normal [=XR device=]. These [=simulated XR device|simulated XR devices=] can be controlled by the associated {{FakeXRDevice}} object.
 
 Every [=simulated XR device=] may have an <dfn for="simulated XR device">native bounds geometry</dfn> which is an array of {{DOMPointReadOnly}}s, used to initialize the [=XRBoundedReferenceSpace/native bounds geometry=] of any {{XRBoundedReferenceSpace}}s created for the device. If <code>null</code>, the device is treated as if it is not currently tracking a bounded reference space.
 
@@ -359,19 +362,19 @@ To <dfn>parse a view</dfn> given a {{FakeXRViewInit}} |init|, perform the follow
   1. Let |view| be a new [=view=].
   1. Set |view|'s [=view/eye=] to |init|'s {{FakeXRViewInit/eye}}.
   1. If |init|'s {{FakeXRViewInit/projectionMatrix}} does not have 16 elements, throw a {{TypeError}}.
-  1. Set |view|'s [=XRView/projectionMatrix=] to |init|'s {{FakeXRViewInit/projectionMatrix}}.
-  1. Set |view|'s [=XRView/transform=] to the result of running [=parse a rigid transform=] |init|'s {{FakeXRViewInit/viewOffset}}.
+  1. Set |view|'s [=view geometry/projection matrix=] to |init|'s {{FakeXRViewInit/projectionMatrix}}.
+  1. Set |view|'s [=view geometry/view offset=] to the result of running [=parse a rigid transform=] |init|'s {{FakeXRViewInit/viewOffset}}.
   1. Set |view|'s [=view/device resolution=] to |init|'s {{FakeXRViewInit/resolution}}.
   1. If |init|'s {{FakeXRViewInit/fieldOfView}} is set, perform the following steps:
     1. Set |view|'s [=view/field of view=] to |init|'s {{FakeXRViewInit/fieldOfView}}.
-    1. Set |view|'s [=XRView/projectionMatrix=] to the projection matrix corresponding to this field of view, and depth values equal to {{XRRenderState/depthNear}} and {{XRRenderState/depthFar}} of any {{XRSession}} associated with the device. If there currently is none, use the default values of <code>near=0.1, far=1000.0</code>.
+    1. Set |view|'s [=view geometry/projection matrix=] to the projection matrix corresponding to this field of view, and depth values equal to {{XRRenderState/depthNear}} and {{XRRenderState/depthFar}} of any {{XRSession}} associated with the device. If there currently is none, use the default values of <code>near=0.1, far=1000.0</code>.
   1. Return |view|.
 
 </div>
 
 FakeXRRigidTransformInit {#fakexrrigidtransform-base-space}
 ------------
-The WebXR API never exposes native origins directly, instead exposing transforms between them, so we need to specify a <dfn>base reference space</dfn> for {{FakeXRRigidTransformInit}}s so that we can have consistent numerical values across implementations. When used as an origin, {{FakeXRRigidTransformInit}}s are in the [=base reference space=] where the [=viewer=]'s [=native origin=] is identity at initialization, unless otherwise specified. In this space, the {{XRReferenceSpaceType/"local"}} reference space has a [=native origin=] of identity. This is an arbitrary choice: changing this reference space doesn't affect the data returned by the WebXR API, but we must make such a choice so that the tests produce the same results across different UAs. When used as an origin it is logically a transform <i>from</i> the origin's space <i>to</i> the underlying [=base reference space=] described above.
+The WebXR API never exposes native origins directly, instead exposing transforms between them, so we need to specify a <dfn>base reference space</dfn> for {{FakeXRRigidTransformInit}}s so that we can have consistent numerical values across implementations. When used as an origin, {{FakeXRRigidTransformInit}}s are in the [=base reference space=] where the [=viewer=]'s [=XRSpace/native origin=] is identity at initialization, unless otherwise specified. In this space, the {{XRReferenceSpaceType/"local"}} reference space has a [=XRSpace/native origin=] of identity. This is an arbitrary choice: changing this reference space doesn't affect the data returned by the WebXR API, but we must make such a choice so that the tests produce the same results across different UAs. When used as an origin it is logically a transform <i>from</i> the origin's space <i>to</i> the underlying [=base reference space=] described above.
 
 Mocking {#mocking}
 ==============
@@ -492,7 +495,7 @@ The <dfn method for=FakeXRDevice>setBoundsGeometry(|boundsCoordinates|)</dfn> pe
 
 </div>
 
-The <dfn method for=FakeXRDevice>simulateResetPose()</dfn> method will, as soon as possible, behave as if the [=FakeXRDevice/device=]'s [=viewer=]'s [=native origin=] had a discontinuity, triggering appropriate {{reset}} events.
+The <dfn method for=FakeXRDevice>simulateResetPose()</dfn> method will, as soon as possible, behave as if the [=FakeXRDevice/device=]'s [=viewer=]'s [=XRSpace/native origin=] had a discontinuity, triggering appropriate {{reset}} events.
 
 <div class="algorithm" data-algorithm="simulate-input-source-connection">
 The <dfn method for=FakeXRDevice>simulateInputSourceConnection(|init|)</dfn> method creates a new [=simulated XR input source=].
@@ -859,9 +862,9 @@ dictionary FakeXRDepthSensingDataInit {
 
 {{FakeXRDepthSensingDataInit/depthType}} is an optional {{XRDepthType}} that indicates which internal depth data store should be updated. If present, it influences how the user agent will interpret the {{XRDepthStateInit/depthTypeRequest}} when [=finding a supported configuration combination=]. If not present, both internal data stores will be updated.
 
-{{FakeXRDepthSensingDataInit/projectionMatrix}} is an optional 16-element sequence of floats representing a projection matrix. If present, this matrix is intended to define the [=XRViewGeometry/projectionMatrix=] for the {{XRDepthInformation/sensor}} {{XRViewGeometry}}. If not present, the sensor geometry's projection matrix is assumed to be aligned with the [=XRView/projectionMatrix=] of the [=view=] for which the depth information is being created.
+{{FakeXRDepthSensingDataInit/projectionMatrix}} is an optional 16-element sequence of floats representing a projection matrix. If present, this matrix is intended to define the [=view geometry/projection matrix=] for the {{XRDepthInformation/sensor}}'s {{XRViewGeometry}}. If not present, the sensor geometry's projection matrix is assumed to be aligned with the projection matrix of the {{XRViewGeometry}} of the [=view=] for which the depth information is being created.
 
-{{FakeXRDepthSensingDataInit/viewOffset}} is an optional {{FakeXRRigidTransformInit}}. If present, this transform is intended to define the [=XRViewGeometry/transform=] for the {{XRDepthInformation/sensor}} {{XRViewGeometry}}, relative to the [=base reference space=]. If not present, the sensor geometry's transform is assumed to be aligned with the [=XRView/transform=] of the [=view=] for which the depth information is being created.
+{{FakeXRDepthSensingDataInit/viewOffset}} is an optional {{FakeXRRigidTransformInit}}. If present, this transform is intended to define the [=view geometry/view offset=] for the {{XRDepthInformation/sensor}}'s {{XRViewGeometry}}, relative to the [=base reference space=]. If not present, the sensor geometry's transform is assumed to be aligned with the view offset of the {{XRViewGeometry}} of the [=view=] for which the depth information is being created.
 
 <div class="algorithm" data-algorithm="set-depth-sensing-information">
 
