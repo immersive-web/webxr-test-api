@@ -60,6 +60,8 @@ spec: WebXR Depth Sensing Module; urlPrefix: https://immersive-web.github.io/dep
     type: dfn; text: create a GPU depth information instance; url: create-a-gpu-depth-information-instance
     type: dfn; text: depth coordinates transformation matrix; url: depth-coordinates-transformation-matrix
     type: dfn; text: native depth sensing; url: native-depth-sensing
+    type: dfn; text: finding a supported configuration combination; url: find-supported-configuration-combination
+    type: enum; text: XRDepthType; url: enumdef-xrdepthtype
 spec: WebXR Raw Camera Access Module; urlPrefix: https://immersive-web.github.io/raw-camera-access/#
     type: dfn; text: obtain camera
 </pre>
@@ -826,7 +828,8 @@ Depth sensing extensions {#depth-sensing-extensions}
 
 The depth sensing extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/depth-sensing/">WebXR Depth Sensing Module</a>.
 
-The {{FakeXRDevice}} is extended with internal <dfn for=FakeXRDevice>depth sensing data</dfn> which is a {{FakeXRDepthSensingDataInit}}, used to supply data for requests to [=native depth sensing=].
+The {{FakeXRDevice}} is extended with internal <dfn for=FakeXRDevice>raw depth sensing data</dfn> and <dfn for=FakeXRDevice>smooth depth sensing data</dfn> which are {{FakeXRDepthSensingDataInit}} instances, used to supply data for requests to [=native depth sensing=].
+
 
 <script type="idl">
 dictionary FakeXRDepthSensingDataInit {
@@ -835,6 +838,7 @@ dictionary FakeXRDepthSensingDataInit {
   required float rawValueToMeters;
   required unsigned long width;
   required unsigned long height;
+  XRDepthType depthType;
 };
 </script>
 
@@ -848,12 +852,21 @@ dictionary FakeXRDepthSensingDataInit {
 
 {{FakeXRDepthSensingDataInit/width}} and {{FakeXRDepthSensingDataInit/height}} correspond to the desired dimensions of the depth buffer that are to be set on native depth information returned from querying the native device.
 
+{{FakeXRDepthSensingDataInit/depthType}} is an optional {{XRDepthType}} that indicates which internal depth data store should be updated. If present, it influences how the user agent will interpret the {{XRDepthStateInit/depthTypeRequest}} when [=finding a supported configuration combination=]. If not present, both internal data stores will be updated.
+
 <div class="algorithm" data-algorithm="set-depth-sensing-information">
 
 When the {{FakeXRDevice/setDepthSensingData()}} method is invoked on {{FakeXRDevice}} |device| with |depthSensingData|, run the following steps:
 
 1. If |depthSensingData|'s {{FakeXRDepthSensingDataInit/depthData}} is <code>null</code>, throw a {{TypeError}} and abort these steps.
-1. Set |device|'s [=FakeXRDevice/depth sensing data=] to |depthSensingData|.
+1. If |depthSensingData|'s {{FakeXRDepthSensingDataInit/depthType}} is set:
+    1. If |depthSensingData|'s {{FakeXRDepthSensingDataInit/depthType}} is {{XRDepthType/raw}}:
+        1. Set |device|'s [=FakeXRDevice/raw depth sensing data=] to |depthSensingData|.
+    1. Else:
+        1. Set |device|'s [=FakeXRDevice/smooth depth sensing data=] to |depthSensingData|.
+1. Else:
+    1. Set |device|'s [=FakeXRDevice/raw depth sensing data=] to |depthSensingData|.
+    1. Set |device|'s [=FakeXRDevice/smooth depth sensing data=] to |depthSensingData|.
 
 </div>
 
@@ -861,12 +874,14 @@ When the {{FakeXRDevice/setDepthSensingData()}} method is invoked on {{FakeXRDev
 
 When the {{FakeXRDevice/clearDepthSensingData()}} method is invoked on {{FakeXRDevice}} |device|, run the following steps:
 
-1. Set |device|'s [=FakeXRDevice/depth sensing data=] to <code>null</code>.
+1. Set |device|'s [=FakeXRDevice/raw depth sensing data=] to <code>null</code>.
+1. Set |device|'s [=FakeXRDevice/smooth depth sensing data=] to <code>null</code>.
 
 </div>
 
 Raw camera access extensions {#raw-camera-access-extensions}
 ============================
+
 
 The raw camera access extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/raw-camera-access/">WebXR Raw Camera Access Module</a>.
 
