@@ -867,6 +867,7 @@ Note: For simplicity, the [=simulated XR device=] is presumed to support the cro
 <script type="idl">
 dictionary FakeXRDepthSensingDataInit {
   required ArrayBuffer depthData;
+  required XRDepthFormat depthFormat;
   required FakeXRRigidTransformInit normDepthBufferFromNormView;
   required float rawValueToMeters;
   required unsigned long width;
@@ -879,6 +880,8 @@ dictionary FakeXRDepthSensingDataInit {
 {{FakeXRDepthSensingDataInit}} dictionary describes the state of the depth sensing data that should be used when returning latest depth information in [=creating a CPU depth information instance=] and [=creating a GPU depth information instance=] algorithms. All keys present in {{FakeXRDepthSensingDataInit}} correspond to the data required to be returned by [=native depth sensing=] capabilities of the device.
 
 {{FakeXRDepthSensingDataInit/depthData}} corresponds to the desired depth buffer that is to be set on native depth information returned from querying the native device. Not setting {{FakeXRDepthSensingDataInit/depthData}} key in the dictionary signals that the returned native depth information should be <code>null</code>.
+
+{{FakeXRDepthSensingDataInit/depthFormat}} indicates the {{XRDepthFormat}} of the data set in {{FakeXRDepthSensingDataInit/depthData}}.
 
 {{FakeXRDepthSensingDataInit/normDepthBufferFromNormView}} corresponds to the desired [=depth coordinates transformation matrix=] that is to be set on native depth information returned from querying the native device.
 
