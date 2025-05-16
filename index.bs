@@ -23,28 +23,34 @@ spec:infra;
     type:dfn; text:string
     type:dfn; text:list
     type:dfn; for:list; text:extend
-spec:webxr-1;
-    type:event; text:reset
+</pre>
+
+<pre class="anchors">
+spec: WebXR Device API - Level 1; urlPrefix: https://www.w3.org/TR/webxr/#
+    type:event; text:reset; url: eventdef-xrreferencespace-reset
     type:dfn; text:xr device
-    type:dfn; for: XRBoundedReferenceSpace; text:native bounds geometry
-    type:dfn; for: XRSpace; text:native origin
     type:dfn; text:viewer
-    type:dfn; text:view
-    type:dfn; text:view offset
-    type:dfn; for:view; text:eye
-    type:dfn; for:view; text:projection matrix
     type:dfn; text:xr animation frame
     type:dfn; text:capable of supporting
     type:dfn; text:list of supported modes
-    type:dfn; text:list of animation frame callbacks
     type:dfn; text:inline xr device
     type:dfn; text:list of immersive xr devices
     type:dfn; text:primary action
     type:dfn; text:primary squeeze action
     type:dfn; text:xr input source
-</pre>
-
-<pre class="anchors">
+    type:dfn; text:view; url: view
+    for: view;
+        type:dfn; text:eye; url: view-eye
+    for: XRBoundedReferenceSpace;
+        type:dfn; text:native bounds geometry; url: xrboundedreferencespace-native-bounds-geometry
+    for: XRSpace;
+        type:dfn; text:native origin; url: xrspace-native-origin
+    type: interface; text: XRViewGeometry; url: xrviewgeometry-mixin
+    type: dfn; text: view geometry; url: view-geometry
+    for: view geometry;
+        type: dfn; text: containing object; url: view-geometry-containing-object
+        type: dfn; text: projection matrix; url: view-geometry-projection-matrix
+        type: dfn; text: view offset; url: view-geometry-view-offset
 spec: Gamepad; urlPrefix: https://www.w3.org/TR/gamepad/#
     type: enum-value; text: "xr-standard"; for: GamepadMappingType; url: dfn-xr-standard
 spec:webxr-dom-overlays; urlPrefix: https://immersive-web.github.io/dom-overlays#
@@ -60,6 +66,11 @@ spec: WebXR Depth Sensing Module; urlPrefix: https://immersive-web.github.io/dep
     type: dfn; text: create a GPU depth information instance; url: create-a-gpu-depth-information-instance
     type: dfn; text: depth coordinates transformation matrix; url: depth-coordinates-transformation-matrix
     type: dfn; text: native depth sensing; url: native-depth-sensing
+    type:attribute; for:XRDepthInformation; text:sensor; url:xrdepthinformation-sensor
+    type: dfn; text: finding a supported configuration combination; url: find-supported-configuration-combination
+    type: enum; text: XRDepthType; url: enumdef-xrdepthtype
+    type: enum; text: XRDepthFormat; url: enumdef-xrdepthformat
+    type: enum; text: XRDepthUsage; url: enumdef-xrdepthusage
 spec: WebXR Raw Camera Access Module; urlPrefix: https://immersive-web.github.io/raw-camera-access/#
     type: dfn; text: obtain camera
 </pre>
@@ -148,7 +159,7 @@ Simulated devices {#simulated-devices}
 
 Simulated XR Device {#simulated-devices-xr}
 ------------
-This API gives tests the ability to spin up a <dfn>simulated XR device</dfn> which is an [=/XR device=] which from the point of view of the WebXR API behaves like a normal [=/XR device=]. These [=simulated XR device|simulated XR devices=] can be controlled by the associated {{FakeXRDevice}} object.
+This API gives tests the ability to spin up a <dfn>simulated XR device</dfn> which is an [=XR device=] which from the point of view of the WebXR API behaves like a normal [=XR device=]. These [=simulated XR device|simulated XR devices=] can be controlled by the associated {{FakeXRDevice}} object.
 
 Every [=simulated XR device=] may have an <dfn for="simulated XR device">native bounds geometry</dfn> which is an array of {{DOMPointReadOnly}}s, used to initialize the [=XRBoundedReferenceSpace/native bounds geometry=] of any {{XRBoundedReferenceSpace}}s created for the device. If <code>null</code>, the device is treated as if it is not currently tracking a bounded reference space.
 
@@ -167,6 +178,12 @@ Every [=simulated XR device=] may have a <dfn for="simulated XR device">list of 
 Every [=view=] for a [=simulated XR device=] has an associated <dfn for=view>device resolution</dfn>, which is an instance of {{FakeXRDeviceResolution}}. This resolution must be used when constructing {{XRViewport}} values for the [=view=], based on the canvas size.
 
 Every [=view=] for a [=simulated XR device=] may have an associated <dfn for=view>field of view</dfn>, which is an instance of {{FakeXRFieldOfViewInit}} used to calculate projection matrices using depth values. If the [=field of view=] is set, projection matrix values are calculated using the [=field of view=] and {{XRRenderState/depthNear}} and {{XRRenderState/depthFar}} values.
+
+Every [=simulated XR device=] has a <dfn for="simulated XR device">supported depth types</dfn> which is a [=list=] of {{XRDepthType}} values, initially empty. If this list is empty, it implies all {{XRDepthType}} values are supported.
+
+Every [=simulated XR device=] has a <dfn for="simulated XR device">supported depth formats</dfn> which is a [=list=] of {{XRDepthFormat}} values, initially empty. If this list is empty, it implies all {{XRDepthFormat}} values are supported.
+
+Every [=simulated XR device=] has a <dfn for="simulated XR device">supported depth usages</dfn> which is a [=list=] of {{XRDepthUsage}} values, initially empty. If this list is empty, it implies all {{XRDepthUsage}} values are supported.
 
 Simulated Input Device {#simulated-devices-input}
 ------------
@@ -256,6 +273,12 @@ When this method is invoked, the user agent MUST run the following steps:
     1. If |init|'s {{FakeXRDeviceInit/supportedFeatures}} is set, for each |mode| in |supportedModes|:
        1. Associate |init|'s {{FakeXRDeviceInit/supportedFeatures}} to |mode|
 
+    1. If |init|'s {{FakeXRDeviceInit/depthSupport}} is present:
+        1. Let |depthConfig| be |init|'s {{FakeXRDeviceInit/depthSupport}}.
+        1. If |depthConfig|'s {{FakeXRDepthConfigurationSupport/depthTypes}} is present and its [=list/size=] is greater than 0, set |device|'s [=simulated XR device/supported depth types=] to a copy of |depthConfig|'s {{FakeXRDepthConfigurationSupport/depthTypes}}.
+        1. If |depthConfig|'s {{FakeXRDepthConfigurationSupport/depthFormats}} is present and its [=list/size=] is greater than 0, set |device|'s [=simulated XR device/supported depth formats=] to a copy of |depthConfig|'s {{FakeXRDepthConfigurationSupport/depthFormats}}.
+        1. If |depthConfig|'s {{FakeXRDepthConfigurationSupport/depthUsages}} is present and its [=list/size=] is greater than 0, set |device|'s [=simulated XR device/supported depth usages=] to a copy of |depthConfig|'s {{FakeXRDepthConfigurationSupport/depthUsages}}.
+
 NOTE: each |device| stores a [=capable of supporting|list of features it is capable of supporting=] per {{XRSessionMode}}. Most tests only test one mode anyway so there isn't much to be gained by splitting features per mode in {{FakeXRDeviceInit}}. Users wishing different modes supporting different features should create multiple devices instead.
 
     1. Set |device|'s [=list of supported modes=] to |supportedModes|.
@@ -295,6 +318,7 @@ dictionary FakeXRDeviceInit {
 
     // Depth sensing extensions:
     FakeXRDepthSensingDataInit depthSensingData;
+    FakeXRDepthConfigurationSupport depthSupport;
 };
 
 dictionary FakeXRViewInit {
@@ -354,19 +378,19 @@ To <dfn>parse a view</dfn> given a {{FakeXRViewInit}} |init|, perform the follow
   1. Let |view| be a new [=view=].
   1. Set |view|'s [=view/eye=] to |init|'s {{FakeXRViewInit/eye}}.
   1. If |init|'s {{FakeXRViewInit/projectionMatrix}} does not have 16 elements, throw a {{TypeError}}.
-  1. Set |view|'s [=view/projection matrix=] to |init|'s {{FakeXRViewInit/projectionMatrix}}.
-  1. Set |view|'s [=view offset=] to the result of running [=parse a rigid transform=] |init|'s {{FakeXRViewInit/viewOffset}}.
+  1. Set |view|'s [=view geometry/projection matrix=] to |init|'s {{FakeXRViewInit/projectionMatrix}}.
+  1. Set |view|'s [=view geometry/view offset=] to the result of running [=parse a rigid transform=] |init|'s {{FakeXRViewInit/viewOffset}}.
   1. Set |view|'s [=view/device resolution=] to |init|'s {{FakeXRViewInit/resolution}}.
   1. If |init|'s {{FakeXRViewInit/fieldOfView}} is set, perform the following steps:
     1. Set |view|'s [=view/field of view=] to |init|'s {{FakeXRViewInit/fieldOfView}}.
-    1. Set |view|'s [=view/projection matrix=] to the projection matrix corresponding to this field of view, and depth values equal to {{XRRenderState/depthNear}} and {{XRRenderState/depthFar}} of any {{XRSession}} associated with the device. If there currently is none, use the default values of <code>near=0.1, far=1000.0</code>.
+    1. Set |view|'s [=view geometry/projection matrix=] to the projection matrix corresponding to this field of view, and depth values equal to {{XRRenderState/depthNear}} and {{XRRenderState/depthFar}} of any {{XRSession}} associated with the device. If there currently is none, use the default values of <code>near=0.1, far=1000.0</code>.
   1. Return |view|.
 
 </div>
 
 FakeXRRigidTransformInit {#fakexrrigidtransform-base-space}
 ------------
-The WebXR API never exposes native origins directly, instead exposing transforms between them, so we need to specify a <dfn>base reference space</dfn> for {{FakeXRRigidTransformInit}}s so that we can have consistent numerical values across implementations. When used as an origin, {{FakeXRRigidTransformInit}}s are in the [=base reference space=] where the [=viewer=]'s [=native origin=] is identity at initialization, unless otherwise specified. In this space, the {{XRReferenceSpaceType/"local"}} reference space has a [=native origin=] of identity. This is an arbitrary choice: changing this reference space doesn't affect the data returned by the WebXR API, but we must make such a choice so that the tests produce the same results across different UAs. When used as an origin it is logically a transform <i>from</i> the origin's space <i>to</i> the underlying [=base reference space=] described above.
+The WebXR API never exposes native origins directly, instead exposing transforms between them, so we need to specify a <dfn>base reference space</dfn> for {{FakeXRRigidTransformInit}}s so that we can have consistent numerical values across implementations. When used as an origin, {{FakeXRRigidTransformInit}}s are in the [=base reference space=] where the [=viewer=]'s [=XRSpace/native origin=] is identity at initialization, unless otherwise specified. In this space, the {{XRReferenceSpaceType/"local"}} reference space has a [=XRSpace/native origin=] of identity. This is an arbitrary choice: changing this reference space doesn't affect the data returned by the WebXR API, but we must make such a choice so that the tests produce the same results across different UAs. When used as an origin it is logically a transform <i>from</i> the origin's space <i>to</i> the underlying [=base reference space=] described above.
 
 Mocking {#mocking}
 ==============
@@ -487,7 +511,7 @@ The <dfn method for=FakeXRDevice>setBoundsGeometry(|boundsCoordinates|)</dfn> pe
 
 </div>
 
-The <dfn method for=FakeXRDevice>simulateResetPose()</dfn> method will, as soon as possible, behave as if the [=FakeXRDevice/device=]'s [=viewer=]'s [=native origin=] had a discontinuity, triggering appropriate {{reset}} events.
+The <dfn method for=FakeXRDevice>simulateResetPose()</dfn> method will, as soon as possible, behave as if the [=FakeXRDevice/device=]'s [=viewer=]'s [=XRSpace/native origin=] had a discontinuity, triggering appropriate {{reset}} events.
 
 <div class="algorithm" data-algorithm="simulate-input-source-connection">
 The <dfn method for=FakeXRDevice>simulateInputSourceConnection(|init|)</dfn> method creates a new [=simulated XR input source=].
@@ -829,12 +853,27 @@ The depth sensing extensions for test API SHOULD be implemented by all user agen
 The {{FakeXRDevice}} is extended with internal <dfn for=FakeXRDevice>depth sensing data</dfn> which is a {{FakeXRDepthSensingDataInit}}, used to supply data for requests to [=native depth sensing=].
 
 <script type="idl">
+dictionary FakeXRDepthConfigurationSupport {
+  sequence<XRDepthType> depthTypes;
+  sequence<XRDepthFormat> depthFormats;
+  sequence<XRDepthUsage> depthUsages;
+};
+</script>
+
+The {{FakeXRDepthConfigurationSupport}} dictionary is used to define the [=native depth sensing=] capabilities of a [=simulated XR device=]. Missing or empty sequences for {{FakeXRDepthConfigurationSupport/depthTypes}}, {{FakeXRDepthConfigurationSupport/depthFormats}}, or {{FakeXRDepthConfigurationSupport/depthUsages}} indicate that all possible values for that respective enumeration are supported by the [=simulated XR device=]. If a User Agent does not support a particular value for any real device that it supports, it SHOULD ignore the presence of that value in any of these lists, in order to generate a more appropriate failure.
+
+Note: For simplicity, the [=simulated XR device=] is presumed to support the cross-product of all supported types, formats, and usages. There is currently no mechanism in this test API to specify support for only specific combinations (e.g., a particular format and type only with a particular usage).
+
+<script type="idl">
 dictionary FakeXRDepthSensingDataInit {
   required ArrayBuffer depthData;
+  required XRDepthFormat depthFormat;
   required FakeXRRigidTransformInit normDepthBufferFromNormView;
   required float rawValueToMeters;
   required unsigned long width;
   required unsigned long height;
+  sequence<float> projectionMatrix;
+  FakeXRRigidTransformInit viewOffset;
 };
 </script>
 
@@ -842,17 +881,25 @@ dictionary FakeXRDepthSensingDataInit {
 
 {{FakeXRDepthSensingDataInit/depthData}} corresponds to the desired depth buffer that is to be set on native depth information returned from querying the native device. Not setting {{FakeXRDepthSensingDataInit/depthData}} key in the dictionary signals that the returned native depth information should be <code>null</code>.
 
+{{FakeXRDepthSensingDataInit/depthFormat}} indicates the {{XRDepthFormat}} of the data set in {{FakeXRDepthSensingDataInit/depthData}}.
+
 {{FakeXRDepthSensingDataInit/normDepthBufferFromNormView}} corresponds to the desired [=depth coordinates transformation matrix=] that is to be set on native depth information returned from querying the native device.
 
 {{FakeXRDepthSensingDataInit/rawValueToMeters}} corresponds to the desired conversion factor that is to be set on native depth information returned from querying the native device.
 
 {{FakeXRDepthSensingDataInit/width}} and {{FakeXRDepthSensingDataInit/height}} correspond to the desired dimensions of the depth buffer that are to be set on native depth information returned from querying the native device.
 
+{{FakeXRDepthSensingDataInit/projectionMatrix}} is an optional 16-element sequence of floats representing a projection matrix. If present, this matrix is intended to define the [=view geometry/projection matrix=] for the {{XRDepthInformation/sensor}}'s {{XRViewGeometry}}. If not present, the sensor geometry's projection matrix is assumed to be aligned with the projection matrix of the {{XRViewGeometry}} of the [=view=] for which the depth information is being created.
+
+{{FakeXRDepthSensingDataInit/viewOffset}} is an optional {{FakeXRRigidTransformInit}}. If present, this transform is intended to define the [=view geometry/view offset=] for the {{XRDepthInformation/sensor}}'s {{XRViewGeometry}}, relative to the [=base reference space=]. If not present, the sensor geometry's transform is assumed to be aligned with the view offset of the {{XRViewGeometry}} of the [=view=] for which the depth information is being created.
+
 <div class="algorithm" data-algorithm="set-depth-sensing-information">
 
 When the {{FakeXRDevice/setDepthSensingData()}} method is invoked on {{FakeXRDevice}} |device| with |depthSensingData|, run the following steps:
 
 1. If |depthSensingData|'s {{FakeXRDepthSensingDataInit/depthData}} is <code>null</code>, throw a {{TypeError}} and abort these steps.
+1. If |depthSensingData|'s {{FakeXRDepthSensingDataInit/projectionMatrix}} is set and its size is not 16, throw a {{TypeError}} and abort these steps.
+1. If |depthSensingData|'s {{FakeXRDepthSensingDataInit/viewOffset}} is set, run [=parse a rigid transform=] on |depthSensingData|'s {{FakeXRDepthSensingDataInit/viewOffset}}.
 1. Set |device|'s [=FakeXRDevice/depth sensing data=] to |depthSensingData|.
 
 </div>
