@@ -28,6 +28,7 @@ spec:infra;
 <pre class="anchors">
 spec: WebXR Device API - Level 1; urlPrefix: https://www.w3.org/TR/webxr/#
     type:event; text:reset; url: eventdef-xrreferencespace-reset
+    type:event; text:XRVisibilityMaskChangeEvent; url: xrvisibilitymaskchangeevent
     type:dfn; text:xr device
     type:dfn; text:viewer
     type:dfn; text:xr animation frame
@@ -45,6 +46,9 @@ spec: WebXR Device API - Level 1; urlPrefix: https://www.w3.org/TR/webxr/#
         type:dfn; text:native bounds geometry; url: xrboundedreferencespace-native-bounds-geometry
     for: XRSpace;
         type:dfn; text:native origin; url: xrspace-native-origin
+    type: interface; text: XRView; url: xrview
+    for: XRView;
+        type: attribute; text:index; url:dom-xrview-index
     type: interface; text: XRViewGeometry; url: xrviewgeometry-mixin
     type: dfn; text: view geometry; url: view-geometry
     for: view geometry;
@@ -177,7 +181,11 @@ Every [=simulated XR device=] may have a <dfn for="simulated XR device">list of 
 
 Every [=view=] for a [=simulated XR device=] has an associated <dfn for=view>device resolution</dfn>, which is an instance of {{FakeXRDeviceResolution}}. This resolution must be used when constructing {{XRViewport}} values for the [=view=], based on the canvas size.
 
+Every [=view=] for a [=simulated XR device=] has an associated <dfn for=view>id</dfn>, which is the index of the [=view=] in the [=view|views=] list, and thus matches the {{XRView/index}}.
+
 Every [=view=] for a [=simulated XR device=] may have an associated <dfn for=view>field of view</dfn>, which is an instance of {{FakeXRFieldOfViewInit}} used to calculate projection matrices using depth values. If the [=field of view=] is set, projection matrix values are calculated using the [=field of view=] and {{XRRenderState/depthNear}} and {{XRRenderState/depthFar}} values.
+
+Every [=view=] for a [=simulated XR device=] may have an associated <dfn for=view>visibility mask</dfn> which is an instance of {{FakeXRVisibilityMask}} used to describe the visible region of the view. If it is missing, the entire view is visible. Changes to this value should result in firing a {{XRVisibilityMaskChangeEvent}} no later than the [=next animation frame=].
 
 Every [=simulated XR device=] has a <dfn for="simulated XR device">supported depth types</dfn> which is a [=list=] of {{XRDepthType}} values, initially empty. If this list is empty, it implies all {{XRDepthType}} values are supported.
 
@@ -243,14 +251,14 @@ When this method is invoked, the user agent MUST run the following steps:
   1. Let |promise| be [=a new Promise=].
   1. Run the following steps [=in parallel=]:
     1. Let |device| be a new [=simulated XR device=].
-    1. For each |view| in |init|'s {{FakeXRDeviceInit/views}}:
-        1. Let |p| be the result of running [=parse a view=] on |view|.
-        1. If running [=parse a view=] threw an error, reject |promise| with this error and abort these steps.
-        1. [=list/Append=] |p| to |device|'s [=simulated XR device/list of primary views=].
-    1. If |init|'s {{FakeXRDeviceInit/secondaryViews}} is set, for each |secondaryView| in |init|'s {{FakeXRDeviceInit/secondaryViews}}:
-        1. Let |s| be the result of running [=parse a view=] on |secondaryView|.
-        1. If running [=parse a view=] threw an error, reject |promise| with this error and abort these steps.
-        1. [=list/Append=] |s| to |device|'s [=simulated XR device/list of secondary views=].
+    1. Run the following steps to set |device|'s [=view=]s.
+      1. Let |l| be the result of running [=parse a list of views=] on {{FakeXRDeviceInit/views}}.
+      1. If running [=parse a list of views=] threw an error, reject |promise| with this error and abort these steps.
+      1. Set |device|'s [=simulated XR device/list of primary views=] to |l|.
+      1. If |init|'s {{FakeXRDeviceInit/secondaryViews}} is set:
+        1. Let |sl| be the result of running [=parse a list of views=] on {{FakeXRDeviceInit/secondaryViews}}.
+        1. If running [=parse a list of views=] threw an error, reject |promise| with this error and abort these steps.
+        1. Set |device|'s [=simulated XR device/list of secondary views=] to |sl|.
     1. If |init|'s {{FakeXRDeviceInit/boundsCoordinates}} is set, perform the following steps:
         1. If |init|'s {{FakeXRDeviceInit/boundsCoordinates}} has less than 3 elements, reject |promise| with {{TypeError}} and abort these steps.
         1. Set |device|'s [=simulated XR device/native bounds geometry=] to |init|'s {{FakeXRDeviceInit/boundsCoordinates}}.
@@ -327,6 +335,7 @@ dictionary FakeXRViewInit {
   required FakeXRDeviceResolution resolution;
   required FakeXRRigidTransformInit viewOffset;
   FakeXRFieldOfViewInit fieldOfView;
+  FakeXRVisibilityMask visibilityMask;
 
   // Raw camera access extensions:
   FakeXRCameraImage cameraImageInit;
@@ -352,6 +361,11 @@ dictionary FakeXRRigidTransformInit {
   required sequence<float> position;
   required sequence<float> orientation;
 };
+
+dictionary FakeXRVisibilityMask {
+  required sequence<float> vertices;
+  required sequence<uint32> indices;
+};
 </script>
 
 <p class="advisement">
@@ -373,10 +387,11 @@ To <dfn>parse a rigid transform</dfn> given a {{FakeXRRigidTransformInit}} |init
 </div>
 
 <div class="algorithm" data-algorithm="parse-view">
-To <dfn>parse a view</dfn> given a {{FakeXRViewInit}} |init|, perform the following steps:
+To <dfn>parse a view</dfn> given a {{FakeXRViewInit}} |init|, and `uint32_t` |id| perform the following steps:
 
   1. Let |view| be a new [=view=].
   1. Set |view|'s [=view/eye=] to |init|'s {{FakeXRViewInit/eye}}.
+  1. Set |view|'s [=view/id=] to |id|.
   1. If |init|'s {{FakeXRViewInit/projectionMatrix}} does not have 16 elements, throw a {{TypeError}}.
   1. Set |view|'s [=view geometry/projection matrix=] to |init|'s {{FakeXRViewInit/projectionMatrix}}.
   1. Set |view|'s [=view geometry/view offset=] to the result of running [=parse a rigid transform=] |init|'s {{FakeXRViewInit/viewOffset}}.
@@ -384,6 +399,7 @@ To <dfn>parse a view</dfn> given a {{FakeXRViewInit}} |init|, perform the follow
   1. If |init|'s {{FakeXRViewInit/fieldOfView}} is set, perform the following steps:
     1. Set |view|'s [=view/field of view=] to |init|'s {{FakeXRViewInit/fieldOfView}}.
     1. Set |view|'s [=view geometry/projection matrix=] to the projection matrix corresponding to this field of view, and depth values equal to {{XRRenderState/depthNear}} and {{XRRenderState/depthFar}} of any {{XRSession}} associated with the device. If there currently is none, use the default values of <code>near=0.1, far=1000.0</code>.
+  1. If |init|'s {{FakeXRViewInit/visibilityMask}} is set, set |view|'s [=view/visibility mask=] to |init|'s {{FakeXRViewInit/visibilityMask}}
   1. Return |view|.
 
 </div>
@@ -448,9 +464,11 @@ NOTE: The reason we defer an extra frame when there are pending animation frame 
 <div class="algorithm" data-algorithm="parse-views-list">
 To <dfn>parse a list of views</dfn> on a [=list=] |views| run the following steps:
     1. Let |l| be an empty [=list=]
+    1. let |offset| be `0`
     1. For each |view| in |views|:
-        1. Let |v| be the result of running [=parse a view=] on |view|.
+        1. Let |v| be the result of running [=parse a view=] on |view| and |offset|.
         1. [=list/Append=] |v| to |l|.
+        1. Increase |offset| by `1`.
     1. Return |l|.
 </div>
 
