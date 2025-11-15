@@ -21,10 +21,10 @@ interface XRTest {
   // Simulates a user activation (aka user gesture) for the current scope.
   // The activation is only guaranteed to be valid in the provided function and only applies to WebXR
   // Device API methods.
-  void simulateUserActivation(Function f);
+  undefined simulateUserActivation(Function f);
 
   // Disconnect all fake devices
-  Promise<void> disconnectAllDevices();
+  Promise<undefined> disconnectAllDevices();
 };
 ```
 
@@ -71,31 +71,31 @@ dictionary FakeXRDeviceInit {
 interface FakeXRDevice {
   // Sets the values to be used for subsequent
   // requestAnimationFrame() callbacks.
-  void setViews(sequence<FakeXRViewInit> primaryViews, sequence<FakeXRViewInit> secondaryViews);
+  undefined setViews(sequence<FakeXRViewInit> primaryViews, sequence<FakeXRViewInit> secondaryViews);
 
   // behaves as if device was disconnected
-  Promise<void> disconnect();
+  Promise<undefined> disconnect();
 
   // Sets the origin of the viewer
-  void setViewerOrigin(FakeXRRigidTransformInit origin, optional boolean emulatedPosition = false);
+  undefined setViewerOrigin(FakeXRRigidTransformInit origin, optional boolean emulatedPosition = false);
 
   // If an origin is not specified, then the device is assumed to not be tracking, emulatedPosition should
   // be assumed for cases where the UA must always provide a pose.
-  void clearViewerOrigin();
+  undefined clearViewerOrigin();
 
   // Simulates devices focusing and blurring sessions.
-  void simulateVisibilityChange(XRVisibilityState state);
+  undefined simulateVisibilityChange(XRVisibilityState state);
 
-  void setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoordinates);
+  undefined setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoordinates);
   // Sets the native origin of the physical floor
-  void setFloorOrigin(FakeXRRigidTransformInit floorOrigin);
+  undefined setFloorOrigin(FakeXRRigidTransformInit floorOrigin);
 
   // Indicates that the device can no longer identify the location of the physical floor.
-  void clearFloorOrigin();
+  undefined clearFloorOrigin();
 
   // Used to simulate a major change in tracking and that a reset pose event should be fired
   // https://immersive-web.github.io/webxr/#event-types
-  void simulateResetPose();
+  undefined simulateResetPose();
 
   // Used to connect and send input events
   FakeXRInputController simulateInputSourceConnection(FakeXRInputSourceInit init);
@@ -176,49 +176,49 @@ dictionary FakeXRInputSourceInit {
 interface FakeXRInputController {
 
   // Indicates that the handedness of the device has changed.
-  void setHandedness(XRHandedness handedness);
+  undefined setHandedness(XRHandedness handedness);
 
   // Indicates that the target ray mode of the device has changed.
-  void setTargetRayMode(XRTargetRayMode targetRayMode);
+  undefined setTargetRayMode(XRTargetRayMode targetRayMode);
 
   // Indicates that the list of profiles representing the device has changed.
-  void setProfiles(sequence<DOMString> profiles);
+  undefined setProfiles(sequence<DOMString> profiles);
 
   // Sets or clears the position of the controller.  If not set, the controller is assumed to
   // not be tracked.
-  void setGripOrigin(FakeXRRigidTransformInit gripOrigin, optional boolean emulatedPosition = false);
-  void clearGripOrigin();
+  undefined setGripOrigin(FakeXRRigidTransformInit gripOrigin, optional boolean emulatedPosition = false);
+  undefined clearGripOrigin();
 
   // Sets the pointer origin for the controller.
-  void setPointerOrigin(FakeXRRigidTransformInit pointerOrigin, optional boolean emulatedPosition = false);
+  undefined setPointerOrigin(FakeXRRigidTransformInit pointerOrigin, optional boolean emulatedPosition = false);
 
   // Temporarily disconnect the input device
-  void disconnect();
+  undefined disconnect();
 
   // Reconnect a disconnected input device
-  void reconnect();
+  undefined reconnect();
 
   // Start a selection for the current frame with the primary input
   // If a gamepad is supported, should update the state of the primary button accordingly.
-  void startSelection();
+  undefined startSelection();
 
   // End selection for the current frame with the primary input
   // If a gamepad is supported, should update the state of the primary button accordingly.
-  void endSelection();
+  undefined endSelection();
 
   // Simulates a start/endSelection for the current frame with the primary input
   // If a gamepad is supported, should update the state of the primary button accordingly.
-  void simulateSelect();
+  undefined simulateSelect();
 
   // Updates the set of supported buttons, including any initial state.
   // Note that this method should not be generally used to update the state of the
   // buttons, as the UA may treat this as re-creating the Gamepad.
   // Note that if any FakeXRButtonType is repeated the behavior is undefined.
-  void setSupportedButtons(sequence<FakeXRButtonStateInit> supportedButtons);
+  undefined setSupportedButtons(sequence<FakeXRButtonStateInit> supportedButtons);
 
   // Used to update the state of a button currently supported by the input source
   // Will not add support for that button if it is not currently supported.
-  void updateButtonState(FakeXRButtonStateInit buttonState);
+  undefined updateButtonState(FakeXRButtonStateInit buttonState);
 };
 
 // Bcause the primary button is always guaranteed to be present, and other buttons
@@ -258,9 +258,9 @@ In order to create deterministic and cross-browser WPT tests for the proposed We
 ```webidl
 partial interface FakeXRDevice {
   // Sets new world state on the device.
-  void setWorld(FakeXRWorldInit world);
+  undefined setWorld(FakeXRWorldInit world);
   // Clears the entire knowledge of the world on the device.
-  void clearWorld();
+  undefined clearWorld();
 };
 
 partial dictionary FakeXRDeviceInit {
@@ -304,6 +304,6 @@ In order to create deterministic and cross-browser WPT tests for the proposed We
 ```webidl
 partial interface FakeXRInputController {
   // Sets the position within the DOM Overlay in DOM coordinates for the next controller action.
-  void setOverlayPointerPosition(float x, float y);
+  undefined setOverlayPointerPosition(float x, float y);
 };
 ```
