@@ -9,6 +9,7 @@ Level: 1
 
 Editor: Manish Goregaokar 109489, Google [Mozilla until 2020], manishearth@google.com
 Editor: Alex Cooper 114716, Google http://google.com/, alcooper@google.com
+Editor: Muadh Al Kalbani 153370, Samsung https://samsung.com/, m.alkalbani@samsung.com
 
 Abstract: The WebXR Test API module provides a mocking interface for <a href="https://github.com/web-platform-tests/">Web Platform Tests</a> to be able to test the <a href="https://www.w3.org/TR/webxr/">WebXR Device API</a>.
 
