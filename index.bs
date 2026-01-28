@@ -365,7 +365,7 @@ dictionary FakeXRRigidTransformInit {
 
 dictionary FakeXRVisibilityMask {
   required sequence<float> vertices;
-  required sequence<uint32> indices;
+  required sequence<unsigned long> indices;
 };
 </script>
 
@@ -748,6 +748,35 @@ enum FakeXRRegionType {
 </script>
 
 {{FakeXRRegionType}} enum is used to describe a type of the world region.
+
+Plane detection extensions {#plane-detection-extensions}
+===================
+
+The plane detection extensions for test API SHOULD be implemented by all user agents that implement <a href="https://immersive-web.github.io/plane-detection/">WebXR Plane Detection Module</a>. These extensions depend on the [[#hit-test-extensions|Hit test extensions]].
+
+<script type="idl">
+dictionary FakeXRPlanePolygonPointInit {
+  required float x;
+  required float z;
+};
+
+dictionary FakeXRPlaneInformationInit {
+  required FakeXRRigidTransformInit origin;
+  required sequence<FakeXRPlanePolygonPointInit> polygon;
+  required XRPlaneOrientation orientation;
+  DOMString? semanticLabel;
+};
+
+partial dictionary FakeXRRegionInit {
+  FakeXRPlaneInformationInit planeInfo;
+};
+</script>
+
+{{FakeXRRegionInit/planeInfo}} is an optional dictionary that MAY be set when {{FakeXRRegionInit/type}} is {{FakeXRRegionType/"plane"}}. It MUST be ignored if {{FakeXRRegionInit/type}} is not {{FakeXRRegionType/"plane"}}. If {{FakeXRRegionInit/planeInfo}} is set, {{FakeXRRegionInit/faces}} should be used for hit-testing purposes, while the {{FakeXRPlaneInformationInit/polygon}} should be reported to the page as-is. The two MAY describe different areas. No information in {{FakeXRPlaneInformationInit}} overrides any data from it's containing {{FakeXRRegionInit}}.
+
+{{FakeXRPlaneInformationInit/polygon}} contains the points that describe the polygon representing the plane. They MUST be in the form of a loop of points at the edges of the polygon in the coordinate system defined by {{FakeXRPlaneInformationInit/origin}}.
+
+If {{FakeXRPlaneInformationInit/semanticLabel}} is set, the user agent MAY ignore any value that is not in the <a href="https://github.com/immersive-web/semantic-labels">semantic label registry</a>.
 
 
 DOM overlay extensions {#dom-overlay-extensions}
