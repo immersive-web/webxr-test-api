@@ -6,9 +6,7 @@ In order to provide end-users with robust and consistent immersive experiences, 
 
 WebXR features are tightly coupled to hardware, platform runtimes and real-time sensor input which makes automated testing difficult. Without a predictable XR device, it is hard to write [Web Platform Tests (WPTs)](https://web-platform-tests.org/) that are deterministic, cross-browser, and runnable on CI. The WebXR Test API addresses these challenges by providing a testing-only surface that allows tests to simulate XR devices, poses and input sources in a controlled way.
 
-This API is intended solely for use in browser test environments (e.g. WPT harnesses and internal test runners) and is not designed to be exposed to web content. Different user agents may implement the same test surface using whatever mechanisms best fit their architecture (e.g. internal mocks, WebDriver, IPC) to communicate with an out of process fake backend.
-
-**Note that these initialisation objects and control interfaces do not currently constitute a comprehensive set of WebXR capabilities, and are anticipated to be further developed as the WebXR specification evolves.**
+This API is intended solely for use in browser test environments (e.g. WPT harnesses and internal test runners) and is not designed to be exposed to web content. Different user agents may implement the same test surface using whatever mechanisms best fit their architecture (e.g. internal mocks, WebDriver, IPC) to communicate with a fake backend.
 
 ## Challenges
 
