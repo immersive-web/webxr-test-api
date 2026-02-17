@@ -37,256 +37,111 @@ In order to allow JavaScript tests for WebXR, there are some basic functions whi
 
 ## Proposed Approach
 
-In order to allow javascript tests for WebXR there are some basic functions which are common across all tests,
-such as adding a fake test device and specifying poses. Below is a Javascript IDL which attempts to capture
-the necessary functions, based off what was defined in the spec. Different browser vendors can implement this
-Javascript IDL in whatever way is most compatible with their browser. For example, some browsers may back the
-interface with a WebDriver API while others may use HTTP or IPC mechanisms to communicate with an out of process
-fake backend. Because of this, any "synchronous" methods that update the state of a device or controller are not
-guaranteed to have that updated state respected until the next "requestAnimationFrame" returns.
+The WebXR Test API is designed around the way the WebXR Device API itself operates: **state is consumed on a per-frame basis**. Tests **set up** fake devices and inputs, **state is updated** and then **results are observed on the next WebXR frame**. This keeps tests deterministic while allowing user agents to implement the backing mechanism using whatever is most compatible with their architecture.
 
-```WebIDL
-partial interface XRSystem {
-    [SameObject] readonly attribute XRTest test;
-};
+This explainer focuses on *how tests use the API*. The normative definition of interfaces and behaviour lives in the [specification](https://immersive-web.github.io/webxr-test-api/).
 
-interface XRTest {
-  // Simulates connecting a device to the system.
-  // Used to instantiate a fake device for use in tests.
-  Promise<FakeXRDevice> simulateDeviceConnection(FakeXRDeviceInit init);
+### The basic testing flow
 
-  // Simulates a user activation (aka user gesture) for the current scope.
-  // The activation is only guaranteed to be valid in the provided function and only applies to WebXR
-  // Device API methods.
-  undefined simulateUserActivation(Function f);
+Most WebXR tests follow the same pattern:
+1. **Connect a fake device** with the desired capabilities (session types, views, supported features, etc.).
+2. **Use WebXR entry points** to obtain a session (e.g. `navigator.xr.requestSession(. . .)`).
+3. **Drive device state** (viewer pose, tracking loss, bounds/floor origin, visibility state etc.).
+4. **Advance one frame**, then assert on data returned by WebXR (poses, events, hit test results etc.).
+5. Optionally **connect fake input sources** and simulate input sequences (select lifecycle, button state changes etc.).
 
-  // Disconnect all fake devices
-  Promise<undefined> disconnectAllDevices();
-};
+### Example: connect a fake device and assert the viewer's pose
+
+```js
+// 1. Create a fake device (values shown are illustrative).
+const device = await navigator.xr.test.simulateDeviceConnection({
+  supportedModes: ["immersive-vr"],
+  views: [{
+    eye: "none",
+    projectionMatrix: [/* tests should provide a valid 4x4 matrix transformation */],
+    resolution: { width: 2000, height: 2000 },
+    viewOffset: { position: [0, 0, 0], orientation: [0, 0, 0, 1] },
+  }],
+  supportedFeatures: ["local-floor"],
+});
+
+// 2. Request a WebXR session using WebXR APIs.
+const session = await navigator.xr.requestSession("immersive-vr");
+const refSpace = await session.requestReferenceSpace("local");
+
+// 3. Update the simulated tracking state (viewer origin in this case).
+device.setViewerOrigin({
+  position: [0, 1.5, 0],
+  orientation: [0, 0, 0, 1],
+});
+
+// 4. Observe the effect on the next frame.
+await new Promise(resolve => {
+  session.requestAnimationFrame((_t, frame) => {
+    const pose = frame.getViewerPose(refSpace);
+    // assert expected pose properties here (exact assertions depend on the test harness used).
+    resolve();
+  });
+});
 ```
 
-The promise returned from simulateDeviceConnection resolves with a FakeXRDevice, which can be used
-to control the fake XRDevice that has been created in the background. The fake device may be used in a session returned by
-navigator.xr.requestSession(), depending on how many devices have been created and how the browser decides to hand
-them out.
+***Note:** user agents are not required to apply state updates synchronously. Tests should assume that updates are reliably visible by the next XR animation frame.*
 
-```WebIDL
-dictionary FakeXRDeviceInit {
-    // Deprecated - use `supportedModes` instead.
-    required boolean supportsImmersive;
-    // Sequence of modes that should be supported by this device.
-    sequence<XRSessionMode> supportedModes;
-    required sequence<FakeXRViewInit> views;
-    sequence<FakeXRViewInit> secondaryViews;
+### Example: simulate tracking loss and recovery
 
-    // https://immersive-web.github.io/webxr/#feature-name
-    // The list of feature names that this device supports.
-    // Any requests for features not in this list should be rejected, with the exception of those
-    // that are guaranteed regardless of device availability (e.g. 'viewer').
-    // If not specified/empty, the device supports no features.
-    // NOTE: This is meant to emulate hardware support, not whether a feature is
-    // currently available (e.g. bounds not being tracked per below)
-    sequence<DOMString> supportedFeatures;
+Tests may need to validate behaviour when tracking is lost (i.e. `getViewerPose` returns `null`) and later restored.
 
-    // The bounds coordinates. If empty, no bounded reference space is currently tracked.
-    // If not, must have at least three elements.
-    sequence<FakeXRBoundsPoint> boundsCoordinates;
+```js
+/* Create a fake device and request a WebXR session as above. */
 
-    // A transform used to identify the physical position of the user's floor.
-    // If not set, indicates that the device cannot identify the physical floor.
-    FakeXRRigidTransformInit floorOrigin;
+// Simulate tracking loss.
+device.clearViewerOrigin();
 
-    // native origin of the viewer
-    // If not set, the device is currently assumed to not be tracking, and xrFrame.getViewerPose should
-    // not return a pose.
-    //
-    // This sets the viewer origin *shortly after* initialization; since the viewer origin at initialization
-    // is used to provide a reference origin for all matrices.
-    FakeXRRigidTransformInit viewerOrigin;
-};
+await new Promise(resolve => {
+  session.requestAnimationFrame((_t, frame) => {
+    const pose = frame.getViewerPose(refSpace);
+    // expect pose to be null while not tracking.
+    resolve();
+  });
+});
 
-interface FakeXRDevice {
-  // Sets the values to be used for subsequent
-  // requestAnimationFrame() callbacks.
-  undefined setViews(sequence<FakeXRViewInit> primaryViews, sequence<FakeXRViewInit> secondaryViews);
-
-  // behaves as if device was disconnected
-  Promise<undefined> disconnect();
-
-  // Sets the origin of the viewer
-  undefined setViewerOrigin(FakeXRRigidTransformInit origin, optional boolean emulatedPosition = false);
-
-  // If an origin is not specified, then the device is assumed to not be tracking, emulatedPosition should
-  // be assumed for cases where the UA must always provide a pose.
-  undefined clearViewerOrigin();
-
-  // Simulates devices focusing and blurring sessions.
-  undefined simulateVisibilityChange(XRVisibilityState state);
-
-  undefined setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoordinates);
-  // Sets the native origin of the physical floor
-  undefined setFloorOrigin(FakeXRRigidTransformInit floorOrigin);
-
-  // Indicates that the device can no longer identify the location of the physical floor.
-  undefined clearFloorOrigin();
-
-  // Used to simulate a major change in tracking and that a reset pose event should be fired
-  // https://immersive-web.github.io/webxr/#event-types
-  undefined simulateResetPose();
-
-  // Used to connect and send input events
-  FakeXRInputController simulateInputSourceConnection(FakeXRInputSourceInit init);
-};
-
-// https://immersive-web.github.io/webxr/#xrview
-dictionary FakeXRViewInit {
-  required XREye eye;
-  // https://immersive-web.github.io/webxr/#view-projection-matrix
-  required sequence<float> projectionMatrix;
-  // https://immersive-web.github.io/webxr/#dom-xrwebgllayer-getviewport
-  required FakeXRDeviceResolution resolution;
-  // https://immersive-web.github.io/webxr/#view-offset
-  // This is the origin of the view in the viewer space. In other words, this is
-  // a transform from the view space to the viewer space.
-  required FakeXRRigidTransformInit viewOffset;
-  // This is an optional means of specifying a decomposed form of the projection
-  // matrix.  If specified, the projectionMatrix should be ignored.
-  // Any test that wishes to test clip planes or similar features that would require
-  // decomposing/recomposing the projectionMatrix should use this instead of
-  // the projection matrix.
-  FakeXRFieldOfViewInit fieldOfView;
-};
-
-// A set of 4 angles which describe the view from a center point, units are degrees.
-dictionary FakeXRFieldOfViewInit {
-  required float upDegrees;
-  required float downDegrees;
-  required float leftDegrees;
-  required float rightDegrees;
-};
-
-// This represents the native resolution of the device, but may not reflect the viewport exposed to the page.
-// https://immersive-web.github.io/webxr/#xrviewport
-dictionary FakeXRDeviceResolution {
-    required long width;
-    required long height;
-};
-
-dictionary FakeXRBoundsPoint {
-  double x; double z;
-};
-
-
-// https://immersive-web.github.io/webxr/#xrrigidtransform
-dictionary FakeXRRigidTransformInit {
-  // must have three elements
-  required sequence<float> position;
-  // must have four elements
-  required sequence<float> orientation;
-};
+// Restore tracking.
+device.setViewerOrigin({
+  position: [0, 1.6, 0],
+  orientation: [0, 0, 0, 1],
+});
 ```
 
+### Example: simulate an input source and a select action
 
-The WebXR API never exposes native origins directly, instead exposing transforms between them, so we need to specify a base reference space for XRRigidTransformInit so that we can have consistent numerical values across implementations. When used as an origin, XRRigidTransformInits are in the base reference space where the viewer's native origin is identity at initialization, unless otherwise specified. In this space, the `local` reference space has a native origin of identity. This is an arbitrary choice: changing this reference space doesn't affect the data returned by the WebXR API, but we must make such a choice so that the tests produce the same results across different UAs. When used as an origin it is logically a transform _from_ the origin's space _to_ the underlying base reference space described above.
+Input is typically delivered per-frame, so tests should wait at least one frame after connecting an input source before expecting it to appear in `session.inputSources` or for events to fire.
 
-For many UAs input is sent on a per-frame basis, therefore input events are not guaranteed to fire and the FakeXRInputController
-is not guaranteed to be present in session.inputSources until after one animation frame.
+```js
+/* Create a fake device and request a WebXR session as above. */
 
-``` WebIDL
-dictionary FakeXRInputSourceInit {
-  required XRHandedness handedness;
-  required XRTargetRayMode targetRayMode;
-  required FakeXRRigidTransformInit pointerOrigin;
-  required sequence<DOMString> profiles;
-  // was the primary action pressed when this was connected?
-  boolean selectionStarted = false;
-  // should this input source send a select immediately upon connection?
-  boolean selectionClicked = false;
-  // Initial button state for any buttons beyond the primary that are supported.
-  // If empty, only the primary button is supported.
-  // Note that if any FakeXRButtonType is repeated the behavior is undefined.
-  sequence<FakeXRButtonStateInit> supportedButtons;
-  // If not set the controller is assumed to not be tracked.
-  FakeXRRigidTransformInit gripOrigin;
-};
+// Simulate an input source (values shown are illustrative).
+const controller = device.simulateInputSourceConnection({
+  handedness: "right",
+  targetRayMode: "tracked-pointer",
+  profiles: ["generic-trigger"],
+  pointerOrigin: { position: [0.2, 1.3, -0.4], orientation: [0, 0, 0, 1] },
+  gripOrigin: { position: [0.2, 1.3, -0.4], orientation: [0, 0, 0, 1] },
+});
 
-interface FakeXRInputController {
+// Wait a frame for the input source to become visible to the session.
+await new Promise(resolve => session.requestAnimationFrame(() => resolve()));
 
-  // Indicates that the handedness of the device has changed.
-  undefined setHandedness(XRHandedness handedness);
+// Listen for select events via normal WebXR events.
+let sawSelect = false;
+session.addEventListener("select", () => { sawSelect = true; });
 
-  // Indicates that the target ray mode of the device has changed.
-  undefined setTargetRayMode(XRTargetRayMode targetRayMode);
+// Drive input for the next frame.
+controller.simulateSelect();
 
-  // Indicates that the list of profiles representing the device has changed.
-  undefined setProfiles(sequence<DOMString> profiles);
-
-  // Sets or clears the position of the controller.  If not set, the controller is assumed to
-  // not be tracked.
-  undefined setGripOrigin(FakeXRRigidTransformInit gripOrigin, optional boolean emulatedPosition = false);
-  undefined clearGripOrigin();
-
-  // Sets the pointer origin for the controller.
-  undefined setPointerOrigin(FakeXRRigidTransformInit pointerOrigin, optional boolean emulatedPosition = false);
-
-  // Temporarily disconnect the input device
-  undefined disconnect();
-
-  // Reconnect a disconnected input device
-  undefined reconnect();
-
-  // Start a selection for the current frame with the primary input
-  // If a gamepad is supported, should update the state of the primary button accordingly.
-  undefined startSelection();
-
-  // End selection for the current frame with the primary input
-  // If a gamepad is supported, should update the state of the primary button accordingly.
-  undefined endSelection();
-
-  // Simulates a start/endSelection for the current frame with the primary input
-  // If a gamepad is supported, should update the state of the primary button accordingly.
-  undefined simulateSelect();
-
-  // Updates the set of supported buttons, including any initial state.
-  // Note that this method should not be generally used to update the state of the
-  // buttons, as the UA may treat this as re-creating the Gamepad.
-  // Note that if any FakeXRButtonType is repeated the behavior is undefined.
-  undefined setSupportedButtons(sequence<FakeXRButtonStateInit> supportedButtons);
-
-  // Used to update the state of a button currently supported by the input source
-  // Will not add support for that button if it is not currently supported.
-  undefined updateButtonState(FakeXRButtonStateInit buttonState);
-};
-
-// Bcause the primary button is always guaranteed to be present, and other buttons
-// should fulfill the role of validating any state from FakeXRButtonStateInit
-// the primary button is not present in this enum.
-enum FakeXRButtonType {
-  "grip",
-  "touchpad",
-  "thumbstick",
-  // Represents a button whose position is not specified by the xr-standard mapping.
-  // Should appear at one past the last reserved button index.
-  "optional-button",
-  // Represents a thumbstick whose position is not specified by the xr-standard mapping.
-  // Should appear at two past the last reserved button index.
-  "optional-thumbstick"
-};
-
-// Used to update the state of optionally supported buttons.
-dictionary FakeXRButtonStateInit {
-  required FakeXRButtonType buttonType;
-  required boolean pressed;
-  required boolean touched;
-  required float pressedValue;
-  // x and y value are ignored if the FakeXRButtonType is not touchpad, thumbstick, or optional-thumbstick
-  float xValue = 0.0;
-  float yValue = 0.0;
-};
+// Observe results on the next frame via events.
+await new Promise(resolve => session.requestAnimationFrame(() => resolve()));
+// Assert: sawSelect === true
 ```
-
-These initialization object and control interfaces do not represent a complete set of WebXR functionality,
-and are expected to be expanded on as the WebXR spec grows.
 
 ## Hit Test Extension
 
