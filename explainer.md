@@ -1,5 +1,42 @@
 # WebXR Test API
 
+## Introduction
+
+In order to provide end-users with robust and consistent immersive experiences, features of the spec need to be implemented consistently across devices and platforms. Additionally, content authors need to be able to depend on up-to-date feature support data in order to make implementation decisions.
+
+WebXR features are tightly coupled to hardware, platform runtimes and real-time sensor input which makes automated testing difficult. Without a predictable XR device, it is hard to write [Web Platform Tests (WPTs)](https://web-platform-tests.org/) that are deterministic, cross-browser, and runnable on CI. The WebXR Test API addresses these challenges by providing a testing-only surface that allows tests to simulate XR devices, poses and input sources in a controlled way.
+
+This API is intended solely for use in browser test environments (e.g. WPT harnesses and internal test runners) and is not designed to be exposed to web content. Different user agents may implement the same test surface using whatever mechanisms best fit their architecture (e.g. internal mocks, WebDriver, IPC) to communicate with a fake backend.
+
+## Challenges
+
+WebXR behaviour depends on physical devices, real-time tracking, platform runtimes and per-frame input delivery. This makes it difficult to write WPTs that are reliable across browsers and runnable in continuous integration environments where XR hardware may not be present. Today, WebXR tests frequently need to:
+- Run without access to real/physical XR hardware (e.g. on bots/CI).
+- Control device characteristics (views, supported session modes, supported features).
+- Drive deterministic tracking states (viewer pose, bounded-floor availability, tracking loss).
+- Simulate input sources and user actions (controllers, select sequences, visibility changes).
+- Assert outcomes consistently across different browsers.
+
+In order to allow JavaScript tests for WebXR, there are some basic functions which are common across all tests such as adding a fake test device and specifying poses. This API attempts to capture the necessary functions, based off what is defined in the [specification](https://immersive-web.github.io/webxr-test-api/).
+
+## Goals
+
+- Enable deterministic, cross-browser automated testing of WebXR Device API behaviour.
+- Allow tests to simulate XR device availability and capabilities (e.g. session modes, views, supported features).
+- Allow tests to control per-frame tracking state and poses in a reproducible way.
+- Allow tests to simulate input sources and input-driven events (e.g. select lifecycle) in a controlled manner.
+- Support extension testing patterns (e.g. hit-test, anchors, light estimation, DOM overlay) by providing test hooks that let tests supply deterministic data.
+
+## Non-goals
+
+- This is not a production web API and is not intended to be exposed to normal web content.
+- This is not a fully-featured XR emulator for application developers; it exists to mainly support automated testing of the WebXR Device API.
+- This does not aim to perfectly model real-world sensor noise, tracking quality or runtime-specific behaviour beyond what is needed for conformance tests.
+- This does not require or endorse a specific implementation strategy (e.g. WebDriver vs in-process mocking); UAs may differ in how tests are implemented.
+- This does not guarantee synchronous visibility of state updates; tests should assume state may only be reflected on the next WebXR frame.
+
+## Proposed Approach
+
 In order to allow javascript tests for WebXR there are some basic functions which are common across all tests,
 such as adding a fake test device and specifying poses. Below is a Javascript IDL which attempts to capture
 the necessary functions, based off what was defined in the spec. Different browser vendors can implement this
