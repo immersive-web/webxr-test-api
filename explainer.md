@@ -47,8 +47,8 @@ Most WebXR tests follow the same pattern:
 1. **Connect a fake device** with the desired capabilities (session types, views, supported features, etc.).
 2. **Use WebXR entry points** to obtain a session (e.g. `navigator.xr.requestSession(. . .)`).
 3. **Drive device state** (viewer pose, tracking loss, bounds/floor origin, visibility state etc.).
-4. **Advance one frame**, then assert on data returned by WebXR (poses, events, hit test results etc.).
-5. Optionally **connect fake input sources** and simulate input sequences (select lifecycle, button state changes etc.).
+4. **Advance one frame**, then assert on data returned by WebXR (poses, events, hit test results etc.). _Note: While most updates are reflected in the next animation frame, some state changes (especially those made outside of an active XR animation frame) may require waiting for up to two frames to be guaranteed as [highlighted in the spec](https://immersive-web.github.io/webxr-test-api/#xrsession-next-animation-frame). If assertions fail unexpectedly, try waiting an additional frame._
+6. Optionally **connect fake input sources** and simulate input sequences (select lifecycle, button state changes etc.).
 
 ### Example: connect a fake device and assert the viewer's pose
 
