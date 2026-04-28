@@ -143,59 +143,129 @@ await new Promise(resolve => session.requestAnimationFrame(() => resolve()));
 // Assert: sawSelect === true
 ```
 
-## Hit Test Extension
+## Extension Test Hooks (Overview)
 
-In order to create deterministic and cross-browser WPT tests for the proposed WebXR [hit testing API](https://github.com/immersive-web/hit-test/), the WPT tests need to have a way to mock the data that is supposed to be returned from the API under test. This can be achieved by leveraging the test API extensions for hit test, described below.
+Many WebXR modules rely on *real-world* data (i.e. geometry, environment understanding, interaction) which must be controllable and repeatable for conformance testing. This Test API takes into account this requirement and provides extension-specific hooks that let tests provide **deterministic inputs** for these modules while still exercising entry points to the **real WebXR-facing APIs** under test. This approach supports WPT-style testing and ensures tests are reliable and effective. For example:
+- Hit Test Extension: tests can define a deterministic “world” (planes/meshes/points) for hit testing.
+- DOM Overlay Extension: tests can define pointer positions within the overlay prior to simulating input.
 
-```webidl
-partial interface FakeXRDevice {
-  // Sets new world state on the device.
-  undefined setWorld(FakeXRWorldInit world);
-  // Clears the entire knowledge of the world on the device.
-  undefined clearWorld();
-};
+The extension-specific usage patterns follow the same testing flow: configure deterministic inputs, then advance a frame and finally assert on the WebXR API results.
 
-partial dictionary FakeXRDeviceInit {
-  // Initial state of the world known to the device.
-  FakeXRWorldInit worldInit;
-};
+***Note:** The WebXR Test API is intended to enable testing of WebXR Device API and related modules, including features that may still be unstable or/and in development. As a result, the test API surface is expected to grow alongside WebXR modules that require deterministic test control.*
 
-dictionary FakeXRWorldInit {
-  // World consists of a collection of hit testing regions.
-  // The regions are listed in no particular order.
-  required sequence<FakeXRRegionInit> hitTestRegions;
-};
+## Extension Test Hooks (Examples)
 
-dictionary FakeXRRegionInit {
-  // Collection of faces that comprise this region.
-  required sequence<FakeXRTriangleInit> faces;
-  // Type of the region. This will be considered when computing hit test results
-  // for the purpose of filtering out the ones that the applicaton is not interested in.
-  // More details can be found in Hit Testing Explainer, Limiting results to specific entities section.
-  required FakeXRRegionType type;
-};
+The examples below follow the same pattern as the core API:
+1. Configure deterministic test data via the test hook.
+2. Use WebXR entry points to call the WebXR module API under test.
+3. Advance a frame (or await relevant promise).
+4. Assert on results.
 
-dictionary FakeXRTriangleInit {
-  // Sequence of vertices that comprise this triangle.
-  // The triangle is considered to be a solid surface for the purposes of hit test computations.
-  required sequence<DOMPointReadOnly> vertices;  // size = 3
-};
+### Hit Test Extension
 
-enum FakeXRRegionType {
-  "point",
-  "plane",
-  "mesh"
-};
+The WebXR Hit Test API computes intersections with real-world geometry. For testing, the device’s “real world knowledge” can be supplied explicitly so that hit test results are predictable across user agents.
 
+Typical test flow:
+- Connect a fake device with `hit-test` listed as a supported feature.
+- Define a synthetic world (regions and faces).
+- Request a hit test source via the real API.
+- Run hit tests and assert on returned results.
+
+```js
+const device = await navigator.xr.test.simulateDeviceConnection({
+  supportedModes: ["immersive-ar"],
+  views: [/* Setup desired device properties as above */],
+  supportedFeatures: ["hit-test"],
+});
+
+const session = await navigator.xr.requestSession("immersive-ar", {
+  requiredFeatures: ["hit-test"],
+});
+
+// Provide deterministic world geometry.
+device.setWorld({
+  hitTestRegions: [{
+    type: "plane",
+    faces: [{
+      vertices: [
+        new DOMPointReadOnly(-1, 0, -1, 1),
+        new DOMPointReadOnly( 1, 0, -1, 1),
+        new DOMPointReadOnly(-1, 0,  1, 1),
+      ],
+    }],
+  }],
+});
+
+// Use WebXR entry points to request a hit test source.
+const viewerSpace = await session.requestReferenceSpace("viewer");
+const hitTestSource = await session.requestHitTestSource({ space: viewerSpace });
+
+// Advance a frame and perform assertions.
+await new Promise(resolve => {
+  session.requestAnimationFrame((_t, frame) => {
+    const results = frame.getHitTestResults(hitTestSource);
+    // assert that results are present and have expected transforms.
+    resolve();
+  });
+});
+```
+Notes for test authors:
+- Tests should construct geometry that is simple and unambiguous to keep assertions stable (e.g. a single plane).
+- World updates should be assumed to take effect by the next XR animation frame.
+
+### DOM Overlay Extension
+The DOM Overlay API enables user interaction with DOM elements while in an immersive session. Tests may need to deterministically control the overlay pointer position before simulating input actions.
+
+Typical test flow:
+- Connect a fake device with `dom-overlay` listed as a supported feature.
+- Request an immersive session with DOM overlay enabled.
+- Set the overlay pointer coordinates on the fake input controller.
+- Simulate an input action and assert on target/event behaviour.
+
+```js
+const device = await navigator.xr.test.simulateDeviceConnection({
+  supportedModes: ["immersive-ar"],
+  views: [/* Setup desired device properties as above */],
+  supportedFeatures: ["dom-overlay"],
+});
+
+const overlayRoot = document.createElement("div");
+overlayRoot.id = "overlay";
+document.body.appendChild(overlayRoot);
+
+const session = await navigator.xr.requestSession("immersive-ar", {
+  requiredFeatures: ["dom-overlay"],
+  domOverlay: { root: overlayRoot },
+});
+
+const controller = device.simulateInputSourceConnection({
+  handedness: "right",
+  targetRayMode: "tracked-pointer",
+  profiles: ["generic-trigger"],
+  pointerOrigin: { position: [0, 1.5, -0.5], orientation: [0, 0, 0, 1] },
+  gripOrigin: { position: [0, 1.5, -0.5], orientation: [0, 0, 0, 1] },
+});
+
+// Example overlay target (a button inside the overlay).
+const button = document.createElement("button");
+button.textContent = "Test";
+overlayRoot.appendChild(button);
+
+let sawClick = false;
+button.addEventListener("click", () => { sawClick = true; });
+
+// Set deterministic overlay pointer position *before* simulating input.
+controller.setOverlayPointerPosition(10, 10); // DOM overlay coordinates
+
+// Wait a frame to ensure the input source is surfaced.
+await new Promise(resolve => session.requestAnimationFrame(() => resolve()));
+
+// Simulate input (selection) and assert expected DOM interaction.
+controller.simulateSelect();
+await new Promise(resolve => session.requestAnimationFrame(() => resolve()));
+// Assert: sawClick === true
 ```
 
-## DOM Overlay Extension
-
-In order to create deterministic and cross-browser WPT tests for the proposed WebXR [DOM Overlay API](https://immersive-web.github.io/dom-overlays/), the WPT tests need to have a way to supply data for API interactions. This can be achieved by leveraging the test API extensions for DOM Overlay support, described below.
-
-```webidl
-partial interface FakeXRInputController {
-  // Sets the position within the DOM Overlay in DOM coordinates for the next controller action.
-  undefined setOverlayPointerPosition(float x, float y);
-};
-```
+Notes for test authors:
+- Use stable, layout-independent overlay geometry where possible (e.g. fixed-size root, explicit coordinates).
+- Overlay pointer position is applied for the next controller action; tests should set it immediately before triggering input.
