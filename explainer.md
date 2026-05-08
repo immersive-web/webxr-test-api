@@ -269,3 +269,11 @@ await new Promise(resolve => session.requestAnimationFrame(() => resolve()));
 Notes for test authors:
 - Use stable, layout-independent overlay geometry where possible (e.g. fixed-size root, explicit coordinates).
 - Overlay pointer position is applied for the next controller action; tests should set it immediately before triggering input.
+
+## Considered alternatives
+
+### Using WebDriver or WebDriver BiDi for XR test control
+
+One option would be to use WebDriver or WebDriver BiDi as the main mechanism for controlling XR state during tests. This has some appeal, particularly because WebDriver is already used for browser automation and cross-browser testing in many other contexts. A WebDriver-based solution could potentially reduce the need for dedicated XR testing hooks exposed through this API. However, WebXR testing often requires precise and deterministic control over XR-specific state in ways that map more directly to a purpose-built testing model. For example, tests may need to control simulated device capabilities or provide deterministic behaviour for extension-specific features such as hit-test, plane detection or DOM overlay. 
+
+A WebDriver-based approach may still be useful in some contexts, and user agents may choose to use WebDriver internally as part of their implementation. However, this does not remove the need for a clear and interoperable abstraction for XR-specific testing behaviour. The WebXR Test API is intended to provide that shared testing surface while still allowing user agents to implement the underlying mechanism in whatever way best fits their architecture.
