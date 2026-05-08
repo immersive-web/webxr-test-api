@@ -237,7 +237,7 @@ XRTest {#xrtest-interface}
 The {{XRTest}} object is the entry point for all testing.
 
 <script type="idl">
-[Exposed=Window] interface XRTest {
+[SecureContext, Exposed=Window] interface XRTest {
   Promise<FakeXRDevice> simulateDeviceConnection(FakeXRDeviceInit init);
   undefined simulateUserActivation(Function f);
   Promise<undefined> disconnectAllDevices();
@@ -416,7 +416,7 @@ FakeXRDevice {#fakexrdevice-interface}
 ------------
 
 <script type="idl">
-[Exposed=Window] interface FakeXRDevice : EventTarget {
+[SecureContext, Exposed=Window] interface FakeXRDevice : EventTarget {
   undefined setViews(sequence<FakeXRViewInit> views, optional sequence<FakeXRViewInit> secondaryViews);
 
   Promise<undefined> disconnect();
@@ -566,7 +566,7 @@ dictionary FakeXRInputSourceInit {
   FakeXRRigidTransformInit gripOrigin;
 };
 
-[Exposed=Window] interface FakeXRInputController {
+[SecureContext, Exposed=Window] interface FakeXRInputController {
   undefined setHandedness(XRHandedness handedness);
   undefined setTargetRayMode(XRTargetRayMode targetRayMode);
   undefined setProfiles(sequence<DOMString> profiles);
@@ -834,7 +834,7 @@ The {{FakeXRAnchorCreationParameters/isAttachedToEntity}} attribute will be set 
 The <dfn for=FakeXRAnchorCreationCallback>anchorController</dfn> parameter passed in to {{FakeXRAnchorCreationCallback}} can be used to update the state of the anchor, assuming that the creation request was deemed successful. Tests SHOULD store it and issue commands to it for the entire duration of controlled anchor's lifetime.
 
 <script type="idl">
-[Exposed=Window] interface FakeXRAnchorController {
+[SecureContext, Exposed=Window] interface FakeXRAnchorController {
   readonly attribute boolean deleted;
 
   // Controlling anchor state:
