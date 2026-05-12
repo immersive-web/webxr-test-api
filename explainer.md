@@ -163,7 +163,7 @@ The examples below follow the same pattern as the core API:
 
 ### Hit Test Extension
 
-The WebXR Hit Test API computes intersections with real-world geometry. For testing, the device’s “real world knowledge” can be supplied explicitly so that hit test results are predictable across user agents.
+The [WebXR Hit Test API](https://www.w3.org/TR/webxr-hit-test-1/) computes intersections with real-world geometry. For testing, the device’s “real world knowledge” can be supplied explicitly so that hit test results are predictable across user agents.
 
 Typical test flow:
 - Connect a fake device with `hit-test` listed as a supported feature.
@@ -209,12 +209,9 @@ await new Promise(resolve => {
   });
 });
 ```
-Notes for test authors:
-- Tests should construct geometry that is simple and unambiguous to keep assertions stable (e.g. a single plane).
-- World updates should be assumed to take effect by the next XR animation frame.
 
 ### DOM Overlay Extension
-The DOM Overlay API enables user interaction with DOM elements while in an immersive session. Tests may need to deterministically control the overlay pointer position before simulating input actions.
+The [DOM Overlay API](https://www.w3.org/TR/webxr-dom-overlays-1/) enables user interaction with DOM elements while in an immersive session. Tests may need to deterministically control the overlay pointer position before simulating input actions.
 
 Typical test flow:
 - Connect a fake device with `dom-overlay` listed as a supported feature.
@@ -265,10 +262,6 @@ controller.simulateSelect();
 await new Promise(resolve => session.requestAnimationFrame(() => resolve()));
 // Assert: sawClick === true
 ```
-
-Notes for test authors:
-- Use stable, layout-independent overlay geometry where possible (e.g. fixed-size root, explicit coordinates).
-- Overlay pointer position is applied for the next controller action; tests should set it immediately before triggering input.
 
 ## Considered alternatives
 

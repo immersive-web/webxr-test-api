@@ -749,6 +749,8 @@ enum FakeXRRegionType {
 
 {{FakeXRRegionType}} enum is used to describe a type of the world region.
 
+Note: For stable hit test results, tests should construct world geometry that is simple and unambiguous, such as a single plane region with a predictable ray intersection. Where possible, tests should avoid overlapping regions or geometry that could produce multiple equally valid results. Since fake world updates are applied through the simulated device state used for subsequent XR frames, tests should generally perform assertions after advancing to the next XR animation frame.
+
 Plane detection extensions {#plane-detection-extensions}
 ===================
 
@@ -778,6 +780,7 @@ partial dictionary FakeXRRegionInit {
 
 If {{FakeXRPlaneInformationInit/semanticLabel}} is set, the user agent MAY ignore any value that is not in the <a href="https://github.com/immersive-web/semantic-labels">semantic label registry</a>.
 
+Note: Tests that exercise plane detection should use simple plane data with explicit polygon coordinates and a clear orientation, and should keep that data consistent with any hit test world geometry used by the same test. In particular, using a single horizontal or vertical plane with a simple polygon can help keep both <a href="https://immersive-web.github.io/plane-detection/#dom-xrframe-detectedplanes">detectedPlanes</a> assertions and any related hit test assertions deterministic. Since these extensions depend on the hit test extensions, tests should also allow world and plane updates to be observed in a subsequent XR animation frame before asserting on results.
 
 DOM overlay extensions {#dom-overlay-extensions}
 ======================
@@ -791,6 +794,8 @@ partial interface FakeXRInputController {
 </script>
 
 When <dfn method for=FakeXRInputController>setOverlayPointerPosition(x, y)</dfn> is called, it sets a position within the DOM overlay in DOM coordinates for the next [=XR animation frame=], and is cleared after that frame. It is intended to be used along with a [=primary action=] for that frame, simulating that the user is interacting with the DOM overlay. The UA will emit a [=beforexrselect=] event at this location before generating XR select events.
+
+Note: Tests using DOM overlay should prefer stable, layout-independent overlay geometry such as a fixed-size overlay root with explicit coordinates. The overlay pointer position set by {{FakeXRInputController/setOverlayPointerPosition()}} applies to the next XR animation frame and is cleared after that frame, so tests should set it immediately before simulating the primary action that is expected to target the overlay.
 
 Anchors extensions {#anchors-extensions}
 ==================
@@ -861,6 +866,8 @@ The {{FakeXRAnchorController/stopTracking()}} method can be used by the tests to
 
 The {{FakeXRAnchorController/setAnchorOrigin(anchorOrigin)}} method can be used to set the controller's [=FakeXRAnchorController/anchor origin=]. Tests can use this method to simulate updates in anchor pose.
 
+Note: Tests using anchors should avoid depending on runtime-specific tracking behaviour that is not explicitly controlled by the test. For stable assertions, tests should use the returned anchor controller to drive tracking state and anchor pose directly, and should perform assertions only after the relevant tracking or origin update has had an opportunity to be reflected in a subsequent XR animation frame.
+
 Lighting estimation extensions {#lighting-estimation-extensions}
 ==================
 
@@ -892,6 +899,8 @@ When the <dfn method for="FakeXRDevice">setLightEstimate(|init|)</dfn> method is
   1. Set |device|'s [=FakeXRDevice/light estimate=] to |init| by the [=next animation frame=].
 
 </div>
+
+Note: Tests using lighting estimation should supply complete and predictable light estimate data, and should prefer assertions against exact values that are directly controlled by the test, such as the 27 spherical harmonics coefficients or explicit primary light values. Because {{FakeXRDevice/setLightEstimate()}} updates the simulated device by the next animation frame, tests should advance to a subsequent XR animation frame before asserting on returned estimates.
 
 Depth sensing extensions {#depth-sensing-extensions}
 ========================
@@ -960,6 +969,8 @@ When the {{FakeXRDevice/clearDepthSensingData()}} method is invoked on {{FakeXRD
 
 </div>
 
+Note: Tests using depth sensing should keep the configured capability set and supplied depth data as simple and explicit as possible. In particular, tests should choose a single intended usage/format combination where practical, provide depth buffers with known dimensions and values, and avoid relying on unsupported capability combinations unless that is the specific behaviour under test.
+
 Raw camera access extensions {#raw-camera-access-extensions}
 ============================
 
@@ -985,3 +996,5 @@ The {{FakeXRCameraImage/pixels}} control the camera image contents in [=obtain c
 The camera image will be initialized as if by a call to <code>gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, pixels)</code>, where <code>width</code>, <code>height</code>, and <code>pixels</code> are, respectively, {{FakeXRCameraImage/width}}, {{FakeXRCameraImage/height}}, and {{FakeXRCameraImage/pixels}}. In case {{FakeXRCameraImage/pixels}} key is not present in the dictionary, the behavior would be as if a call to <code>gl.texImage2D()</code> variant that omits the <code>pixels</code> parameter was made.
 
 Any time a [=simulated XR device=]'s [=simulated XR device/list of primary views=] and [=simulated XR device/list of secondary views=] is set, the user agent MUST verify that the camera images associated with the views present across both of those lists are all equal to each other. Camera images are considered equal when their {{FakeXRCameraImage/width}}s and {{FakeXRCameraImage/height}}s are equal, and their {{FakeXRCameraImage/pixels}} are the same instance (if present). If they are not equal, the user agent MUST throw an error from within the algorithm that attempted to set them.
+
+Note: Tests using raw camera access should provide explicit camera image dimensions, and only provide pixel data when the test needs to validate image contents rather than camera availability. If {{FakeXRViewInit/cameraImageInit}} is omitted, the simulated camera image is treated as null, which is useful for tests that need to verify the absence of camera data.
