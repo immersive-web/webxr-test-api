@@ -64,6 +64,9 @@ spec:WebXR Anchors Module; urlPrefix: https://immersive-web.github.io/anchors/#
     for: XRAnchor;
         type: method; text: delete(); url: dom-xranchor-delete
         type: dfn; text: native origin; url: xranchor-native-origin
+spec:WebXR AR Module; urlPrefix: https://immersive-web.github.io/webxr-ar-module/#
+    type: enum; text: XREnvironmentBlendMode; url: enumdef-xrenvironmentblendmode
+    type: enum; text: XRInteractionMode; url: enumdef-xrinteractionmode
 spec:WebXR Lighting Estimation; urlPrefix: https://immersive-web.github.io/lighting-estimation/
     type:interface; text: XRLightEstimate; url: xrlightestimate-interface
 spec: WebXR Depth Sensing Module; urlPrefix: https://immersive-web.github.io/depth-sensing/#
@@ -321,6 +324,10 @@ dictionary FakeXRDeviceInit {
     sequence<FakeXRBoundsPoint> boundsCoordinates;
     FakeXRRigidTransformInit floorOrigin;
     FakeXRRigidTransformInit viewerOrigin;
+
+    // AR Module extensions
+    XREnvironmentBlendMode environmentBlendMode;
+    XRInteractionMode interactionMode;
 
     // Hit test extensions:
     FakeXRWorldInit world;
