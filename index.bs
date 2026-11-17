@@ -174,6 +174,8 @@ Every [=simulated XR device=] may have an <dfn for="simulated XR device">viewer 
 
 Every [=simulated XR device=] has an <dfn for="simulated XR device">emulated position boolean</dfn> which is a boolean used to set the {{XRPose/emulatedPosition}} of any {{XRPose}}s produced involving the [=viewer=]. This is initially <code>false</code>.
 
+Every [=simulated XR device=] may have a <dfn for="simulated XR device">viewer velocity</dfn> which is a [=simulated velocity=] of the [=viewer=]'s [=XRSpace/native origin=]. If <code>null</code>, the device is treated as if it doesn't know how the [=viewer=] is moving. This is initially <code>null</code>.
+
 Every [=simulated XR device=] has an <dfn for="simulated XR device">visibility state</dfn> which is an {{XRVisibilityState}} used to set the {{XRSession/visibilityState}} of any {{XRSession}}s associated with the [=simulated XR device=] . This is initially {{XRVisibilityState/"visible"}}. When it is changed, the associated changes must be reflected on the {{XRSession}}, including triggering {{XRSession/onvisibilitychange}} events if necessary.
 
 Every [=simulated XR device=] has a <dfn for="simulated XR device">list of primary views</dfn> which is a list of [=view|views=] that must be rendered to for an immersive experience. There must be at least one primary view.
@@ -206,6 +208,8 @@ Every [=simulated XR input source=] has a <dfn for="simulated XR input source">t
 Every [=simulated XR input source=] has a <dfn for="simulated XR input source">pointerOrigin</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/targetRaySpace}}.
 
 A [=simulated XR input source=] may have a <dfn for="simulated XR input source">gripOrigin</dfn> which is an {{XRRigidTransform}} used to note the origin of the {{XRInputSource/gripSpace}}. If this is <code>null</code> the [=simulated XR input source=] is not tracked.
+
+A [=simulated XR input source=] may have a <dfn for="simulated XR input source">gripVelocity</dfn> which is a [=simulated velocity=] of the origin of the {{XRInputSource/gripSpace}}. If this is <code>null</code>, the [=simulated XR input source=] is treated as if it doesn't know how the {{XRInputSource/gripSpace}} is moving. This is initially <code>null</code>.
 
 Every [=simulated XR input source=] has a <dfn for="simulated XR input source">profiles</dfn> array which is an array of {{DOMString}}s which MUST be returned for the corresponding [=/XR input source|XR input source's=] {{XRInputSource/profiles}} attribute.
 
@@ -363,6 +367,11 @@ dictionary FakeXRRigidTransformInit {
   required sequence<float> orientation;
 };
 
+dictionary FakeXRVelocityInit {
+  required sequence<float> linear;
+  required sequence<float> angular;
+};
+
 dictionary FakeXRVisibilityMask {
   required sequence<float> vertices;
   required sequence<unsigned long> indices;
@@ -409,6 +418,25 @@ FakeXRRigidTransformInit {#fakexrrigidtransform-base-space}
 ------------
 The WebXR API never exposes native origins directly, instead exposing transforms between them, so we need to specify a <dfn>base reference space</dfn> for {{FakeXRRigidTransformInit}}s so that we can have consistent numerical values across implementations. When used as an origin, {{FakeXRRigidTransformInit}}s are in the [=base reference space=] where the [=viewer=]'s [=XRSpace/native origin=] is identity at initialization, unless otherwise specified. In this space, the {{XRReferenceSpaceType/"local"}} reference space has a [=XRSpace/native origin=] of identity. This is an arbitrary choice: changing this reference space doesn't affect the data returned by the WebXR API, but we must make such a choice so that the tests produce the same results across different UAs. When used as an origin it is logically a transform <i>from</i> the origin's space <i>to</i> the underlying [=base reference space=] described above.
 
+FakeXRVelocityInit {#fakexrvelocity}
+------------
+A <dfn>simulated velocity</dfn> describes how a [=XRSpace/native origin=] moves at an instant. It has a <dfn for="simulated velocity">linear velocity</dfn>, the velocity of the origin in meters per second, and an <dfn for="simulated velocity">angular velocity</dfn>, whose direction is the axis about which the origin rotates, following the right-hand rule, and whose magnitude is the rate of rotation in radians per second. Both are vectors in the [=base reference space=].
+
+When populating the {{XRPose/linearVelocity}} and {{XRPose/angularVelocity}} of an {{XRPose}}, the user agent MUST treat each [=XRSpace/native origin=] as moving like a rigid body with its [=simulated velocity=], and report the velocity of the {{XRPose}}'s space relative to its base space as defined by the WebXR Device API. Any [=XRSpace/native origin=] that the [=simulated XR device=] holds still in the [=base reference space=], such as that of the {{XRReferenceSpaceType/"local"}} reference space, has zero velocity. The {{XRInputSource/targetRaySpace}} of a {{XRTargetRayMode/"tracked-pointer"}} [=simulated XR input source=] with a [=simulated XR input source/gripOrigin=] moves with its {{XRInputSource/gripSpace}}, and that of a {{XRTargetRayMode/"gaze"}} [=simulated XR input source=] moves with the [=viewer=]. If the velocity of any [=XRSpace/native origin=] involved is unknown, the user agent MUST report <code>null</code> for both attributes.
+
+<div class="algorithm" data-algorithm="parse-velocity">
+To <dfn>parse a velocity</dfn> given a {{FakeXRVelocityInit}} |init|, perform the following steps:
+
+  1. Let |l| be |init|'s {{FakeXRVelocityInit/linear}}.
+  1. If |l| does not have three elements, throw a {{TypeError}}.
+  1. Let |a| be |init|'s {{FakeXRVelocityInit/angular}}.
+  1. If |a| does not have three elements, throw a {{TypeError}}.
+  1. Return a [=simulated velocity=] whose [=simulated velocity/linear velocity=] is the vector with x, y and z components equal to the three elements of |l| in order, and whose [=simulated velocity/angular velocity=] is the vector with x, y and z components equal to the three elements of |a| in order.
+
+</div>
+
+Note: A [=simulated velocity=] doesn't move its origin. Tests that check velocities should set the origin and the velocity they expect, and advance to a subsequent XR animation frame before asserting, as for other updates that take effect on the [=next animation frame=].
+
 Mocking {#mocking}
 ==============
 
@@ -423,6 +451,8 @@ FakeXRDevice {#fakexrdevice-interface}
 
   undefined setViewerOrigin(FakeXRRigidTransformInit origin, optional boolean emulatedPosition = false);
   undefined clearViewerOrigin();
+  undefined setViewerVelocity(FakeXRVelocityInit velocity);
+  undefined clearViewerVelocity();
   undefined setFloorOrigin(FakeXRRigidTransformInit origin);
   undefined clearFloorOrigin();
   undefined setBoundsGeometry(sequence<FakeXRBoundsPoint> boundsCoordinates);
@@ -506,6 +536,16 @@ The <dfn method for=FakeXRDevice>setViewerOrigin(|origin|, |emulatedPosition|)</
 
 The <dfn method for=FakeXRDevice>clearViewerOrigin()</dfn> method will, on the [=next animation frame=], set [=FakeXRDevice/device=]'s [=simulated XR device/viewer origin=] to <code>null</code>.
 
+<div class="algorithm" data-algorithm="set-viewer-velocity">
+The <dfn method for=FakeXRDevice>setViewerVelocity(|velocity|)</dfn> method performs the following steps:
+
+    1. Let |v| be the result of running [=parse a velocity=] on |velocity|.
+    1. On the [=next animation frame=], set [=FakeXRDevice/device=]'s [=simulated XR device/viewer velocity=] to |v|.
+
+</div>
+
+The <dfn method for=FakeXRDevice>clearViewerVelocity()</dfn> method will, on the [=next animation frame=], set [=FakeXRDevice/device=]'s [=simulated XR device/viewer velocity=] to <code>null</code>.
+
 The <dfn method for=FakeXRDevice>simulateVisibilityChange(|state|)</dfn> method will, as soon as possible, set [=FakeXRDevice/device=]'s [=simulated XR device/visibility state=] to |state|.
 
 
@@ -572,6 +612,8 @@ dictionary FakeXRInputSourceInit {
   undefined setProfiles(sequence<DOMString> profiles);
   undefined setGripOrigin(FakeXRRigidTransformInit gripOrigin, optional boolean emulatedPosition = false);
   undefined clearGripOrigin();
+  undefined setGripVelocity(FakeXRVelocityInit velocity);
+  undefined clearGripVelocity();
   undefined setPointerOrigin(FakeXRRigidTransformInit pointerOrigin, optional boolean emulatedPosition = false);
 
   undefined disconnect();
@@ -650,6 +692,10 @@ The <dfn method for=FakeXRInputController>setProfiles(|profiles|)</dfn> method w
 The <dfn method for=FakeXRInputController>setGripOrigin(|gripOrigin|)</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/gripOrigin=] to the result of running [=parse a rigid transform=] on |gripOrigin|.
 
 The <dfn method for=FakeXRInputController>clearGripOrigin()</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/gripOrigin=] to <code>null</code>.
+
+The <dfn method for=FakeXRInputController>setGripVelocity(|velocity|)</dfn> method will run [=parse a velocity=] on |velocity| and, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/gripVelocity=] to the result.
+
+The <dfn method for=FakeXRInputController>clearGripVelocity()</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/gripVelocity=] to <code>null</code>.
 
 The <dfn method for=FakeXRInputController>setPointerOrigin(|pointerOrigin|)</dfn> method will, by the [=next animation frame=], set [=FakeXRInputController/inputSource=]'s [=simulated XR input source/pointerOrigin=] to the result of running [=parse a rigid transform=] on |pointerOrigin|.
 
